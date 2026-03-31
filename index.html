@@ -2,83 +2,575 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>프리플레이 통합 대시보드</title>
+<title>SCJ 프리플레이 대시보드</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=DM+Sans:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: #0b1120; font-family: 'Segoe UI', system-ui, sans-serif; }
+:root{
+  --bg:#060e1a;--bg-card:#0a1628;--bg-card2:#0d1e35;
+  --border:rgba(56,189,248,.08);--border-hi:rgba(0,212,255,.32);
+  --text:#cdd9e8;--text2:#4e6a85;--text3:#1e3048;
+  --accent:#00d4ff;--accent2:#7c6af7;--accent3:#00e5a0;
+  --grid:rgba(56,189,248,.016);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:'DM Sans',system-ui,sans-serif;
+  background:var(--bg);color:var(--text);
+  padding:28px 36px;font-size:13px;line-height:1.55;
+  background-image:
+    radial-gradient(ellipse 90% 40% at 50% -10%,rgba(0,212,255,.055) 0%,transparent 65%),
+    linear-gradient(var(--grid) 1px,transparent 1px),
+    linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:100% 100%,48px 48px,48px 48px;
+}
+h1{
+  font-family:'Oxanium',sans-serif;font-size:1.5rem;font-weight:700;letter-spacing:.09em;
+  text-transform:uppercase;margin-bottom:4px;position:relative;padding-top:14px;
+  background:linear-gradient(100deg,#e8f4ff 35%,var(--accent) 75%,var(--accent3));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+h1::before{
+  content:'';position:absolute;top:0;left:0;width:44px;height:2px;
+  background:linear-gradient(90deg,var(--accent),var(--accent3));border-radius:2px;
+  box-shadow:0 0 10px rgba(0,212,255,.5);
+}
+h1::after{content:'SCJ · QA SYSTEM';position:absolute;right:0;bottom:3px;font-family:'IBM Plex Mono',monospace;font-size:.58rem;color:var(--text2);letter-spacing:.14em;font-weight:400;-webkit-text-fill-color:var(--text2)}
+.meta{font-family:'IBM Plex Mono',monospace;font-size:.67rem;color:var(--text2);margin-bottom:22px;letter-spacing:.02em}
+.meta b{color:#5ba3cc}
+.sec-title{
+  font-family:'Oxanium',sans-serif;font-size:.73rem;font-weight:700;color:var(--text2);
+  text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px;
+  display:flex;align-items:center;gap:7px;
+}
+.sec-title::before{content:'';width:3px;height:11px;background:var(--accent2);border-radius:2px;flex-shrink:0}
+.sec-desc{font-size:.67rem;color:#2d4a63;margin-bottom:10px;line-height:1.6}
 
-  .top-bar {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 10px 16px;
-    background: #0f1a2e;
-    border-bottom: 1px solid #1e3a5f;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
-  .top-bar .logo {
-    font-size: 13px;
-    font-weight: 600;
-    color: #64748b;
-    margin-right: 4px;
-    white-space: nowrap;
-  }
-  .gtab {
-    padding: 6px 18px;
-    border: 1.5px solid var(--gc, #3b82f6);
-    border-radius: 20px;
-    background: transparent;
-    color: var(--gc, #3b82f6);
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.15s, color 0.15s;
-    opacity: 0.55;
-  }
-  .gtab.active {
-    background: var(--gc, #3b82f6);
-    color: #fff;
-    opacity: 1;
-  }
-  .gtab:hover:not(.active) { opacity: 0.9; }
+/* 카드 */
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.card{
+  background:var(--bg-card);border-radius:8px;padding:16px;
+  border:1px solid var(--border);position:relative;overflow:hidden;
+  transition:border-color .25s,transform .18s,box-shadow .25s;
+}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.06) 50%,transparent 100%)}
+.card::after{content:'';position:absolute;inset:0;border-radius:8px;background:radial-gradient(ellipse 70% 55% at 15% 0%,rgba(0,212,255,.04),transparent);pointer-events:none}
+.card:hover{border-color:var(--border-hi);transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,0,0,.5),0 0 0 1px rgba(0,212,255,.08)}
+.card.dim{opacity:.25}
+.ct{font-family:'Oxanium',sans-serif;font-size:.73rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px}
+.pk{font-weight:400;color:var(--text2);font-size:.65rem}
+.cv{font-family:'IBM Plex Mono',monospace;font-size:1.95rem;font-weight:600;line-height:1;margin-bottom:6px;letter-spacing:-.02em}
+.cs{font-family:'IBM Plex Mono',monospace;font-size:.62rem;color:var(--text2);margin-top:3px;letter-spacing:.01em}
 
-  .ts {
-    margin-left: auto;
-    font-size: 11px;
-    color: #334155;
-    white-space: nowrap;
-  }
+/* 레이아웃 */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-bottom:13px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:13px;margin-bottom:13px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-bottom:13px}
+.box{background:var(--bg-card);border-radius:8px;padding:16px;border:1px solid var(--border);transition:border-color .2s,box-shadow .2s;position:relative;overflow:hidden}
+.box::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(124,106,247,.1) 50%,transparent);pointer-events:none}
+.box:hover{border-color:rgba(124,106,247,.25);box-shadow:0 0 0 1px rgba(124,106,247,.06),0 4px 24px rgba(0,0,0,.35)}
+.full{grid-column:1/-1}
 
-  iframe {
-    width: 100%;
-    height: calc(100vh - 45px);
-    border: none;
-    display: block;
-  }
+/* 테이블 */
+table{width:100%;border-collapse:collapse}
+th{text-align:left;padding:7px 10px;font-family:'Oxanium',sans-serif;color:var(--text2);font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;border-bottom:1px solid rgba(56,189,248,.1);white-space:nowrap}
+td{padding:7px 10px;border-bottom:1px solid rgba(6,14,26,.95);font-size:.71rem}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(0,212,255,.022)}
+.mono{font-family:'IBM Plex Mono',monospace;color:#9ca8f4;font-size:.67rem}
+.desc{color:#a8c0d8;max-width:320px}
+.nd{text-align:center;color:var(--text2);padding:18px;font-family:'IBM Plex Mono',monospace;font-size:.7rem}
+
+/* 배지 */
+.pbadge{display:inline-block;padding:2px 8px;border-radius:3px;font-family:'Oxanium',sans-serif;font-size:.67rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+.pbadge+.pbadge{margin-left:3px}
+.cat-badge{font-size:.68rem;font-weight:600}
+
+/* 상태 색상 */
+.cr-low{color:#ff5f5f;font-weight:700}
+.cr-mid{color:#ffb340;font-weight:600}
+.cr-ok{color:#00e5a0;font-weight:600}
+
+/* 링크 */
+.rl{color:var(--accent);text-decoration:none;font-size:.67rem;font-family:'IBM Plex Mono',monospace}
+.rl:hover{color:#5de4ff;text-decoration:underline}
+.nr{color:var(--text2);font-size:.7rem}
+
+/* 검증 요약 */
+.val-summary{display:flex;align-items:center;gap:16px;margin-bottom:14px}
+.val-rate{font-family:'IBM Plex Mono',monospace;font-size:1.75rem;font-weight:600}
+.val-sub{font-size:.72rem;color:#5ba3cc;font-family:'IBM Plex Mono',monospace}
+
+/* 탭 */
+.tabs{display:flex;gap:2px;margin-bottom:24px;background:rgba(10,22,40,.95);border:1px solid var(--border);border-radius:8px;padding:4px;width:fit-content;backdrop-filter:blur(12px);box-shadow:0 4px 24px rgba(0,0,0,.3)}
+.tab-btn{background:none;border:none;font-family:'Oxanium',sans-serif;color:var(--text2);font-size:.8rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:6px 20px;cursor:pointer;border-radius:5px;transition:color .15s,background .15s}
+.tab-btn:hover{color:var(--text);background:rgba(0,212,255,.06)}
+.tab-btn.active{color:#e8f4ff;background:rgba(0,212,255,.1);box-shadow:inset 0 0 0 1px rgba(0,212,255,.22),0 0 16px rgba(0,212,255,.07)}
+.tab-btn.active::after{content:'';display:block;height:2px;border-radius:1px;margin-top:4px;background:linear-gradient(90deg,var(--accent),var(--accent3));box-shadow:0 0 8px var(--accent)}
+.tab-panel{display:none}
+.tab-panel.active{display:block;animation:tabIn .2s ease}
+.tab-panel.active .card{animation:cardIn .24s ease both}
+.tab-panel.active .card:nth-child(1){animation-delay:.03s}
+.tab-panel.active .card:nth-child(2){animation-delay:.07s}
+.tab-panel.active .card:nth-child(3){animation-delay:.11s}
+.tab-panel.active .card:nth-child(4){animation-delay:.15s}
+.tab-panel.active .card:nth-child(5){animation-delay:.19s}
+.tab-panel.active .card:nth-child(6){animation-delay:.23s}
+.tab-panel.active .card:nth-child(7){animation-delay:.27s}
+.tab-panel.active .card:nth-child(8){animation-delay:.31s}
+
+/* 최근런 */
+.rr-section{margin-bottom:32px}
+.rr-mode-hd{display:flex;align-items:center;gap:10px}
+.rr-mode-sub{font-size:11px;color:var(--text2);font-family:'IBM Plex Mono',monospace}
+.rr-detail{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;margin-bottom:10px;overflow:hidden}
+.rr-summary{display:flex;align-items:center;gap:14px;padding:12px 16px;cursor:pointer;list-style:none;user-select:none}
+.rr-summary::-webkit-details-marker{display:none}
+.rr-summary::before{content:'▶';font-size:9px;color:var(--text2);transition:transform .15s}
+details[open] .rr-summary::before{transform:rotate(90deg)}
+.rr-date{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--text);font-weight:600;min-width:130px}
+.rr-tag{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text2);padding:2px 8px;border-radius:4px;background:rgba(255,255,255,.04)}
+.rr-tbl-wrap{overflow-x:auto;padding:0 4px 12px}
+.rr-tbl{width:100%;border-collapse:collapse;font-size:12px}
+.rr-tbl th{text-align:left;padding:6px 10px;color:var(--text2);font-family:'IBM Plex Mono',monospace;font-size:10px;text-transform:uppercase;border-bottom:1px solid var(--border);white-space:nowrap}
+.rr-tbl td{padding:5px 10px;border-bottom:1px solid rgba(255,255,255,.02);white-space:nowrap}
+.rr-tbl tr:last-child td{border-bottom:none}
+.rr-tbl tr:hover td{background:rgba(0,212,255,.022)}
+.rr-expand-btn{text-align:center;color:var(--accent);font-size:13px;font-weight:700;width:24px;user-select:none}
+.rr-lvl-row:hover .rr-expand-btn{color:#fff}
+.rr-lvl-detail td{padding:10px 12px;background:rgba(0,212,255,.03)}
+.rr-detail-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:4px 0}
+.rr-dg-item{display:flex;flex-direction:column;gap:2px;font-size:11px}
+.rr-dg-wide{grid-column:span 2}
+.rr-dg-full{grid-column:span 4}
+.rr-dk{color:var(--text2);font-size:10px;text-transform:uppercase;letter-spacing:.5px;font-family:'IBM Plex Mono',monospace}
+.rr-val-wrap{display:flex;flex-wrap:wrap;gap:4px;margin-top:2px}
+.rr-val-item{font-size:10px;padding:1px 6px;border-radius:3px;background:rgba(255,255,255,.05);font-family:'IBM Plex Mono',monospace}
+.rr-ev-wrap{display:flex;flex-wrap:wrap;gap:4px;margin-top:2px}
+.rr-ev-tag{font-size:11px;padding:2px 8px;border-radius:4px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08)}
+.rr-ev-item{background:rgba(0,212,255,.1);border-color:rgba(0,212,255,.25);color:#5de4ff}
+.rr-ev-gimmick{background:rgba(255,122,48,.1);border-color:rgba(255,122,48,.25);color:#ffaa6e}
+@keyframes tabIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+@keyframes cardIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* 스크롤바 */
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:rgba(0,212,255,.18);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:rgba(0,212,255,.35)}
 </style>
 </head>
 <body>
-  <div class="top-bar">
-    <span class="logo">🎮 통합 대시보드</span>
-    <button class="gtab active" style="--gc:#3b82f6" onclick="switchGame('scj',this)">SCJ</button>
-    <button class="gtab " style="--gc:#10b981" onclick="switchGame('ctz',this)">CTZ</button>
-    <span class="ts">갱신: 2026-03-31 17:29:52</span>
+<h1>SCJ 프리플레이 대시보드</h1>
+<div class="meta">기간: 전체 기간 &nbsp;·&nbsp; 생성: 2026-03-31 17:37:03 &nbsp;·&nbsp; <b>2런 19판</b></div>
+
+<div class="tabs">
+  <button class="tab-btn active" data-tab="overall" onclick="showTab('overall')">종합</button>
+  <button class="tab-btn" data-tab="hardcore"  onclick="showTab('hardcore')" style="color:#3b82f6">고수</button>
+  <button class="tab-btn" data-tab="average"   onclick="showTab('average')"  style="color:#10b981">중수</button>
+  <button class="tab-btn" data-tab="casual"    onclick="showTab('casual')"   style="color:#f59e0b">하수</button>
+  <button class="tab-btn" data-tab="struggling" onclick="showTab('struggling')" style="color:#ef4444">초보</button>
+  <button class="tab-btn" data-tab="recent"     onclick="showTab('recent')"     style="color:#a78bfa">최근 런</button>
+  <button class="tab-btn" data-tab="issues"     onclick="showTab('issues')"     style="color:#ef4444">에러/이슈</button>
+</div>
+
+<div id="tab-overall" class="tab-panel active">
+
+<!-- 요약 카드 -->
+<div class="cards"><div class="card" style="border-left:4px solid #3b82f6"><div class="ct" style="color:#3b82f6">고수 <span class="pk">hardcore</span></div><div class="cv">98.4%</div><div class="cs">9판 · 1런 · 골드 회수율</div><div class="cs">손익 -137/판 · 잔액변화 -901/런</div><div class="cs">평균턴 40.3 · 판당 25.9초 · 해머 +7.0/런</div></div><div class="card" style="border-left:4px solid #10b981"><div class="ct" style="color:#10b981">중수 <span class="pk">average</span></div><div class="cv">91.1%</div><div class="cs">10판 · 1런 · 골드 회수율</div><div class="cs">손익 -842/판 · 잔액변화 -7,495/런</div><div class="cs">평균턴 39.6 · 판당 24.4초 · 해머 +11.0/런</div></div><div class="card dim" style="border-left:4px solid #f59e0b"><div class="ct" style="color:#f59e0b">하수</div><div class="cv">—</div><div class="cs">데이터 없음</div></div><div class="card dim" style="border-left:4px solid #ef4444"><div class="ct" style="color:#ef4444">초보</div><div class="cv">—</div><div class="cs">데이터 없음</div></div></div>
+
+<!-- 페르소나 비교 4종 -->
+<div class="g4">
+  <div class="box"><div class="sec-title">골드 회수율 (%)</div><div class="sec-desc">모드별 보상 총액 ÷ 비용(입장료+아이템) 총액. 100% 이상이면 비용을 초과하는 보상 획득.</div><canvas id="cEff" height="180"></canvas></div>
+  <div class="box"><div class="sec-title">골드 손익 /판</div><div class="sec-desc">한 판당 골드 순수익. 입장료·아이템 비용을 차감하고 보상을 더한 값. 음수면 손실.</div><canvas id="cGold" height="180"></canvas></div>
+  <div class="box"><div class="sec-title">평균 턴수</div><div class="sec-desc">한 판에 소모한 평균 턴 수. 낮을수록 덱이 빠르게 소진되어 효율적으로 클리어.</div><canvas id="cTurns" height="180"></canvas></div>
+  <div class="box"><div class="sec-title">기믹·플러스카드 /판</div><div class="sec-desc">판당 기믹(키&amp;자물쇠·얼음·러너) 및 플러스카드 평균 발생 횟수. 높을수록 변수가 많은 구성.</div><canvas id="cGimmick" height="180"></canvas></div>
+</div>
+
+<!-- 추이 차트 -->
+<div class="g2">
+  <div class="box"><div class="sec-title">런별 골드 회수율 추이</div><div class="sec-desc">실행(런) 순서별 골드 회수율 변화. 100% 기준으로 수익/손실 구간 추적.</div><canvas id="cRunEff" height="140"></canvas></div>
+  <div class="box"><div class="sec-title">런별 골드 손익 추이</div><div class="sec-desc">실행 순서별 판당 평균 골드 손익 변화. 수익성 추세 파악에 활용.</div><canvas id="cRunGold" height="140"></canvas></div>
+</div>
+
+<!-- 모드별 시계열 분석 -->
+<div class="g2">
+  <div class="box full"><div class="sec-title">모드별 일별 골드 회수율 추이</div><div class="sec-desc">날짜별 각 모드의 골드 회수율(보상/비용) 변화. 패치 전후 수익성 변화를 모드별로 비교.</div><canvas id="cDayEff" height="120"></canvas></div>
+</div>
+<div class="g2">
+  <div class="box"><div class="sec-title">모드별 일별 평균 턴수 추이</div><div class="sec-desc">날짜별 각 모드의 판당 평균 턴 수 변화. 턴이 늘면 스테이지가 어려워지거나 덱 효율이 떨어진 것.</div><canvas id="cDayTurns" height="140"></canvas></div>
+  <div class="box"><div class="sec-title">모드별 일별 평균 난이도 추이</div><div class="sec-desc">날짜별 각 모드의 평균 스테이지 난이도 (1=튜토리얼·2=보통·3=어려움·4=매우어려움). 테스트 구성 변화 추적.</div><canvas id="cDayDiff" height="140"></canvas></div>
+</div>
+
+<!-- 게임플레이 세부 + 배팅 -->
+<div class="g2">
+  <div class="box"><div class="sec-title">게임플레이 세부 지표</div><div class="sec-desc">매치/턴: 전체 턴 중 카드가 매치(제거)된 비율 · 드로우/턴: 덱에서 카드를 뽑은 비율 · 와일드/판: 판당 와일드 카드 사용 횟수</div><canvas id="cGP" height="150"></canvas></div>
+  <div class="box"><div class="sec-title">배팅 배수별 골드 손익 /판</div><div class="sec-desc">배팅 배수(x1·x2·x4)별 판당 평균 골드 손익. 배수가 높을수록 보상과 손실 모두 커짐.</div><canvas id="cBet" height="150"></canvas></div>
+</div>
+
+<!-- 경제 지표 -->
+<div class="g4">
+  <div class="box"><div class="sec-title">와일드 비용 /판</div><div class="sec-desc">판당 평균 와일드 카드 구매 비용.</div><canvas id="cWild" height="150"></canvas></div>
+  <div class="box"><div class="sec-title">스트릭 보너스 /판</div><div class="sec-desc">판당 평균 스트릭 보너스 골드.</div><canvas id="cStreak" height="150"></canvas></div>
+  <div class="box"><div class="sec-title">미스드로우 /판</div><div class="sec-desc">판당 평균 미스드로우(덱 소진) 횟수. 높을수록 덱 운용 비효율.</div><canvas id="cMiss" height="150"></canvas></div>
+  <div class="box"><div class="sec-title">평균 콤보 /판</div><div class="sec-desc">판당 평균 콤보 횟수.</div><canvas id="cCombo" height="150"></canvas></div>
+</div>
+
+<!-- 일별 트렌드 -->
+<div class="g2" style="margin-bottom:14px">
+  <div class="box"><div class="sec-title">모드별 일별 손익/판 트렌드</div><div class="sec-desc">날짜별 각 모드의 판당 평균 손익. 모드 간 수익성 격차와 추세를 한눈에 비교.</div><canvas id="cTrend" height="130"></canvas></div>
+
+  <!-- 밸런스 검증 -->
+  <div class="box">
+    <div class="sec-title">밸런스 검증</div>
+    <div class="sec-desc">게임 내부 골드 계산(입장료·아이템·보상)이 예상 값과 일치하는지 판별 결과.</div>
+    <div class="val-summary">
+      <div class="val-rate" style="color:#ef4444">67.9%</div>
+      <div class="val-sub">통과 38 / 실패 18 (전체 56)</div>
+    </div>
+    <table>
+      <tr><th>모드</th><th>통과</th><th>실패</th><th>통과율</th></tr>
+      <tr><td><span class="pbadge" style="background:#3b82f622;color:#3b82f6;border:1px solid #3b82f644">고수</span></td><td>17</td><td class="cr-low">8</td><td class="cr-low">68.0%</td></tr><tr><td><span class="pbadge" style="background:#10b98122;color:#10b981;border:1px solid #10b98144">중수</span></td><td>21</td><td class="cr-low">10</td><td class="cr-low">67.7%</td></tr><tr><td><span class="pbadge" style="background:#f59e0b22;color:#f59e0b;border:1px solid #f59e0b44">하수</span></td><td>—</td><td>—</td><td>—</td></tr><tr><td><span class="pbadge" style="background:#ef444422;color:#ef4444;border:1px solid #ef444444">초보</span></td><td>—</td><td>—</td><td>—</td></tr>
+    </table>
   </div>
-  <iframe id="frame-scj" src="dashboard_scj.html"></iframe>
-  <iframe id="frame-ctz" src="dashboard_ctz.html" style="display:none"></iframe>
+</div>
+
+<!-- 이슈/특이사항 + 스테이지 -->
+<div class="g2" style="margin-bottom:14px">
+  <div class="box">
+    <div class="sec-title">이슈 / 특이사항</div>
+    <div class="sec-desc">테스트 중 감지된 주요 이벤트. 기믹 발생·보상 오류·반복 로그·골드 이상 등을 포함.</div>
+    <table>
+      <tr><th>시각</th><th>모드</th><th>유형</th><th>내용</th></tr>
+      <tr data-cat="보상" class="iss-row" onclick="issToggle('idr_0')"><td class="mono">17:25:08</td><td><span class="pbadge" style="background:#3b82f622;color:#3b82f6;border:1px solid #3b82f644">고수</span></td><td><span class="cat-badge" style="color:#34d399">보상</span></td><td class="desc">마일스톤/보너스 수령: [마일스톤 완료!] | 골드 +130 | 골드 x5 <span class="iss-xhint">▶</span></td></tr><tr id="idr_0" class="iss-detail-row" style="display:none"><td colspan="4" class="iss-detail-cell"><div class="iss-det-wrap"><div class="iss-det-meta"><span class="mono" style="font-size:.65rem;margin-right:8px">20260331</span><span style="color:#3b82f6;font-size:.68rem;margin-right:8px">고수</span><span style="color:#34d399;font-size:.68rem">보상</span></div><div class="iss-det-body">마일스톤/보너스 수령: [마일스톤 완료!] | 골드 +130 | 골드 x5</div></div></td></tr><tr data-cat="보상" class="iss-row" onclick="issToggle('idr_1')"><td class="mono">17:25:16</td><td><span class="pbadge" style="background:#3b82f622;color:#3b82f6;border:1px solid #3b82f644">고수</span></td><td><span class="cat-badge" style="color:#34d399">보상</span></td><td class="desc">마일스톤/보너스 수령: [마일스톤 완료!] | 골드 +200 | 골드 x5 <span class="iss-xhint">▶</span></td></tr><tr id="idr_1" class="iss-detail-row" style="display:none"><td colspan="4" class="iss-detail-cell"><div class="iss-det-wrap"><div class="iss-det-meta"><span class="mono" style="font-size:.65rem;margin-right:8px">20260331</span><span style="color:#3b82f6;font-size:.68rem;margin-right:8px">고수</span><span style="color:#34d399;font-size:.68rem">보상</span></div><div class="iss-det-body">마일스톤/보너스 수령: [마일스톤 완료!] | 골드 +200 | 골드 x5</div></div></td></tr><tr data-cat="보상" class="iss-row" onclick="issToggle('idr_2')"><td class="mono">17:26:10</td><td><span class="pbadge" style="background:#3b82f622;color:#3b82f6;border:1px solid #3b82f644">고수</span></td><td><span class="cat-badge" style="color:#34d399">보상</span></td><td class="desc">마일스톤/보너스 수령: [마일스톤 완료!] | card_back x1 | 골드 x5 <span class="iss-xhint">▶</span></td></tr><tr id="idr_2" class="iss-detail-row" style="display:none"><td colspan="4" class="iss-detail-cell"><div class="iss-det-wrap"><div class="iss-det-meta"><span class="mono" style="font-size:.65rem;margin-right:8px">20260331</span><span style="color:#3b82f6;font-size:.68rem;margin-right:8px">고수</span><span style="color:#34d399;font-size:.68rem">보상</span></div><div class="iss-det-body">마일스톤/보너스 수령: [마일스톤 완료!] | card_back x1 | 골드 x5</div></div></td></tr><tr data-cat="보상" class="iss-row" onclick="issToggle('idr_3')"><td class="mono">17:30:05</td><td><span class="pbadge" style="background:#10b98122;color:#10b981;border:1px solid #10b98144">중수</span></td><td><span class="cat-badge" style="color:#34d399">보상</span></td><td class="desc">마일스톤/보너스 수령: [마일스톤 완료!] | card_back x1 | 골드 x5 <span class="iss-xhint">▶</span></td></tr><tr id="idr_3" class="iss-detail-row" style="display:none"><td colspan="4" class="iss-detail-cell"><div class="iss-det-wrap"><div class="iss-det-meta"><span class="mono" style="font-size:.65rem;margin-right:8px">20260331</span><span style="color:#10b981;font-size:.68rem;margin-right:8px">중수</span><span style="color:#34d399;font-size:.68rem">보상</span></div><div class="iss-det-body">마일스톤/보너스 수령: [마일스톤 완료!] | card_back x1 | 골드 x5</div></div></td></tr><tr data-cat="기믹" class="iss-row" onclick="issToggle('idr_4')"><td class="mono">17:33:13</td><td><span class="pbadge" style="background:#10b98122;color:#10b981;border:1px solid #10b98144">중수</span></td><td><span class="cat-badge" style="color:#a78bfa">기믹</span></td><td class="desc">Lv6(CC_0018) 기믹 1회 — 키&amp;자물쇠 1회 <span class="iss-xhint">▶</span></td></tr><tr id="idr_4" class="iss-detail-row" style="display:none"><td colspan="4" class="iss-detail-cell"><div class="iss-det-wrap"><div class="iss-det-meta"><span class="mono" style="font-size:.65rem;margin-right:8px">20260331</span><span style="color:#10b981;font-size:.68rem;margin-right:8px">중수</span><span style="color:#a78bfa;font-size:.68rem">기믹</span></div><div class="iss-det-body">Lv6(CC_0018) 기믹 1회 — 키&amp;자물쇠 1회</div></div></td></tr><tr data-cat="보상" class="iss-row" onclick="issToggle('idr_5')"><td class="mono">17:33:22</td><td><span class="pbadge" style="background:#10b98122;color:#10b981;border:1px solid #10b98144">중수</span></td><td><span class="cat-badge" style="color:#34d399">보상</span></td><td class="desc">마일스톤/보너스 수령: [마일스톤 완료!] | 골드 +530 | 골드 x5 <span class="iss-xhint">▶</span></td></tr><tr id="idr_5" class="iss-detail-row" style="display:none"><td colspan="4" class="iss-detail-cell"><div class="iss-det-wrap"><div class="iss-det-meta"><span class="mono" style="font-size:.65rem;margin-right:8px">20260331</span><span style="color:#10b981;font-size:.68rem;margin-right:8px">중수</span><span style="color:#34d399;font-size:.68rem">보상</span></div><div class="iss-det-body">마일스톤/보너스 수령: [마일스톤 완료!] | 골드 +530 | 골드 x5</div></div></td></tr><tr data-cat="보상" class="iss-row" onclick="issToggle('idr_6')"><td class="mono">17:34:11</td><td><span class="pbadge" style="background:#10b98122;color:#10b981;border:1px solid #10b98144">중수</span></td><td><span class="cat-badge" style="color:#34d399">보상</span></td><td class="desc">마일스톤/보너스 수령: [마일스톤 완료!] | 골드 +400 | 골드 x5 <span class="iss-xhint">▶</span></td></tr><tr id="idr_6" class="iss-detail-row" style="display:none"><td colspan="4" class="iss-detail-cell"><div class="iss-det-wrap"><div class="iss-det-meta"><span class="mono" style="font-size:.65rem;margin-right:8px">20260331</span><span style="color:#10b981;font-size:.68rem;margin-right:8px">중수</span><span style="color:#34d399;font-size:.68rem">보상</span></div><div class="iss-det-body">마일스톤/보너스 수령: [마일스톤 완료!] | 골드 +400 | 골드 x5</div></div></td></tr><tr data-cat="반복로그" class="iss-row" onclick="issToggle('idr_7')"><td class="mono">08:30:06</td><td><span class="pbadge" style="background:#10b98122;color:#10b981;border:1px solid #10b98144">중수</span></td><td><span class="cat-badge" style="color:#94a3b8">반복로그</span></td><td class="desc">&#x27;sendHttp &gt; send http https://game-log.supergenecas...&#x27; 424회 반복 <span class="iss-xhint">▶</span></td></tr><tr id="idr_7" class="iss-detail-row" style="display:none"><td colspan="4" class="iss-detail-cell"><div class="iss-det-wrap"><div class="iss-det-meta"><span class="mono" style="font-size:.65rem;margin-right:8px">20260331</span><span style="color:#10b981;font-size:.68rem;margin-right:8px">중수</span><span style="color:#94a3b8;font-size:.68rem">반복로그</span></div><div class="iss-det-body">&#x27;sendHttp &gt; send http https://game-log.supergenecas...&#x27; 424회 반복</div></div></td></tr>
+    </table>
+  </div>
+  <div class="box">
+    <div class="sec-title">비용 상위 스테이지 Top 10</div>
+    <div class="sec-desc">판당 손익이 낮은 스테이지 순위. 소모 비용 대비 보상이 적은 구간을 밸런스 검토 기준으로 활용.</div>
+    <table>
+      <tr><th>#</th><th>스테이지</th><th>손익/판</th><th>횟수</th><th>평균턴</th><th>난이도</th><th>모드</th></tr>
+      <tr><td>1</td><td class="mono">CC_0131</td><td class="cr-low">-7100</td><td>1</td><td>39.0</td><td>보통</td><td><span class="pbadge" style="background:#3b82f622;color:#3b82f6;border:1px solid #3b82f644">고수</span></td></tr><tr><td>2</td><td class="mono">CC_0124</td><td class="cr-low">-3056</td><td>1</td><td>40.0</td><td>보통</td><td><span class="pbadge" style="background:#10b98122;color:#10b981;border:1px solid #10b98144">중수</span></td></tr><tr><td>3</td><td class="mono">CC_0048</td><td class="cr-low">-2003</td><td>1</td><td>43.0</td><td>보통</td><td><span class="pbadge" style="background:#10b98122;color:#10b981;border:1px solid #10b98144">중수</span></td></tr><tr><td>4</td><td class="mono">CC_0007</td><td class="cr-low">-1950</td><td>1</td><td>36.0</td><td>보통</td><td><span class="pbadge" style="background:#3b82f622;color:#3b82f6;border:1px solid #3b82f644">고수</span></td></tr><tr><td>5</td><td class="mono">CC_0187</td><td class="cr-low">-1898</td><td>1</td><td>42.0</td><td>보통</td><td><span class="pbadge" style="background:#3b82f622;color:#3b82f6;border:1px solid #3b82f644">고수</span></td></tr><tr><td>6</td><td class="mono">CC_0052</td><td class="cr-low">-1748</td><td>1</td><td>41.0</td><td>보통</td><td><span class="pbadge" style="background:#10b98122;color:#10b981;border:1px solid #10b98144">중수</span></td></tr><tr><td>7</td><td class="mono">CC_0130</td><td class="cr-low">-1508</td><td>1</td><td>40.0</td><td>보통</td><td><span class="pbadge" style="background:#10b98122;color:#10b981;border:1px solid #10b98144">중수</span></td></tr><tr><td>8</td><td class="mono">CC_0033</td><td class="cr-low">-1496</td><td>1</td><td>45.0</td><td>보통</td><td><span class="pbadge" style="background:#3b82f622;color:#3b82f6;border:1px solid #3b82f644">고수</span></td></tr><tr><td>9</td><td class="mono">CC_0051</td><td class="cr-low">-758</td><td>1</td><td>48.0</td><td>보통</td><td><span class="pbadge" style="background:#10b98122;color:#10b981;border:1px solid #10b98144">중수</span></td></tr><tr><td>10</td><td class="mono">CC_0190</td><td class="cr-low">-536</td><td>1</td><td>42.0</td><td>보통</td><td><span class="pbadge" style="background:#3b82f622;color:#3b82f6;border:1px solid #3b82f644">고수</span></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- 최근 런 목록 -->
+<div class="box">
+  <div class="sec-title">최근 런 목록</div>
+  <div class="sec-desc">손익/판: 판당 평균 골드 순수익 · 골드변화: 런 시작~종료 잔액 차이 · 해머변화: 해머 잔량 변화</div>
+  <table>
+    <tr><th>날짜</th><th>모드</th><th>판수</th><th>평균턴</th><th>손익/판</th><th>골드변화</th><th>해머변화</th><th>소요</th><th></th></tr>
+    <tr><td>2026-03-31 17:29</td><td><span class="pbadge" style="background:#3b82f622;color:#3b82f6;border:1px solid #3b82f644">고수</span></td><td>9</td><td>40.3</td><td>-137</td><td>-901</td><td>+7</td><td>7분 17초</td><td><a href="../../games/SCJ/results/20260331/freeplay/hardcore/freeplay_report_1729_batch01.html" target="_blank" class="rl">상세</a></td></tr><tr><td>2026-03-31 17:37</td><td><span class="pbadge" style="background:#10b98122;color:#10b981;border:1px solid #10b98144">중수</span></td><td>10</td><td>39.6</td><td>-842</td><td>-7,495</td><td>+11</td><td>6분 57초</td><td><a href="../../games/SCJ/results/20260331/freeplay/average/freeplay_report_1737_batch01.html" target="_blank" class="rl">상세</a></td></tr>
+  </table>
+</div>
+
+</div><!-- end tab-overall -->
+
+
+<div id="tab-hardcore" class="tab-panel">
+  <div class="cards" style="margin-bottom:14px">
+    <div class="card" style="border-left:4px solid #3b82f6"><div class="ct" style="color:#3b82f6">골드 회수율</div><div class="cv">98.4%</div><div class="cs">9판 · 1런</div></div>
+    <div class="card" style="border-left:4px solid #3b82f6"><div class="ct" style="color:#3b82f6">골드 손익/판</div><div class="cv">-137</div><div class="cs">잔액변화 -901/런</div></div>
+    <div class="card" style="border-left:4px solid #3b82f6"><div class="ct" style="color:#3b82f6">평균 턴수</div><div class="cv">40.3</div><div class="cs">판당 25.9초</div></div>
+    <div class="card" style="border-left:4px solid #3b82f6"><div class="ct" style="color:#3b82f6">해머 변화/런</div><div class="cv">+7.0</div><div class="cs">검증 17통과/8실패</div></div>
+    <div class="card" style="border-left:4px solid #3b82f6"><div class="ct" style="color:#3b82f6">와일드/판</div><div class="cv">1.11</div><div class="cs">매치/턴 0.67 · 드로우/턴 0.32</div></div>
+    <div class="card" style="border-left:4px solid #3b82f6"><div class="ct" style="color:#3b82f6">최적 배팅</div><div class="cv">x4</div><div class="cs">배수별 최고손익 +1,672/판</div></div>
+    <div class="card" style="border-left:4px solid #3b82f6"><div class="ct" style="color:#3b82f6">난이도 분포</div><div class="cv">9<span style="font-size:.9rem;color:var(--text2)"> / 0 / 0</span></div><div class="cs">보통 / 어려움 / 매우어려움</div></div>
+    <div class="card" style="border-left:4px solid #3b82f6"><div class="ct" style="color:#3b82f6">총 소요시간</div><div class="cv">3분 53초</div><div class="cs">9판 기준</div></div>
+  </div>
+  <div class="g2">
+    <div class="box"><div class="sec-title">런별 골드 회수율</div><canvas id="hardcoreRC" height="140"></canvas></div>
+    <div class="box"><div class="sec-title">런별 골드 손익/판</div><canvas id="hardcoreRG" height="140"></canvas></div>
+  </div>
+  <div class="g2">
+    <div class="box"><div class="sec-title">게임플레이 지표 (매치/턴·드로우/턴·와일드/판)</div><canvas id="hardcoreGP" height="150"></canvas></div>
+    <div class="box"><div class="sec-title">배팅 배수별 골드 손익/판</div><canvas id="hardcoreBT" height="150"></canvas></div>
+  </div>
+  <div class="g2">
+    <div class="box"><div class="sec-title">스테이지 난이도 분포</div><div class="sec-desc">이 모드에서 플레이한 스테이지의 난이도 등급별 개수.</div><canvas id="hardcoreSD" height="150"></canvas></div>
+    <div class="box"><div class="sec-title">이슈 / 특이사항</div>
+      <table><tr><th>시각</th><th>유형</th><th>내용</th></tr><tr><td class="mono">17:25:08</td><td><span class="cat-badge" style="color:#34d399">보상</span></td><td class="desc" title="마일스톤/보너스 수령: [마일스톤 완료!] | 골드 +130 | 골드 x5">마일스톤/보너스 수령: [마일스톤 완료!] | 골드 +130 | 골드 x5</td></tr><tr><td class="mono">17:25:16</td><td><span class="cat-badge" style="color:#34d399">보상</span></td><td class="desc" title="마일스톤/보너스 수령: [마일스톤 완료!] | 골드 +200 | 골드 x5">마일스톤/보너스 수령: [마일스톤 완료!] | 골드 +200 | 골드 x5</td></tr><tr><td class="mono">17:26:10</td><td><span class="cat-badge" style="color:#34d399">보상</span></td><td class="desc" title="마일스톤/보너스 수령: [마일스톤 완료!] | card_back x1 | 골드 x5">마일스톤/보너스 수령: [마일스톤 완료!] | card_back x1 | 골드 x5</td></tr></table>
+    </div>
+  </div>
+  <div class="g2" style="margin-top:14px">
+    <div class="box">
+      <div class="sec-title">골드 잔액 추이 — 최근 런 (9판)</div>
+      <div class="sec-desc">레벨 진행에 따른 골드 잔액 변화.</div>
+      <canvas id="hardcoreGoldSeq" height="110"></canvas>
+    </div>
+    <div class="box">
+      <div class="sec-title">턴 수 / 난이도 — 최근 런</div>
+      <div class="sec-desc"><span style="color:#4ade80">● 클리어</span> &nbsp;<span style="color:#f87171">● 실패</span> &nbsp;· 점선 = 난이도</div>
+      <canvas id="hardcoreTurnDiff" height="110"></canvas>
+    </div>
+  </div>
+  <div class="g2" style="margin-top:14px">
+    <div class="box"><div class="sec-title">콤보 분포</div><div class="sec-desc">레벨당 콤보 횟수 분포. 높은 콤보는 별 보상과 골드 보너스에 직결.</div><canvas id="hardcoreCombo" height="120"></canvas></div>
+    <div class="box"><div class="sec-title">별 보상 분포</div><div class="sec-desc">레벨당 획득한 별 보상 등급별 빈도.</div><canvas id="hardcoreStar" height="120"></canvas></div>
+  </div>
+  <div class="g2" style="margin-top:14px">
+    <div class="box"><div class="sec-title">와일드/스트릭 경제</div><div class="sec-desc">와일드 카드 평균 비용(음수) vs 스트릭 보너스 평균 골드(양수) — 판당 기준.</div><canvas id="hardcoreEcon" height="120"></canvas></div>
+    <div class="box"><div class="sec-title">기믹 타입 분포 <span class="nr">(데이터 없음)</span></div><div class="sec-desc">이벤트 로그에서 감지된 기믹 타입별 발생 횟수.</div><div class="nd">기믹 이벤트 미감지</div></div>
+  </div>
+  <div class="box" style="margin-top:14px">
+    <div class="sec-title">스테이지 목록 (손익 낮은 순)</div>
+    <table><tr><th>#</th><th>스테이지</th><th>손익/판</th><th>횟수</th><th>평균턴</th><th>난이도</th></tr><tr><td>1</td><td class="mono">CC_0131</td><td class="cr-low">-7100</td><td>1</td><td>39.0</td><td>보통</td></tr><tr><td>2</td><td class="mono">CC_0007</td><td class="cr-low">-1950</td><td>1</td><td>36.0</td><td>보통</td></tr><tr><td>3</td><td class="mono">CC_0187</td><td class="cr-low">-1898</td><td>1</td><td>42.0</td><td>보통</td></tr><tr><td>4</td><td class="mono">CC_0033</td><td class="cr-low">-1496</td><td>1</td><td>45.0</td><td>보통</td></tr><tr><td>5</td><td class="mono">CC_0190</td><td class="cr-low">-536</td><td>1</td><td>42.0</td><td>보통</td></tr><tr><td>6</td><td class="mono">CC_0186</td><td class="cr-ok">+475</td><td>1</td><td>41.0</td><td>보통</td></tr><tr><td>7</td><td class="mono">CC_0198</td><td class="cr-ok">+2322</td><td>1</td><td>37.0</td><td>보통</td></tr><tr><td>8</td><td class="mono">CC_0199</td><td class="cr-ok">+4112</td><td>1</td><td>43.0</td><td>보통</td></tr><tr><td>9</td><td class="mono">CC_0197</td><td class="cr-ok">+4840</td><td>1</td><td>38.0</td><td>보통</td></tr></table>
+  </div>
+</div>
+
+<div id="tab-average" class="tab-panel">
+  <div class="cards" style="margin-bottom:14px">
+    <div class="card" style="border-left:4px solid #10b981"><div class="ct" style="color:#10b981">골드 회수율</div><div class="cv">91.1%</div><div class="cs">10판 · 1런</div></div>
+    <div class="card" style="border-left:4px solid #10b981"><div class="ct" style="color:#10b981">골드 손익/판</div><div class="cv">-842</div><div class="cs">잔액변화 -7,495/런</div></div>
+    <div class="card" style="border-left:4px solid #10b981"><div class="ct" style="color:#10b981">평균 턴수</div><div class="cv">39.6</div><div class="cs">판당 24.4초</div></div>
+    <div class="card" style="border-left:4px solid #10b981"><div class="ct" style="color:#10b981">해머 변화/런</div><div class="cv">+11.0</div><div class="cs">검증 21통과/10실패</div></div>
+    <div class="card" style="border-left:4px solid #10b981"><div class="ct" style="color:#10b981">와일드/판</div><div class="cv">1.10</div><div class="cs">매치/턴 0.67 · 드로우/턴 0.33</div></div>
+    <div class="card" style="border-left:4px solid #10b981"><div class="ct" style="color:#10b981">최적 배팅</div><div class="cv">x2</div><div class="cs">배수별 최고손익 +52/판</div></div>
+    <div class="card" style="border-left:4px solid #10b981"><div class="ct" style="color:#10b981">난이도 분포</div><div class="cv">9<span style="font-size:.9rem;color:var(--text2)"> / 1 / 0</span></div><div class="cs">보통 / 어려움 / 매우어려움</div></div>
+    <div class="card" style="border-left:4px solid #10b981"><div class="ct" style="color:#10b981">총 소요시간</div><div class="cv">4분 04초</div><div class="cs">10판 기준</div></div>
+  </div>
+  <div class="g2">
+    <div class="box"><div class="sec-title">런별 골드 회수율</div><canvas id="averageRC" height="140"></canvas></div>
+    <div class="box"><div class="sec-title">런별 골드 손익/판</div><canvas id="averageRG" height="140"></canvas></div>
+  </div>
+  <div class="g2">
+    <div class="box"><div class="sec-title">게임플레이 지표 (매치/턴·드로우/턴·와일드/판)</div><canvas id="averageGP" height="150"></canvas></div>
+    <div class="box"><div class="sec-title">배팅 배수별 골드 손익/판</div><canvas id="averageBT" height="150"></canvas></div>
+  </div>
+  <div class="g2">
+    <div class="box"><div class="sec-title">스테이지 난이도 분포</div><div class="sec-desc">이 모드에서 플레이한 스테이지의 난이도 등급별 개수.</div><canvas id="averageSD" height="150"></canvas></div>
+    <div class="box"><div class="sec-title">이슈 / 특이사항</div>
+      <table><tr><th>시각</th><th>유형</th><th>내용</th></tr><tr><td class="mono">17:30:05</td><td><span class="cat-badge" style="color:#34d399">보상</span></td><td class="desc" title="마일스톤/보너스 수령: [마일스톤 완료!] | card_back x1 | 골드 x5">마일스톤/보너스 수령: [마일스톤 완료!] | card_back x1 | 골드 x5</td></tr><tr><td class="mono">17:33:13</td><td><span class="cat-badge" style="color:#a78bfa">기믹</span></td><td class="desc" title="Lv6(CC_0018) 기믹 1회 — 키&amp;자물쇠 1회">Lv6(CC_0018) 기믹 1회 — 키&amp;자물쇠 1회</td></tr><tr><td class="mono">17:33:22</td><td><span class="cat-badge" style="color:#34d399">보상</span></td><td class="desc" title="마일스톤/보너스 수령: [마일스톤 완료!] | 골드 +530 | 골드 x5">마일스톤/보너스 수령: [마일스톤 완료!] | 골드 +530 | 골드 x5</td></tr><tr><td class="mono">17:34:11</td><td><span class="cat-badge" style="color:#34d399">보상</span></td><td class="desc" title="마일스톤/보너스 수령: [마일스톤 완료!] | 골드 +400 | 골드 x5">마일스톤/보너스 수령: [마일스톤 완료!] | 골드 +400 | 골드 x5</td></tr><tr><td class="mono">08:30:06</td><td><span class="cat-badge" style="color:#94a3b8">반복로그</span></td><td class="desc" title="&#x27;sendHttp &gt; send http https://game-log.supergenecas...&#x27; 424회 반복">&#x27;sendHttp &gt; send http https://game-log.supergenecas...&#x27; 424회 반복</td></tr></table>
+    </div>
+  </div>
+  <div class="g2" style="margin-top:14px">
+    <div class="box">
+      <div class="sec-title">골드 잔액 추이 — 최근 런 (10판)</div>
+      <div class="sec-desc">레벨 진행에 따른 골드 잔액 변화.</div>
+      <canvas id="averageGoldSeq" height="110"></canvas>
+    </div>
+    <div class="box">
+      <div class="sec-title">턴 수 / 난이도 — 최근 런</div>
+      <div class="sec-desc"><span style="color:#4ade80">● 클리어</span> &nbsp;<span style="color:#f87171">● 실패</span> &nbsp;· 점선 = 난이도</div>
+      <canvas id="averageTurnDiff" height="110"></canvas>
+    </div>
+  </div>
+  <div class="g2" style="margin-top:14px">
+    <div class="box"><div class="sec-title">콤보 분포</div><div class="sec-desc">레벨당 콤보 횟수 분포. 높은 콤보는 별 보상과 골드 보너스에 직결.</div><canvas id="averageCombo" height="120"></canvas></div>
+    <div class="box"><div class="sec-title">별 보상 분포</div><div class="sec-desc">레벨당 획득한 별 보상 등급별 빈도.</div><canvas id="averageStar" height="120"></canvas></div>
+  </div>
+  <div class="g2" style="margin-top:14px">
+    <div class="box"><div class="sec-title">와일드/스트릭 경제</div><div class="sec-desc">와일드 카드 평균 비용(음수) vs 스트릭 보너스 평균 골드(양수) — 판당 기준.</div><canvas id="averageEcon" height="120"></canvas></div>
+    <div class="box"><div class="sec-title">기믹 타입 분포</div><div class="sec-desc">이벤트 로그에서 감지된 기믹 타입별 발생 횟수.</div><canvas id="averageGT" height="120"></canvas></div>
+  </div>
+  <div class="box" style="margin-top:14px">
+    <div class="sec-title">스테이지 목록 (손익 낮은 순)</div>
+    <table><tr><th>#</th><th>스테이지</th><th>손익/판</th><th>횟수</th><th>평균턴</th><th>난이도</th></tr><tr><td>1</td><td class="mono">CC_0124</td><td class="cr-low">-3056</td><td>1</td><td>40.0</td><td>보통</td></tr><tr><td>2</td><td class="mono">CC_0048</td><td class="cr-low">-2003</td><td>1</td><td>43.0</td><td>보통</td></tr><tr><td>3</td><td class="mono">CC_0052</td><td class="cr-low">-1748</td><td>1</td><td>41.0</td><td>보통</td></tr><tr><td>4</td><td class="mono">CC_0130</td><td class="cr-low">-1508</td><td>1</td><td>40.0</td><td>보통</td></tr><tr><td>5</td><td class="mono">CC_0051</td><td class="cr-low">-758</td><td>1</td><td>48.0</td><td>보통</td></tr><tr><td>6</td><td class="mono">CC_0047</td><td class="cr-low">-390</td><td>1</td><td>44.0</td><td>보통</td></tr><tr><td>7</td><td class="mono">CC_0065</td><td class="cr-ok">+59</td><td>1</td><td>31.0</td><td>보통</td></tr><tr><td>8</td><td class="mono">CC_0141</td><td class="cr-ok">+65</td><td>1</td><td>28.0</td><td>보통</td></tr><tr><td>9</td><td class="mono">CC_0128</td><td class="cr-ok">+288</td><td>1</td><td>43.0</td><td>보통</td></tr><tr><td>10</td><td class="mono">CC_0018</td><td class="cr-ok">+626</td><td>1</td><td>38.0</td><td>어려움</td></tr></table>
+  </div>
+</div>
+<div id="tab-casual" class="tab-panel"><div class="box"><div class="nd">데이터 없음</div></div></div>
+<div id="tab-struggling" class="tab-panel"><div class="box"><div class="nd">데이터 없음</div></div></div>
+
+<div id="tab-recent" class="tab-panel">
+<div class="rr-section"><div class="rr-mode-hd" style="border-left:3px solid #3b82f6;padding-left:12px;margin-bottom:14px"><span class="pbadge" style="background:#3b82f622;color:#3b82f6;border:1px solid #3b82f644">고수</span><span class="rr-mode-sub"> — 최근 1런 (클릭하여 펼치기)</span></div>
+<details class="rr-detail"><summary class="rr-summary"><span class="rr-date">2026-03-31 17:29</span><span class="rr-tag">9판</span><span class="rr-tag cr-low">골드 -901</span><span class="rr-tag">7분 17초</span></summary><div class="rr-tbl-wrap"><table class="rr-tbl"><thead><tr><th style="width:24px"></th><th>레벨</th><th>스테이지</th><th>결과</th><th>난이도</th><th>턴</th><th>입장료</th><th>아이템</th><th>보상</th><th>손익</th><th>골드잔액</th><th>와일드</th><th>엑스트라덱</th></tr></thead><tbody>
+<tr class="rr-lvl-row" onclick="rrToggle('rrx_hardcore_0_0')" style="cursor:pointer"><td class="rr-expand-btn" id="btn_rrx_hardcore_0_0">＋</td><td>레벨 30</td><td class="mono">CC_0131</td><td class="cr-ok">✔</td><td>보통</td><td>39</td><td class="mono">2,100</td><td class="mono">5,000</td><td class="mono">0</td><td class="mono cr-low">-7,100</td><td class="mono">993,900</td><td>1</td><td>—</td></tr><tr class="rr-lvl-detail" id="rrx_hardcore_0_0" style="display:none"><td></td><td colspan="12"><div class="rr-detail-grid"><div class="rr-dg-item"><span class="rr-dk">입장방식</span><span>gold</span></div><div class="rr-dg-item"><span class="rr-dk">베팅배수</span><span>1x</span></div><div class="rr-dg-item"><span class="rr-dk">소요시간</span><span>26초</span></div><div class="rr-dg-item"><span class="rr-dk">매치수</span><span>22</span></div><div class="rr-dg-item"><span class="rr-dk">드로우수</span><span>17</span></div><div class="rr-dg-item"><span class="rr-dk">필드카드</span><span>26 (앞면 1)</span></div><div class="rr-dg-item"><span class="rr-dk">보너스골드</span><span>0</span></div><div class="rr-dg-item"><span class="rr-dk">플러스카드</span><span>—</span></div><div class="rr-dg-item"><span class="rr-dk">실수 드로우</span><span>—</span></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">클리어보상</span><span>—</span></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">검증결과</span><div class="rr-val-wrap"><span class="rr-val-item cr-low">입장료: 2100</span><span class="rr-val-item cr-ok">난이도 티어: 2 (Normal)</span></div></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">아이템 사용</span><div class="rr-ev-wrap"><span class="rr-ev-tag rr-ev-item">와일드카드 <span style="color:var(--text2)">(5,000골드)</span></span></div></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">기믹 매칭</span><div class="rr-ev-wrap"><span style="color:var(--text2)">없음</span></div></div><div class="rr-dg-item rr-dg-full"><span class="rr-dk">기타 이벤트</span><div class="rr-ev-wrap"><span style="color:var(--text2)">없음</span></div></div></div></td></tr>
+<tr class="rr-lvl-row" onclick="rrToggle('rrx_hardcore_0_1')" style="cursor:pointer"><td class="rr-expand-btn" id="btn_rrx_hardcore_0_1">＋</td><td>레벨 30</td><td class="mono">CC_0199</td><td class="cr-ok">✔</td><td>보통</td><td>43</td><td class="mono">0</td><td class="mono">0</td><td class="mono">4,112</td><td class="mono cr-ok">+4,112</td><td class="mono">998,012</td><td>—</td><td>—</td></tr><tr class="rr-lvl-detail" id="rrx_hardcore_0_1" style="display:none"><td></td><td colspan="12"><div class="rr-detail-grid"><div class="rr-dg-item"><span class="rr-dk">입장방식</span><span>gold</span></div><div class="rr-dg-item"><span class="rr-dk">베팅배수</span><span>1x</span></div><div class="rr-dg-item"><span class="rr-dk">소요시간</span><span>25초</span></div><div class="rr-dg-item"><span class="rr-dk">매치수</span><span>30</span></div><div class="rr-dg-item"><span class="rr-dk">드로우수</span><span>13</span></div><div class="rr-dg-item"><span class="rr-dk">필드카드</span><span>30 (앞면 1)</span></div><div class="rr-dg-item"><span class="rr-dk">보너스골드</span><span>0</span></div><div class="rr-dg-item"><span class="rr-dk">플러스카드</span><span>—</span></div><div class="rr-dg-item"><span class="rr-dk">실수 드로우</span><span>—</span></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">클리어보상</span><span>해머 0, 스타 x3</span></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">검증결과</span><div class="rr-val-wrap"><span class="rr-val-item cr-low">입장료: 2100</span><span class="rr-val-item cr-ok">난이도 티어: 2 (Normal)</span><span class="rr-val-item cr-ok">해머 보상: 0</span></div></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">아이템 사용</span><div class="rr-ev-wrap"><span style="color:var(--text2)">없음</span></div></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">기믹 매칭</span><div class="rr-ev-wrap"><span style="color:var(--text2)">없음</span></div></div><div class="rr-dg-item rr-dg-full"><span class="rr-dk">기타 이벤트</span><div class="rr-ev-wrap"><span style="color:var(--text2)">없음</span></div></div></div></td></tr>
+<tr class="rr-lvl-row" onclick="rrToggle('rrx_hardcore_0_2')" style="cursor:pointer"><td class="rr-expand-btn" id="btn_rrx_hardcore_0_2">＋</td><td>레벨 31</td><td class="mono">CC_0190</td><td class="cr-ok">✔</td><td>보통</td><td>42</td><td class="mono">4,200</td><td class="mono">5,000</td><td class="mono">8,664</td><td class="mono cr-low">-536</td><td class="mono">997,806</td><td>1</td><td>—</td></tr><tr class="rr-lvl-detail" id="rrx_hardcore_0_2" style="display:none"><td></td><td colspan="12"><div class="rr-detail-grid"><div class="rr-dg-item"><span class="rr-dk">입장방식</span><span>gold</span></div><div class="rr-dg-item"><span class="rr-dk">베팅배수</span><span>2x</span></div><div class="rr-dg-item"><span class="rr-dk">소요시간</span><span>27초</span></div><div class="rr-dg-item"><span class="rr-dk">매치수</span><span>28</span></div><div class="rr-dg-item"><span class="rr-dk">드로우수</span><span>13</span></div><div class="rr-dg-item"><span class="rr-dk">필드카드</span><span>32 (앞면 1)</span></div><div class="rr-dg-item"><span class="rr-dk">보너스골드</span><span>330</span></div><div class="rr-dg-item"><span class="rr-dk">플러스카드</span><span>—</span></div><div class="rr-dg-item"><span class="rr-dk">실수 드로우</span><span>—</span></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">클리어보상</span><span>해머 1, 스타 x6, 콤보 1</span></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">검증결과</span><div class="rr-val-wrap"><span class="rr-val-item cr-low">입장료 (x2배수): 4200</span><span class="rr-val-item cr-ok">난이도 티어: 2 (Normal)</span><span class="rr-val-item cr-ok">해머 보상: 1</span></div></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">아이템 사용</span><div class="rr-ev-wrap"><span class="rr-ev-tag rr-ev-item">와일드카드 <span style="color:var(--text2)">(5,000골드)</span></span></div></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">기믹 매칭</span><div class="rr-ev-wrap"><span style="color:var(--text2)">없음</span></div></div><div class="rr-dg-item rr-dg-full"><span class="rr-dk">기타 이벤트</span><div class="rr-ev-wrap"><span style="color:var(--text2)">없음</span></div></div></div></td></tr>
+<tr class="rr-lvl-row" onclick="rrToggle('rrx_hardcore_0_3')" style="cursor:pointer"><td class="rr-expand-btn" id="btn_rrx_hardcore_0_3">＋</td><td>레벨 32</td><td class="mono">CC_0033</td><td class="cr-ok">✔</td><td>보통</td><td>45</td><td class="mono">8,400</td><td class="mono">10,000</td><td class="mono">16,904</td><td class="mono cr-low">-1,496</td><td class="mono">996,310</td><td>2</td><td>—</td></tr><tr class="rr-lvl-detail" id="rrx_hardcore_0_3" style="display:none"><td></td><td colspan="12"><div class="rr-detail-grid"><div class="rr-dg-item"><span class="rr-dk">입장방식</span><span>gold</span></div><div class="rr-dg-item"><span class="rr-dk">베팅배수</span><span>4x</span></div><div class="rr-dg-item"><span class="rr-dk">소요시간</span><span>31초</span></div><div class="rr-dg-item"><span class="rr-dk">매치수</span><span>29</span></div><div class="rr-dg-item"><span class="rr-dk">드로우수</span><span>15</span></div><div class="rr-dg-item"><span class="rr-dk">필드카드</span><span>28 (앞면 1)</span></div><div class="rr-dg-item"><span class="rr-dk">보너스골드</span><span>0</span></div><div class="rr-dg-item"><span class="rr-dk">플러스카드</span><span>—</span></div><div class="rr-dg-item"><span class="rr-dk">실수 드로우</span><span>—</span></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">클리어보상</span><span>해머 1, 스타 x8, 콤보 2</span></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">검증결과</span><div class="rr-val-wrap"><span class="rr-val-item cr-low">입장료 (x4배수): 8400</span><span class="rr-val-item cr-ok">난이도 티어: 2 (Normal)</span><span class="rr-val-item cr-ok">해머 보상: 1</span></div></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">아이템 사용</span><div class="rr-ev-wrap"><span class="rr-ev-tag rr-ev-item">와일드카드 <span style="color:var(--text2)">(5,000골드)</span></span><span class="rr-ev-tag rr-ev-item">와일드카드 <span style="color:var(--text2)">(5,000골드)</span></span></div></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">기믹 매칭</span><div class="rr-ev-wrap"><span style="color:var(--text2)">없음</span></div></div><div class="rr-dg-item rr-dg-full"><span class="rr-dk">기타 이벤트</span><div class="rr-ev-wrap"><span style="color:var(--text2)">없음</span></div></div></div></td></tr>
+<tr class="rr-lvl-row" onclick="rrToggle('rrx_hardcore_0_4')" style="cursor:pointer"><td class="rr-expand-btn" id="btn_rrx_hardcore_0_4">＋</td><td>레벨 33</td><td class="mono">CC_0186</td><td class="cr-ok">✔</td><td>보통</td><td>41</td><td class="mono">2,100</td><td class="mono">0</td><td class="mono">2,575</td><td class="mono cr-ok">+475</td><td class="mono">996,785</td><td>—</td><td>—</td></tr><tr class="rr-lvl-detail" id="rrx_hardcore_0_4" style="display:none"><td></td><td colspan="12"><div class="rr-detail-grid"><div class="rr-dg-item"><span class="rr-dk">입장방식</span><span>gold</span></div><div class="rr-dg-item"><span class="rr-dk">베팅배수</span><span>1x</span></div><div class="rr-dg-item"><span class="rr-dk">소요시간</span><span>23초</span></div><div class="rr-dg-item"><span class="rr-dk">매치수</span><span>28</span></div><div class="rr-dg-item"><span class="rr-dk">드로우수</span><span>13</span></div><div class="rr-dg-item"><span class="rr-dk">필드카드</span><span>28 (앞면 1)</span></div><div class="rr-dg-item"><span class="rr-dk">보너스골드</span><span>0</span></div><div class="rr-dg-item"><span class="rr-dk">플러스카드</span><span>—</span></div><div class="rr-dg-item"><span class="rr-dk">실수 드로우</span><span>—</span></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">클리어보상</span><span>해머 0, 스타 x3</span></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">검증결과</span><div class="rr-val-wrap"><span class="rr-val-item cr-low">입장료: 2100</span><span class="rr-val-item cr-ok">난이도 티어: 2 (Normal)</span><span class="rr-val-item cr-ok">해머 보상: 0</span></div></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">아이템 사용</span><div class="rr-ev-wrap"><span style="color:var(--text2)">없음</span></div></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">기믹 매칭</span><div class="rr-ev-wrap"><span style="color:var(--text2)">없음</span></div></div><div class="rr-dg-item rr-dg-full"><span class="rr-dk">기타 이벤트</span><div class="rr-ev-wrap"><span style="color:var(--text2)">없음</span></div></div></div></td></tr>
+<tr class="rr-lvl-row" onclick="rrToggle('rrx_hardcore_0_5')" style="cursor:pointer"><td class="rr-expand-btn" id="btn_rrx_hardcore_0_5">＋</td><td>레벨 34</td><td class="mono">CC_0187</td><td class="cr-ok">✔</td><td>보통</td><td>42</td><td class="mono">2,100</td><td class="mono">20,000</td><td class="mono">20,202</td><td class="mono cr-low">-1,898</td><td class="mono">994,887</td><td>4</td><td>—</td></tr><tr class="rr-lvl-detail" id="rrx_hardcore_0_5" style="display:none"><td></td><td colspan="12"><div class="rr-detail-grid"><div class="rr-dg-item"><span class="rr-dk">입장방식</span><span>free</span></div><div class="rr-dg-item"><span class="rr-dk">베팅배수</span><span>2x</span></div><div class="rr-dg-item"><span class="rr-dk">소요시간</span><span>33초</span></div><div class="rr-dg-item"><span class="rr-dk">매치수</span><span>30</span></div><div class="rr-dg-item"><span class="rr-dk">드로우수</span><span>11</span></div><div class="rr-dg-item"><span class="rr-dk">필드카드</span><span>29 (앞면 1)</span></div><div class="rr-dg-item"><span class="rr-dk">보너스골드</span><span>0</span></div><div class="rr-dg-item"><span class="rr-dk">플러스카드</span><span>—</span></div><div class="rr-dg-item"><span class="rr-dk">실수 드로우</span><span>—</span></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">클리어보상</span><span>해머 1, 스타 x4, 콤보 1</span></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">검증결과</span><div class="rr-val-wrap"><span class="rr-val-item cr-ok">난이도 티어: 2 (Normal)</span><span class="rr-val-item cr-ok">해머 보상: 1</span></div></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">아이템 사용</span><div class="rr-ev-wrap"><span class="rr-ev-tag rr-ev-item">와일드카드 <span style="color:var(--text2)">(5,000골드)</span></span><span class="rr-ev-tag rr-ev-item">와일드카드 <span style="color:var(--text2)">(5,000골드)</span></span><span class="rr-ev-tag rr-ev-item">와일드카드 <span style="color:var(--text2)">(5,000골드)</span></span><span class="rr-ev-tag rr-ev-item">와일드카드 <span style="color:var(--text2)">(5,000골드)</span></span></div></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">기믹 매칭</span><div class="rr-ev-wrap"><span style="color:var(--text2)">없음</span></div></div><div class="rr-dg-item rr-dg-full"><span class="rr-dk">기타 이벤트</span><div class="rr-ev-wrap"><span style="color:var(--text2)">없음</span></div></div></div></td></tr>
+<tr class="rr-lvl-row" onclick="rrToggle('rrx_hardcore_0_6')" style="cursor:pointer"><td class="rr-expand-btn" id="btn_rrx_hardcore_0_6">＋</td><td>레벨 35</td><td class="mono">CC_0197</td><td class="cr-ok">✔</td><td>보통</td><td>38</td><td class="mono">4,200</td><td class="mono">0</td><td class="mono">9,040</td><td class="mono cr-ok">+4,840</td><td class="mono">999,727</td><td>—</td><td>—</td></tr><tr class="rr-lvl-detail" id="rrx_hardcore_0_6" style="display:none"><td></td><td colspan="12"><div class="rr-detail-grid"><div class="rr-dg-item"><span class="rr-dk">입장방식</span><span>gold</span></div><div class="rr-dg-item"><span class="rr-dk">베팅배수</span><span>4x</span></div><div class="rr-dg-item"><span class="rr-dk">소요시간</span><span>21초</span></div><div class="rr-dg-item"><span class="rr-dk">매치수</span><span>28</span></div><div class="rr-dg-item"><span class="rr-dk">드로우수</span><span>10</span></div><div class="rr-dg-item"><span class="rr-dk">필드카드</span><span>28 (앞면 1)</span></div><div class="rr-dg-item"><span class="rr-dk">보너스골드</span><span>0</span></div><div class="rr-dg-item"><span class="rr-dk">플러스카드</span><span>—</span></div><div class="rr-dg-item"><span class="rr-dk">실수 드로우</span><span>—</span></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">클리어보상</span><span>해머 1, 스타 x4</span></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">검증결과</span><div class="rr-val-wrap"><span class="rr-val-item cr-low">입장료 (x4배수): 4200</span><span class="rr-val-item cr-ok">난이도 티어: 2 (Normal)</span><span class="rr-val-item cr-ok">해머 보상: 1</span></div></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">아이템 사용</span><div class="rr-ev-wrap"><span style="color:var(--text2)">없음</span></div></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">기믹 매칭</span><div class="rr-ev-wrap"><span style="color:var(--text2)">없음</span></div></div><div class="rr-dg-item rr-dg-full"><span class="rr-dk">기타 이벤트</span><div class="rr-ev-wrap"><span style="color:var(--text2)">없음</span></div></div></div></td></tr>
+<tr class="rr-lvl-row" onclick="rrToggle('rrx_hardcore_0_7')" style="cursor:pointer"><td class="rr-expand-btn" id="btn_rrx_hardcore_0_7">＋</td><td>레벨 36</td><td class="mono">CC_0198</td><td class="cr-ok">✔</td><td>보통</td><td>37</td><td class="mono">4,200</td><td class="mono">0</td><td class="mono">6,522</td><td class="mono cr-ok">+2,322</td><td class="mono">1,002,049</td><td>—</td><td>—</td></tr><tr class="rr-lvl-detail" id="rrx_hardcore_0_7" style="display:none"><td></td><td colspan="12"><div class="rr-detail-grid"><div class="rr-dg-item"><span class="rr-dk">입장방식</span><span>gold</span></div><div class="rr-dg-item"><span class="rr-dk">베팅배수</span><span>1x</span></div><div class="rr-dg-item"><span class="rr-dk">소요시간</span><span>20초</span></div><div class="rr-dg-item"><span class="rr-dk">매치수</span><span>25</span></div><div class="rr-dg-item"><span class="rr-dk">드로우수</span><span>12</span></div><div class="rr-dg-item"><span class="rr-dk">필드카드</span><span>25 (앞면 6)</span></div><div class="rr-dg-item"><span class="rr-dk">보너스골드</span><span>0</span></div><div class="rr-dg-item"><span class="rr-dk">플러스카드</span><span>—</span></div><div class="rr-dg-item"><span class="rr-dk">실수 드로우</span><span>—</span></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">클리어보상</span><span>해머 0, 스타 x1</span></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">검증결과</span><div class="rr-val-wrap"><span class="rr-val-item cr-low">입장료: 4200</span><span class="rr-val-item cr-ok">난이도 티어: 2 (Normal)</span><span class="rr-val-item cr-ok">해머 보상: 0</span></div></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">아이템 사용</span><div class="rr-ev-wrap"><span style="color:var(--text2)">없음</span></div></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">기믹 매칭</span><div class="rr-ev-wrap"><span style="color:var(--text2)">없음</span></div></div><div class="rr-dg-item rr-dg-full"><span class="rr-dk">기타 이벤트</span><div class="rr-ev-wrap"><span style="color:var(--text2)">없음</span></div></div></div></td></tr>
+<tr class="rr-lvl-row" onclick="rrToggle('rrx_hardcore_0_8')" style="cursor:pointer"><td class="rr-expand-btn" id="btn_rrx_hardcore_0_8">＋</td><td>레벨 37</td><td class="mono">CC_0007</td><td class="cr-ok">✔</td><td>보통</td><td>36</td><td class="mono">2,100</td><td class="mono">10,000</td><td class="mono">10,150</td><td class="mono cr-low">-1,950</td><td class="mono">1,000,099</td><td>2</td><td>—</td></tr><tr class="rr-lvl-detail" id="rrx_hardcore_0_8" style="display:none"><td></td><td colspan="12"><div class="rr-detail-grid"><div class="rr-dg-item"><span class="rr-dk">입장방식</span><span>gold</span></div><div class="rr-dg-item"><span class="rr-dk">베팅배수</span><span>2x</span></div><div class="rr-dg-item"><span class="rr-dk">소요시간</span><span>24초</span></div><div class="rr-dg-item"><span class="rr-dk">매치수</span><span>25</span></div><div class="rr-dg-item"><span class="rr-dk">드로우수</span><span>11</span></div><div class="rr-dg-item"><span class="rr-dk">필드카드</span><span>25 (앞면 6)</span></div><div class="rr-dg-item"><span class="rr-dk">보너스골드</span><span>0</span></div><div class="rr-dg-item"><span class="rr-dk">플러스카드</span><span>—</span></div><div class="rr-dg-item"><span class="rr-dk">실수 드로우</span><span>—</span></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">클리어보상</span><span>해머 1, 스타 x2</span></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">검증결과</span><div class="rr-val-wrap"><span class="rr-val-item cr-low">입장료 (x2배수): 2100</span><span class="rr-val-item cr-ok">난이도 티어: 2 (Normal)</span><span class="rr-val-item cr-ok">해머 보상: 1</span></div></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">아이템 사용</span><div class="rr-ev-wrap"><span class="rr-ev-tag rr-ev-item">와일드카드 <span style="color:var(--text2)">(5,000골드)</span></span><span class="rr-ev-tag rr-ev-item">와일드카드 <span style="color:var(--text2)">(5,000골드)</span></span></div></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">기믹 매칭</span><div class="rr-ev-wrap"><span style="color:var(--text2)">없음</span></div></div><div class="rr-dg-item rr-dg-full"><span class="rr-dk">기타 이벤트</span><div class="rr-ev-wrap"><span style="color:var(--text2)">없음</span></div></div></div></td></tr>
+</tbody></table></div></details>
+</div>
+<div class="rr-section"><div class="rr-mode-hd" style="border-left:3px solid #10b981;padding-left:12px;margin-bottom:14px"><span class="pbadge" style="background:#10b98122;color:#10b981;border:1px solid #10b98144">중수</span><span class="rr-mode-sub"> — 최근 1런 (클릭하여 펼치기)</span></div>
+<details class="rr-detail"><summary class="rr-summary"><span class="rr-date">2026-03-31 17:37</span><span class="rr-tag">10판</span><span class="rr-tag cr-low">골드 -7,495</span><span class="rr-tag">6분 57초</span></summary><div class="rr-tbl-wrap"><table class="rr-tbl"><thead><tr><th style="width:24px"></th><th>레벨</th><th>스테이지</th><th>결과</th><th>난이도</th><th>턴</th><th>입장료</th><th>아이템</th><th>보상</th><th>손익</th><th>골드잔액</th><th>와일드</th><th>엑스트라덱</th></tr></thead><tbody>
+<tr class="rr-lvl-row" onclick="rrToggle('rrx_average_0_0')" style="cursor:pointer"><td class="rr-expand-btn" id="btn_rrx_average_0_0">＋</td><td>레벨 38</td><td class="mono">CC_0124</td><td class="cr-ok">✔</td><td>보통</td><td>40</td><td class="mono">2,100</td><td class="mono">15,000</td><td class="mono">14,044</td><td class="mono cr-low">-3,056</td><td class="mono">997,043</td><td>3</td><td>—</td></tr><tr class="rr-lvl-detail" id="rrx_average_0_0" style="display:none"><td></td><td colspan="12"><div class="rr-detail-grid"><div class="rr-dg-item"><span class="rr-dk">입장방식</span><span>gold</span></div><div class="rr-dg-item"><span class="rr-dk">베팅배수</span><span>1x</span></div><div class="rr-dg-item"><span class="rr-dk">소요시간</span><span>30초</span></div><div class="rr-dg-item"><span class="rr-dk">매치수</span><span>28</span></div><div class="rr-dg-item"><span class="rr-dk">드로우수</span><span>12</span></div><div class="rr-dg-item"><span class="rr-dk">필드카드</span><span>29 (앞면 1)</span></div><div class="rr-dg-item"><span class="rr-dk">보너스골드</span><span>0</span></div><div class="rr-dg-item"><span class="rr-dk">플러스카드</span><span>—</span></div><div class="rr-dg-item"><span class="rr-dk">실수 드로우</span><span>—</span></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">클리어보상</span><span>해머 1, 스타 x3, 콤보 8</span></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">검증결과</span><div class="rr-val-wrap"><span class="rr-val-item cr-low">입장료: 2100</span><span class="rr-val-item cr-ok">난이도 티어: 2 (Normal)</span><span class="rr-val-item cr-ok">해머 보상: 1</span></div></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">아이템 사용</span><div class="rr-ev-wrap"><span class="rr-ev-tag rr-ev-item">와일드카드 <span style="color:var(--text2)">(5,000골드)</span></span><span class="rr-ev-tag rr-ev-item">와일드카드 <span style="color:var(--text2)">(5,000골드)</span></span><span class="rr-ev-tag rr-ev-item">와일드카드 <span style="color:var(--text2)">(5,000골드)</span></span></div></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">기믹 매칭</span><div class="rr-ev-wrap"><span style="color:var(--text2)">없음</span></div></div><div class="rr-dg-item rr-dg-full"><span class="rr-dk">기타 이벤트</span><div class="rr-ev-wrap"><span style="color:var(--text2)">없음</span></div></div></div></td></tr>
+<tr class="rr-lvl-row" onclick="rrToggle('rrx_average_0_1')" style="cursor:pointer"><td class="rr-expand-btn" id="btn_rrx_average_0_1">＋</td><td>레벨 39</td><td class="mono">CC_0128</td><td class="cr-ok">✔</td><td>보통</td><td>43</td><td class="mono">2,100</td><td class="mono">0</td><td class="mono">2,388</td><td class="mono cr-ok">+288</td><td class="mono">997,331</td><td>—</td><td>—</td></tr><tr class="rr-lvl-detail" id="rrx_average_0_1" style="display:none"><td></td><td colspan="12"><div class="rr-detail-grid"><div class="rr-dg-item"><span class="rr-dk">입장방식</span><span>gold</span></div><div class="rr-dg-item"><span class="rr-dk">베팅배수</span><span>2x</span></div><div class="rr-dg-item"><span class="rr-dk">소요시간</span><span>23초</span></div><div class="rr-dg-item"><span class="rr-dk">매치수</span><span>30</span></div><div class="rr-dg-item"><span class="rr-dk">드로우수</span><span>13</span></div><div class="rr-dg-item"><span class="rr-dk">필드카드</span><span>30 (앞면 3)</span></div><div class="rr-dg-item"><span class="rr-dk">보너스골드</span><span>0</span></div><div class="rr-dg-item"><span class="rr-dk">플러스카드</span><span>—</span></div><div class="rr-dg-item"><span class="rr-dk">실수 드로우</span><span>—</span></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">클리어보상</span><span>해머 1, 스타 x6</span></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">검증결과</span><div class="rr-val-wrap"><span class="rr-val-item cr-low">입장료 (x2배수): 2100</span><span class="rr-val-item cr-ok">난이도 티어: 2 (Normal)</span><span class="rr-val-item cr-ok">해머 보상: 1</span></div></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">아이템 사용</span><div class="rr-ev-wrap"><span style="color:var(--text2)">없음</span></div></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">기믹 매칭</span><div class="rr-ev-wrap"><span style="color:var(--text2)">없음</span></div></div><div class="rr-dg-item rr-dg-full"><span class="rr-dk">기타 이벤트</span><div class="rr-ev-wrap"><span style="color:var(--text2)">없음</span></div></div></div></td></tr>
+<tr class="rr-lvl-row" onclick="rrToggle('rrx_average_0_2')" style="cursor:pointer"><td class="rr-expand-btn" id="btn_rrx_average_0_2">＋</td><td>레벨 40</td><td class="mono">CC_0130</td><td class="cr-ok">✔</td><td>보통</td><td>40</td><td class="mono">8,400</td><td class="mono">10,000</td><td class="mono">16,892</td><td class="mono cr-low">-1,508</td><td class="mono">995,823</td><td>2</td><td>—</td></tr><tr class="rr-lvl-detail" id="rrx_average_0_2" style="display:none"><td></td><td colspan="12"><div class="rr-detail-grid"><div class="rr-dg-item"><span class="rr-dk">입장방식</span><span>gold</span></div><div class="rr-dg-item"><span class="rr-dk">베팅배수</span><span>4x</span></div><div class="rr-dg-item"><span class="rr-dk">소요시간</span><span>26초</span></div><div class="rr-dg-item"><span class="rr-dk">매치수</span><span>28</span></div><div class="rr-dg-item"><span class="rr-dk">드로우수</span><span>12</span></div><div class="rr-dg-item"><span class="rr-dk">필드카드</span><span>28 (앞면 4)</span></div><div class="rr-dg-item"><span class="rr-dk">보너스골드</span><span>0</span></div><div class="rr-dg-item"><span class="rr-dk">플러스카드</span><span>—</span></div><div class="rr-dg-item"><span class="rr-dk">실수 드로우</span><span>—</span></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">클리어보상</span><span>해머 0, 스타 x8, 콤보 5</span></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">검증결과</span><div class="rr-val-wrap"><span class="rr-val-item cr-low">입장료 (x4배수): 8400</span><span class="rr-val-item cr-ok">난이도 티어: 2 (Normal)</span><span class="rr-val-item cr-ok">해머 보상: 0</span></div></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">아이템 사용</span><div class="rr-ev-wrap"><span class="rr-ev-tag rr-ev-item">와일드카드 <span style="color:var(--text2)">(5,000골드)</span></span><span class="rr-ev-tag rr-ev-item">와일드카드 <span style="color:var(--text2)">(5,000골드)</span></span></div></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">기믹 매칭</span><div class="rr-ev-wrap"><span style="color:var(--text2)">없음</span></div></div><div class="rr-dg-item rr-dg-full"><span class="rr-dk">기타 이벤트</span><div class="rr-ev-wrap"><span style="color:var(--text2)">없음</span></div></div></div></td></tr>
+<tr class="rr-lvl-row" onclick="rrToggle('rrx_average_0_3')" style="cursor:pointer"><td class="rr-expand-btn" id="btn_rrx_average_0_3">＋</td><td>레벨 41</td><td class="mono">CC_0141</td><td class="cr-ok">✔</td><td>보통</td><td>28</td><td class="mono">2,100</td><td class="mono">0</td><td class="mono">2,165</td><td class="mono cr-ok">+65</td><td class="mono">995,888</td><td>—</td><td>—</td></tr><tr class="rr-lvl-detail" id="rrx_average_0_3" style="display:none"><td></td><td colspan="12"><div class="rr-detail-grid"><div class="rr-dg-item"><span class="rr-dk">입장방식</span><span>gold</span></div><div class="rr-dg-item"><span class="rr-dk">베팅배수</span><span>1x</span></div><div class="rr-dg-item"><span class="rr-dk">소요시간</span><span>15초</span></div><div class="rr-dg-item"><span class="rr-dk">매치수</span><span>19</span></div><div class="rr-dg-item"><span class="rr-dk">드로우수</span><span>9</span></div><div class="rr-dg-item"><span class="rr-dk">필드카드</span><span>19 (앞면 7)</span></div><div class="rr-dg-item"><span class="rr-dk">보너스골드</span><span>0</span></div><div class="rr-dg-item"><span class="rr-dk">플러스카드</span><span>—</span></div><div class="rr-dg-item"><span class="rr-dk">실수 드로우</span><span>—</span></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">클리어보상</span><span>해머 1, 스타 x1, 콤보 2</span></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">검증결과</span><div class="rr-val-wrap"><span class="rr-val-item cr-low">입장료: 2100</span><span class="rr-val-item cr-ok">난이도 티어: 2 (Normal)</span><span class="rr-val-item cr-ok">해머 보상: 1</span></div></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">아이템 사용</span><div class="rr-ev-wrap"><span style="color:var(--text2)">없음</span></div></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">기믹 매칭</span><div class="rr-ev-wrap"><span class="rr-ev-tag rr-ev-gimmick">러너</span></div></div><div class="rr-dg-item rr-dg-full"><span class="rr-dk">기타 이벤트</span><div class="rr-ev-wrap"><span style="color:var(--text2)">없음</span></div></div></div></td></tr>
+<tr class="rr-lvl-row" onclick="rrToggle('rrx_average_0_4')" style="cursor:pointer"><td class="rr-expand-btn" id="btn_rrx_average_0_4">＋</td><td>레벨 42</td><td class="mono">CC_0018</td><td class="cr-ok">✔</td><td>어려움</td><td>38</td><td class="mono">2,100</td><td class="mono">0</td><td class="mono">2,726</td><td class="mono cr-ok">+626</td><td class="mono">997,044</td><td>—</td><td>—</td></tr><tr class="rr-lvl-detail" id="rrx_average_0_4" style="display:none"><td></td><td colspan="12"><div class="rr-detail-grid"><div class="rr-dg-item"><span class="rr-dk">입장방식</span><span>gold</span></div><div class="rr-dg-item"><span class="rr-dk">베팅배수</span><span>2x</span></div><div class="rr-dg-item"><span class="rr-dk">소요시간</span><span>20초</span></div><div class="rr-dg-item"><span class="rr-dk">매치수</span><span>23</span></div><div class="rr-dg-item"><span class="rr-dk">드로우수</span><span>14</span></div><div class="rr-dg-item"><span class="rr-dk">필드카드</span><span>27 (앞면 4)</span></div><div class="rr-dg-item"><span class="rr-dk">보너스골드</span><span>530</span></div><div class="rr-dg-item"><span class="rr-dk">플러스카드</span><span>—</span></div><div class="rr-dg-item"><span class="rr-dk">실수 드로우</span><span>—</span></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">클리어보상</span><span>해머 0, 스타 x4, 콤보 3</span></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">검증결과</span><div class="rr-val-wrap"><span class="rr-val-item cr-low">입장료 (x2배수): 2100</span><span class="rr-val-item cr-ok">난이도 티어: 3 (Hard)</span><span class="rr-val-item cr-ok">해머 보상: 0</span><span class="rr-val-item cr-ok">플러스카드 기믹 해금: 레벨 42</span></div></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">아이템 사용</span><div class="rr-ev-wrap"><span style="color:var(--text2)">없음</span></div></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">기믹 매칭</span><div class="rr-ev-wrap"><span class="rr-ev-tag rr-ev-gimmick">러너</span><span class="rr-ev-tag rr-ev-gimmick">키&amp;자물쇠</span></div></div><div class="rr-dg-item rr-dg-full"><span class="rr-dk">기타 이벤트</span><div class="rr-ev-wrap"><span style="color:var(--text2)">없음</span></div></div></div></td></tr>
+<tr class="rr-lvl-row" onclick="rrToggle('rrx_average_0_5')" style="cursor:pointer"><td class="rr-expand-btn" id="btn_rrx_average_0_5">＋</td><td>레벨 43</td><td class="mono">CC_0047</td><td class="cr-ok">✔</td><td>보통</td><td>44</td><td class="mono">8,400</td><td class="mono">5,000</td><td class="mono">13,010</td><td class="mono cr-low">-390</td><td class="mono">997,054</td><td>1</td><td>—</td></tr><tr class="rr-lvl-detail" id="rrx_average_0_5" style="display:none"><td></td><td colspan="12"><div class="rr-detail-grid"><div class="rr-dg-item"><span class="rr-dk">입장방식</span><span>gold</span></div><div class="rr-dg-item"><span class="rr-dk">베팅배수</span><span>4x</span></div><div class="rr-dg-item"><span class="rr-dk">소요시간</span><span>26초</span></div><div class="rr-dg-item"><span class="rr-dk">매치수</span><span>31</span></div><div class="rr-dg-item"><span class="rr-dk">드로우수</span><span>12</span></div><div class="rr-dg-item"><span class="rr-dk">필드카드</span><span>31 (앞면 10)</span></div><div class="rr-dg-item"><span class="rr-dk">보너스골드</span><span>400</span></div><div class="rr-dg-item"><span class="rr-dk">플러스카드</span><span>—</span></div><div class="rr-dg-item"><span class="rr-dk">실수 드로우</span><span>—</span></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">클리어보상</span><span>해머 1, 스타 x12, 콤보 1</span></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">검증결과</span><div class="rr-val-wrap"><span class="rr-val-item cr-low">입장료 (x4배수): 8400</span><span class="rr-val-item cr-ok">난이도 티어: 2 (Normal)</span><span class="rr-val-item cr-ok">해머 보상: 1</span></div></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">아이템 사용</span><div class="rr-ev-wrap"><span class="rr-ev-tag rr-ev-item">와일드카드 <span style="color:var(--text2)">(5,000골드)</span></span></div></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">기믹 매칭</span><div class="rr-ev-wrap"><span style="color:var(--text2)">없음</span></div></div><div class="rr-dg-item rr-dg-full"><span class="rr-dk">기타 이벤트</span><div class="rr-ev-wrap"><span style="color:var(--text2)">없음</span></div></div></div></td></tr>
+<tr class="rr-lvl-row" onclick="rrToggle('rrx_average_0_6')" style="cursor:pointer"><td class="rr-expand-btn" id="btn_rrx_average_0_6">＋</td><td>레벨 44</td><td class="mono">CC_0048</td><td class="cr-ok">✔</td><td>보통</td><td>43</td><td class="mono">2,100</td><td class="mono">10,000</td><td class="mono">10,097</td><td class="mono cr-low">-2,003</td><td class="mono">995,051</td><td>2</td><td>—</td></tr><tr class="rr-lvl-detail" id="rrx_average_0_6" style="display:none"><td></td><td colspan="12"><div class="rr-detail-grid"><div class="rr-dg-item"><span class="rr-dk">입장방식</span><span>gold</span></div><div class="rr-dg-item"><span class="rr-dk">베팅배수</span><span>1x</span></div><div class="rr-dg-item"><span class="rr-dk">소요시간</span><span>28초</span></div><div class="rr-dg-item"><span class="rr-dk">매치수</span><span>28</span></div><div class="rr-dg-item"><span class="rr-dk">드로우수</span><span>15</span></div><div class="rr-dg-item"><span class="rr-dk">필드카드</span><span>28 (앞면 5)</span></div><div class="rr-dg-item"><span class="rr-dk">보너스골드</span><span>0</span></div><div class="rr-dg-item"><span class="rr-dk">플러스카드</span><span>—</span></div><div class="rr-dg-item"><span class="rr-dk">실수 드로우</span><span>—</span></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">클리어보상</span><span>해머 1, 스타 x2, 콤보 2</span></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">검증결과</span><div class="rr-val-wrap"><span class="rr-val-item cr-low">입장료: 2100</span><span class="rr-val-item cr-ok">난이도 티어: 2 (Normal)</span><span class="rr-val-item cr-ok">해머 보상: 1</span></div></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">아이템 사용</span><div class="rr-ev-wrap"><span class="rr-ev-tag rr-ev-item">와일드카드 <span style="color:var(--text2)">(5,000골드)</span></span><span class="rr-ev-tag rr-ev-item">와일드카드 <span style="color:var(--text2)">(5,000골드)</span></span></div></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">기믹 매칭</span><div class="rr-ev-wrap"><span style="color:var(--text2)">없음</span></div></div><div class="rr-dg-item rr-dg-full"><span class="rr-dk">기타 이벤트</span><div class="rr-ev-wrap"><span style="color:var(--text2)">없음</span></div></div></div></td></tr>
+<tr class="rr-lvl-row" onclick="rrToggle('rrx_average_0_7')" style="cursor:pointer"><td class="rr-expand-btn" id="btn_rrx_average_0_7">＋</td><td>레벨 45</td><td class="mono">CC_0051</td><td class="cr-ok">✔</td><td>보통</td><td>48</td><td class="mono">2,100</td><td class="mono">5,000</td><td class="mono">6,342</td><td class="mono cr-low">-758</td><td class="mono">994,293</td><td>1</td><td>—</td></tr><tr class="rr-lvl-detail" id="rrx_average_0_7" style="display:none"><td></td><td colspan="12"><div class="rr-detail-grid"><div class="rr-dg-item"><span class="rr-dk">입장방식</span><span>gold</span></div><div class="rr-dg-item"><span class="rr-dk">베팅배수</span><span>2x</span></div><div class="rr-dg-item"><span class="rr-dk">소요시간</span><span>28초</span></div><div class="rr-dg-item"><span class="rr-dk">매치수</span><span>28</span></div><div class="rr-dg-item"><span class="rr-dk">드로우수</span><span>19</span></div><div class="rr-dg-item"><span class="rr-dk">필드카드</span><span>28 (앞면 7)</span></div><div class="rr-dg-item"><span class="rr-dk">보너스골드</span><span>0</span></div><div class="rr-dg-item"><span class="rr-dk">플러스카드</span><span>—</span></div><div class="rr-dg-item"><span class="rr-dk">실수 드로우</span><span>—</span></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">클리어보상</span><span>해머 1, 스타 x4, 콤보 1</span></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">검증결과</span><div class="rr-val-wrap"><span class="rr-val-item cr-low">입장료 (x2배수): 2100</span><span class="rr-val-item cr-ok">난이도 티어: 2 (Normal)</span><span class="rr-val-item cr-ok">해머 보상: 1</span></div></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">아이템 사용</span><div class="rr-ev-wrap"><span class="rr-ev-tag rr-ev-item">와일드카드 <span style="color:var(--text2)">(5,000골드)</span></span></div></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">기믹 매칭</span><div class="rr-ev-wrap"><span style="color:var(--text2)">없음</span></div></div><div class="rr-dg-item rr-dg-full"><span class="rr-dk">기타 이벤트</span><div class="rr-ev-wrap"><span style="color:var(--text2)">없음</span></div></div></div></td></tr>
+<tr class="rr-lvl-row" onclick="rrToggle('rrx_average_0_8')" style="cursor:pointer"><td class="rr-expand-btn" id="btn_rrx_average_0_8">＋</td><td>레벨 46</td><td class="mono">CC_0052</td><td class="cr-ok">✔</td><td>보통</td><td>41</td><td class="mono">8,400</td><td class="mono">10,000</td><td class="mono">16,652</td><td class="mono cr-low">-1,748</td><td class="mono">992,545</td><td>2</td><td>—</td></tr><tr class="rr-lvl-detail" id="rrx_average_0_8" style="display:none"><td></td><td colspan="12"><div class="rr-detail-grid"><div class="rr-dg-item"><span class="rr-dk">입장방식</span><span>gold</span></div><div class="rr-dg-item"><span class="rr-dk">베팅배수</span><span>4x</span></div><div class="rr-dg-item"><span class="rr-dk">소요시간</span><span>27초</span></div><div class="rr-dg-item"><span class="rr-dk">매치수</span><span>28</span></div><div class="rr-dg-item"><span class="rr-dk">드로우수</span><span>13</span></div><div class="rr-dg-item"><span class="rr-dk">필드카드</span><span>28 (앞면 9)</span></div><div class="rr-dg-item"><span class="rr-dk">보너스골드</span><span>0</span></div><div class="rr-dg-item"><span class="rr-dk">플러스카드</span><span>—</span></div><div class="rr-dg-item"><span class="rr-dk">실수 드로우</span><span>—</span></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">클리어보상</span><span>해머 1, 스타 x4, 콤보 4</span></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">검증결과</span><div class="rr-val-wrap"><span class="rr-val-item cr-low">입장료 (x4배수): 8400</span><span class="rr-val-item cr-ok">난이도 티어: 2 (Normal)</span><span class="rr-val-item cr-ok">해머 보상: 1</span></div></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">아이템 사용</span><div class="rr-ev-wrap"><span class="rr-ev-tag rr-ev-item">와일드카드 <span style="color:var(--text2)">(5,000골드)</span></span><span class="rr-ev-tag rr-ev-item">와일드카드 <span style="color:var(--text2)">(5,000골드)</span></span></div></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">기믹 매칭</span><div class="rr-ev-wrap"><span style="color:var(--text2)">없음</span></div></div><div class="rr-dg-item rr-dg-full"><span class="rr-dk">기타 이벤트</span><div class="rr-ev-wrap"><span style="color:var(--text2)">없음</span></div></div></div></td></tr>
+<tr class="rr-lvl-row" onclick="rrToggle('rrx_average_0_9')" style="cursor:pointer"><td class="rr-expand-btn" id="btn_rrx_average_0_9">＋</td><td>레벨 47</td><td class="mono">CC_0065</td><td class="cr-ok">✔</td><td>보통</td><td>31</td><td class="mono">2,100</td><td class="mono">0</td><td class="mono">2,159</td><td class="mono cr-ok">+59</td><td class="mono">992,604</td><td>—</td><td>—</td></tr><tr class="rr-lvl-detail" id="rrx_average_0_9" style="display:none"><td></td><td colspan="12"><div class="rr-detail-grid"><div class="rr-dg-item"><span class="rr-dk">입장방식</span><span>gold</span></div><div class="rr-dg-item"><span class="rr-dk">베팅배수</span><span>1x</span></div><div class="rr-dg-item"><span class="rr-dk">소요시간</span><span>16초</span></div><div class="rr-dg-item"><span class="rr-dk">매치수</span><span>21</span></div><div class="rr-dg-item"><span class="rr-dk">드로우수</span><span>10</span></div><div class="rr-dg-item"><span class="rr-dk">필드카드</span><span>20 (앞면 7)</span></div><div class="rr-dg-item"><span class="rr-dk">보너스골드</span><span>0</span></div><div class="rr-dg-item"><span class="rr-dk">플러스카드</span><span>—</span></div><div class="rr-dg-item"><span class="rr-dk">실수 드로우</span><span>—</span></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">클리어보상</span><span>해머 1, 스타 x1</span></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">검증결과</span><div class="rr-val-wrap"><span class="rr-val-item cr-low">입장료: 2100</span><span class="rr-val-item cr-ok">난이도 티어: 2 (Normal)</span><span class="rr-val-item cr-ok">해머 보상: 1</span></div></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">아이템 사용</span><div class="rr-ev-wrap"><span style="color:var(--text2)">없음</span></div></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">기믹 매칭</span><div class="rr-ev-wrap"><span class="rr-ev-tag rr-ev-gimmick">얼음 ×2</span></div></div><div class="rr-dg-item rr-dg-full"><span class="rr-dk">기타 이벤트</span><div class="rr-ev-wrap"><span style="color:var(--text2)">없음</span></div></div></div></td></tr>
+</tbody></table></div></details>
+</div>
+<script>function rrToggle(id){var r=document.getElementById(id);var b=document.getElementById("btn_"+id);if(!r)return;var show=r.style.display==="none";r.style.display=show?"table-row":"none";if(b)b.textContent=show?"－":"＋";}</script>
+</div>
+
+<div id="tab-issues" class="tab-panel">
+<div class="g2" style="margin-bottom:14px">
+  <div class="box">
+    <div class="sec-title">중단 런</div>
+    <div class="sec-desc">골드 부족 등 비정상 중단 런 목록. stop_reason이 기록된 런만 표시.</div>
+    <table>
+      <tr><th>날짜</th><th>모드</th><th>판수</th><th>중단 원인</th><th>골드변화</th><th></th></tr>
+      <tr><td colspan="6" class="nd">중단/실패 런 없음 ✓</td></tr>
+    </table>
+  </div>
+  <div class="box">
+    <div class="sec-title">검증 실패</div>
+    <div class="sec-desc">게임 내부 골드 계산(입장료·아이템·보상)이 예상 값과 불일치한 건수.</div>
+    <div class="val-summary">
+      <div class="val-rate" style="color:#ef4444">67.9%</div>
+      <div class="val-sub">통과 38 / 실패 18</div>
+    </div>
+    <table>
+      <tr><th>모드</th><th>통과</th><th>실패</th><th>통과율</th></tr>
+      <tr><td><span class="pbadge" style="background:#3b82f622;color:#3b82f6;border:1px solid #3b82f644">고수</span></td><td>17</td><td class="cr-low">8</td><td class="cr-low">68.0%</td></tr><tr><td><span class="pbadge" style="background:#10b98122;color:#10b981;border:1px solid #10b98144">중수</span></td><td>21</td><td class="cr-low">10</td><td class="cr-low">67.7%</td></tr><tr><td><span class="pbadge" style="background:#f59e0b22;color:#f59e0b;border:1px solid #f59e0b44">하수</span></td><td>—</td><td>—</td><td>—</td></tr><tr><td><span class="pbadge" style="background:#ef444422;color:#ef4444;border:1px solid #ef444444">초보</span></td><td>—</td><td>—</td><td>—</td></tr>
+    </table>
+  </div>
+</div>
+<div class="box">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px">
+    <div class="sec-title" style="margin-bottom:0">이슈 / 특이사항 전체</div>
+    <div style="display:flex;gap:4px;flex-wrap:wrap;align-items:center">
+      <button class="ifl ifl-active" onclick="iFilter(this,'all')">전체</button>
+      <button class="ifl" onclick="iFilter(this,'버그')" style="--fc:#ef4444">버그</button>
+      <button class="ifl" onclick="iFilter(this,'골드')" style="--fc:#fbbf24">골드이상</button>
+      <button class="ifl" onclick="iFilter(this,'반복로그')" style="--fc:#94a3b8">반복로그</button>
+      <button class="ifl" onclick="iFilter(this,'기믹')" style="--fc:#a78bfa">기믹</button>
+      <button class="ifl" onclick="iFilter(this,'보상')" style="--fc:#34d399">보상</button>
+      <button class="ifl" onclick="iFilter(this,'좀비')" style="--fc:#f97316">좀비</button>
+    </div>
+  </div>
+  <div class="sec-desc" style="margin-bottom:10px">테스트 중 감지된 이벤트. <span style="color:#ef4444">버그</span>·<span style="color:#fbbf24">골드이상</span>·<span style="color:#94a3b8">반복로그</span>는 검토 필요. <span style="color:#a78bfa">기믹</span>·<span style="color:#34d399">보상</span>은 정상 게임플레이.</div>
+  <table id="iss-tbl">
+    <tr><th>시각</th><th>모드</th><th>유형</th><th>내용</th></tr>
+    <tr data-cat="보상" class="iss-row" onclick="issToggle('idr_0')"><td class="mono">17:25:08</td><td><span class="pbadge" style="background:#3b82f622;color:#3b82f6;border:1px solid #3b82f644">고수</span></td><td><span class="cat-badge" style="color:#34d399">보상</span></td><td class="desc">마일스톤/보너스 수령: [마일스톤 완료!] | 골드 +130 | 골드 x5 <span class="iss-xhint">▶</span></td></tr><tr id="idr_0" class="iss-detail-row" style="display:none"><td colspan="4" class="iss-detail-cell"><div class="iss-det-wrap"><div class="iss-det-meta"><span class="mono" style="font-size:.65rem;margin-right:8px">20260331</span><span style="color:#3b82f6;font-size:.68rem;margin-right:8px">고수</span><span style="color:#34d399;font-size:.68rem">보상</span></div><div class="iss-det-body">마일스톤/보너스 수령: [마일스톤 완료!] | 골드 +130 | 골드 x5</div></div></td></tr><tr data-cat="보상" class="iss-row" onclick="issToggle('idr_1')"><td class="mono">17:25:16</td><td><span class="pbadge" style="background:#3b82f622;color:#3b82f6;border:1px solid #3b82f644">고수</span></td><td><span class="cat-badge" style="color:#34d399">보상</span></td><td class="desc">마일스톤/보너스 수령: [마일스톤 완료!] | 골드 +200 | 골드 x5 <span class="iss-xhint">▶</span></td></tr><tr id="idr_1" class="iss-detail-row" style="display:none"><td colspan="4" class="iss-detail-cell"><div class="iss-det-wrap"><div class="iss-det-meta"><span class="mono" style="font-size:.65rem;margin-right:8px">20260331</span><span style="color:#3b82f6;font-size:.68rem;margin-right:8px">고수</span><span style="color:#34d399;font-size:.68rem">보상</span></div><div class="iss-det-body">마일스톤/보너스 수령: [마일스톤 완료!] | 골드 +200 | 골드 x5</div></div></td></tr><tr data-cat="보상" class="iss-row" onclick="issToggle('idr_2')"><td class="mono">17:26:10</td><td><span class="pbadge" style="background:#3b82f622;color:#3b82f6;border:1px solid #3b82f644">고수</span></td><td><span class="cat-badge" style="color:#34d399">보상</span></td><td class="desc">마일스톤/보너스 수령: [마일스톤 완료!] | card_back x1 | 골드 x5 <span class="iss-xhint">▶</span></td></tr><tr id="idr_2" class="iss-detail-row" style="display:none"><td colspan="4" class="iss-detail-cell"><div class="iss-det-wrap"><div class="iss-det-meta"><span class="mono" style="font-size:.65rem;margin-right:8px">20260331</span><span style="color:#3b82f6;font-size:.68rem;margin-right:8px">고수</span><span style="color:#34d399;font-size:.68rem">보상</span></div><div class="iss-det-body">마일스톤/보너스 수령: [마일스톤 완료!] | card_back x1 | 골드 x5</div></div></td></tr><tr data-cat="보상" class="iss-row" onclick="issToggle('idr_3')"><td class="mono">17:30:05</td><td><span class="pbadge" style="background:#10b98122;color:#10b981;border:1px solid #10b98144">중수</span></td><td><span class="cat-badge" style="color:#34d399">보상</span></td><td class="desc">마일스톤/보너스 수령: [마일스톤 완료!] | card_back x1 | 골드 x5 <span class="iss-xhint">▶</span></td></tr><tr id="idr_3" class="iss-detail-row" style="display:none"><td colspan="4" class="iss-detail-cell"><div class="iss-det-wrap"><div class="iss-det-meta"><span class="mono" style="font-size:.65rem;margin-right:8px">20260331</span><span style="color:#10b981;font-size:.68rem;margin-right:8px">중수</span><span style="color:#34d399;font-size:.68rem">보상</span></div><div class="iss-det-body">마일스톤/보너스 수령: [마일스톤 완료!] | card_back x1 | 골드 x5</div></div></td></tr><tr data-cat="기믹" class="iss-row" onclick="issToggle('idr_4')"><td class="mono">17:33:13</td><td><span class="pbadge" style="background:#10b98122;color:#10b981;border:1px solid #10b98144">중수</span></td><td><span class="cat-badge" style="color:#a78bfa">기믹</span></td><td class="desc">Lv6(CC_0018) 기믹 1회 — 키&amp;자물쇠 1회 <span class="iss-xhint">▶</span></td></tr><tr id="idr_4" class="iss-detail-row" style="display:none"><td colspan="4" class="iss-detail-cell"><div class="iss-det-wrap"><div class="iss-det-meta"><span class="mono" style="font-size:.65rem;margin-right:8px">20260331</span><span style="color:#10b981;font-size:.68rem;margin-right:8px">중수</span><span style="color:#a78bfa;font-size:.68rem">기믹</span></div><div class="iss-det-body">Lv6(CC_0018) 기믹 1회 — 키&amp;자물쇠 1회</div></div></td></tr><tr data-cat="보상" class="iss-row" onclick="issToggle('idr_5')"><td class="mono">17:33:22</td><td><span class="pbadge" style="background:#10b98122;color:#10b981;border:1px solid #10b98144">중수</span></td><td><span class="cat-badge" style="color:#34d399">보상</span></td><td class="desc">마일스톤/보너스 수령: [마일스톤 완료!] | 골드 +530 | 골드 x5 <span class="iss-xhint">▶</span></td></tr><tr id="idr_5" class="iss-detail-row" style="display:none"><td colspan="4" class="iss-detail-cell"><div class="iss-det-wrap"><div class="iss-det-meta"><span class="mono" style="font-size:.65rem;margin-right:8px">20260331</span><span style="color:#10b981;font-size:.68rem;margin-right:8px">중수</span><span style="color:#34d399;font-size:.68rem">보상</span></div><div class="iss-det-body">마일스톤/보너스 수령: [마일스톤 완료!] | 골드 +530 | 골드 x5</div></div></td></tr><tr data-cat="보상" class="iss-row" onclick="issToggle('idr_6')"><td class="mono">17:34:11</td><td><span class="pbadge" style="background:#10b98122;color:#10b981;border:1px solid #10b98144">중수</span></td><td><span class="cat-badge" style="color:#34d399">보상</span></td><td class="desc">마일스톤/보너스 수령: [마일스톤 완료!] | 골드 +400 | 골드 x5 <span class="iss-xhint">▶</span></td></tr><tr id="idr_6" class="iss-detail-row" style="display:none"><td colspan="4" class="iss-detail-cell"><div class="iss-det-wrap"><div class="iss-det-meta"><span class="mono" style="font-size:.65rem;margin-right:8px">20260331</span><span style="color:#10b981;font-size:.68rem;margin-right:8px">중수</span><span style="color:#34d399;font-size:.68rem">보상</span></div><div class="iss-det-body">마일스톤/보너스 수령: [마일스톤 완료!] | 골드 +400 | 골드 x5</div></div></td></tr><tr data-cat="반복로그" class="iss-row" onclick="issToggle('idr_7')"><td class="mono">08:30:06</td><td><span class="pbadge" style="background:#10b98122;color:#10b981;border:1px solid #10b98144">중수</span></td><td><span class="cat-badge" style="color:#94a3b8">반복로그</span></td><td class="desc">&#x27;sendHttp &gt; send http https://game-log.supergenecas...&#x27; 424회 반복 <span class="iss-xhint">▶</span></td></tr><tr id="idr_7" class="iss-detail-row" style="display:none"><td colspan="4" class="iss-detail-cell"><div class="iss-det-wrap"><div class="iss-det-meta"><span class="mono" style="font-size:.65rem;margin-right:8px">20260331</span><span style="color:#10b981;font-size:.68rem;margin-right:8px">중수</span><span style="color:#94a3b8;font-size:.68rem">반복로그</span></div><div class="iss-det-body">&#x27;sendHttp &gt; send http https://game-log.supergenecas...&#x27; 424회 반복</div></div></td></tr>
+  </table>
+  <div id="iss-empty" style="display:none;text-align:center;padding:20px;color:#3d6080;font-family:'IBM Plex Mono',monospace;font-size:.7rem;letter-spacing:.05em">해당 카테고리 이벤트 없음</div>
+</div>
+<style>
+.ifl{background:none;border:1px solid rgba(56,189,248,.18);color:#5b7a99;font-family:'Oxanium',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 11px;cursor:pointer;border-radius:4px;transition:all .15s;--fc:#38bdf8}
+.ifl:hover,.ifl.ifl-active{color:var(--fc);border-color:var(--fc)}
+.ifl.ifl-active{background:rgba(255,255,255,.05)}
+.iss-row{cursor:pointer;transition:background .12s}
+.iss-row:hover{background:rgba(0,212,255,.04)}
+.iss-xhint{font-size:.6rem;color:#2a4a6a;margin-left:6px;transition:transform .2s;display:inline-block;vertical-align:middle}
+.iss-xhint.open{transform:rotate(90deg);color:#00d4ff}
+.iss-detail-row{background:rgba(0,10,22,.6)}
+.iss-detail-cell{padding:0 !important}
+.iss-det-wrap{padding:10px 16px 14px 16px;border-top:1px solid rgba(0,212,255,.08)}
+.iss-det-meta{display:flex;gap:12px;align-items:center;margin-bottom:6px;opacity:.7}
+.iss-det-body{font-family:'IBM Plex Mono',monospace;font-size:.68rem;color:#7faac8;white-space:pre-wrap;word-break:break-all;line-height:1.6;background:rgba(0,212,255,.02);border:1px solid rgba(0,212,255,.07);border-radius:4px;padding:8px 10px}
+</style>
 <script>
-var GAMES = ["scj","ctz"];
-function switchGame(id, btn) {
-  document.querySelectorAll('.gtab').forEach(function(b) { b.classList.remove('active'); });
-  btn.classList.add('active');
-  GAMES.forEach(function(g) {
-    var f = document.getElementById('frame-' + g);
-    if (f) f.style.display = (g === id) ? 'block' : 'none';
-  });
+function issToggle(id){
+  var det=document.getElementById(id);
+  if(!det)return;
+  var hint=det.previousElementSibling.querySelector('.iss-xhint');
+  var open=det.style.display==='table-row';
+  det.style.display=open?'none':'table-row';
+  if(hint)hint.classList.toggle('open',!open);
 }
+function iFilter(btn,cat){
+  document.querySelectorAll('.ifl').forEach(function(b){b.classList.remove('ifl-active')});
+  btn.classList.add('ifl-active');
+  var rows=document.querySelectorAll('#iss-tbl tr[data-cat]');
+  var n=0;
+  rows.forEach(function(r){
+    var show=cat==='all'||r.dataset.cat===cat;
+    r.style.display=show?'':'none';
+    if(show)n++;
+    /* collapse detail row when main row is hidden */
+    var det=document.getElementById('idr_'+r.rowIndex);
+    if(!show&&det){det.style.display='none';var h=r.querySelector('.iss-xhint');if(h)h.classList.remove('open');}
+  });
+  /* also hide all detail rows that belong to hidden cats */
+  document.querySelectorAll('.iss-detail-row').forEach(function(d){
+    var prev=d.previousElementSibling;
+    if(prev&&prev.style.display==='none')d.style.display='none';
+  });
+  var empty=document.getElementById('iss-empty');
+  var ndTd=document.querySelector('#iss-tbl td.nd');
+  if(ndTd){
+    ndTd.closest('tr').style.display=cat==='all'?'':'none';
+    empty.style.display=cat!=='all'?'block':'none';
+  }else{
+    empty.style.display=n===0?'block':'none';
+  }
+}
+</script>
+</div>
+
+<script>
+const D={responsive:true,
+  plugins:{legend:{labels:{color:'#94a3b8',font:{size:10}}}},
+  scales:{
+    x:{ticks:{color:'#64748b',font:{size:10}},grid:{color:'#1e293b'}},
+    y:{ticks:{color:'#64748b',font:{size:10}},grid:{color:'#334155'}}
+  }};
+const noLegend = {...D,plugins:{legend:{display:false}}};
+
+new Chart('cEff',  {type:'bar', data:{labels:["고수", "중수", "하수", "초보"],datasets:[{label:"골드 회수율",data:[98.4, 91.1, 0.0, 0.0],backgroundColor:"#6366f1",borderRadius:5}]},   options:noLegend});
+new Chart('cGold', {type:'bar', data:{labels:["고수", "중수", "하수", "초보"],datasets:[{label:"골드손익",data:[-137, -842, 0, 0],backgroundColor:"#f59e0b",borderRadius:5}]},   options:noLegend});
+new Chart('cTurns',{type:'bar', data:{labels:["고수", "중수", "하수", "초보"],datasets:[{label:"평균턴",data:[40.3, 39.6, 0.0, 0.0],backgroundColor:"#3b82f6",borderRadius:5}]},  options:noLegend});
+new Chart('cGimmick',{type:'bar',data:{labels:["고수", "중수", "하수", "초보"],datasets:[{label:"기믹",data:[0.0, 0.1, 0.0, 0.0],backgroundColor:"#ef4444",borderRadius:5},{label:"플러스카드",data:[0.0, 0.0, 0.0, 0.0],backgroundColor:"#a78bfa",borderRadius:5}]},options:D});
+
+new Chart('cRunEff', {type:'line',data:{labels:["런1"],datasets:[{label:"고수",data:[106.8],borderColor:"#3b82f6",backgroundColor:"#3b82f622",tension:0.3,fill:false,pointRadius:3,spanGaps:false},{label:"중수",data:[98.4],borderColor:"#10b981",backgroundColor:"#10b98122",tension:0.3,fill:false,pointRadius:3,spanGaps:false}]},  options:D});
+new Chart('cRunGold',{type:'line',data:{labels:["런1"],datasets:[{label:"고수",data:[-137],borderColor:"#3b82f6",backgroundColor:"#3b82f622",tension:0.3,fill:false,pointRadius:3,spanGaps:false},{label:"중수",data:[-842],borderColor:"#10b981",backgroundColor:"#10b98122",tension:0.3,fill:false,pointRadius:3,spanGaps:false}]},options:D});
+
+new Chart('cDayEff',  {type:'line',data:{labels:["20260331"],datasets:[{label:"고수",data:[106.8],borderColor:"#3b82f6",backgroundColor:"#3b82f622",tension:0.3,fill:false,pointRadius:3,spanGaps:false},{label:"중수",data:[98.4],borderColor:"#10b981",backgroundColor:"#10b98122",tension:0.3,fill:false,pointRadius:3,spanGaps:false}]},  options:D});
+
+new Chart('cDayTurns',{type:'line',data:{labels:["20260331"],datasets:[{label:"고수",data:[40.3],borderColor:"#3b82f6",backgroundColor:"#3b82f622",tension:0.3,fill:false,pointRadius:3,spanGaps:false},{label:"중수",data:[39.6],borderColor:"#10b981",backgroundColor:"#10b98122",tension:0.3,fill:false,pointRadius:3,spanGaps:false}]},options:D});
+new Chart('cDayDiff', {type:'line',data:{labels:["20260331"],datasets:[{label:"고수",data:[2.0],borderColor:"#3b82f6",backgroundColor:"#3b82f622",tension:0.3,fill:false,pointRadius:3,spanGaps:false},{label:"중수",data:[2.1],borderColor:"#10b981",backgroundColor:"#10b98122",tension:0.3,fill:false,pointRadius:3,spanGaps:false}]}, options:{...D,scales:{...D.scales,y:{...D.scales.y,min:1,max:4,ticks:{stepSize:1,color:'#64748b',font:{size:10},callback:function(v){return v===2?'보통':v===3?'어려움':v===4?'매우어려움':v}}}}}});
+
+new Chart('cGP',{type:'bar', data:{labels:["매치/턴", "드로우/턴", "와일드/판"],datasets:[{label:"고수",data:[0.67, 0.32, 1.11],backgroundColor:"#3b82f6",borderRadius:5},{label:"중수",data:[0.67, 0.33, 1.10],backgroundColor:"#10b981",borderRadius:5},{label:"하수",data:[0.00, 0.00, 0.00],backgroundColor:"#f59e0b",borderRadius:5},{label:"초보",data:[0.00, 0.00, 0.00],backgroundColor:"#ef4444",borderRadius:5}]}, options:D});
+new Chart('cBet',{type:'line',data:{labels:["x1", "x2", "x4"],datasets:[{label:"고수",data:[-48, -1461, 1672],borderColor:"#3b82f6",backgroundColor:"#3b82f622",tension:0.3,fill:false,pointRadius:3,spanGaps:false},{label:"중수",data:[-1234, 52, -1215],borderColor:"#10b981",backgroundColor:"#10b98122",tension:0.3,fill:false,pointRadius:3,spanGaps:false},{label:"하수",data:[null, null, null],borderColor:"#f59e0b",backgroundColor:"#f59e0b22",tension:0.3,fill:false,pointRadius:3,spanGaps:false},{label:"초보",data:[null, null, null],borderColor:"#ef4444",backgroundColor:"#ef444422",tension:0.3,fill:false,pointRadius:3,spanGaps:false}]},options:D});
+
+new Chart('cWild',{type:'bar',data:{labels:["고수", "중수", "하수", "초보"],datasets:[{label:"와일드비용",data:[-5555.6, -5500.0, 0.0, 0.0],backgroundColor:"#f87171",borderRadius:5}]},options:{...D,plugins:{...D.plugins}}});
+new Chart('cStreak',{type:'bar',data:{labels:["고수", "중수", "하수", "초보"],datasets:[{label:"스트릭보너스",data:[38.7, 12.1, 0.0, 0.0],backgroundColor:"#34d399",borderRadius:5}]},options:D});
+new Chart('cMiss',{type:'bar',data:{labels:["고수", "중수", "하수", "초보"],datasets:[{label:"미스드로우",data:[0.00, 2.10, 0.00, 0.00],backgroundColor:"#f59e0b",borderRadius:5}]},options:D});
+new Chart('cCombo',{type:'bar',data:{labels:["고수", "중수", "하수", "초보"],datasets:[{label:"콤보",data:[0.44, 2.60, 0.00, 0.00],backgroundColor:"#818cf8",borderRadius:5}]},options:D});
+
+new Chart('cTrend',{type:'line',data:{labels:["20260331"],datasets:[{label:"고수",data:[-137],borderColor:"#3b82f6",backgroundColor:"#3b82f622",tension:0.3,fill:false,pointRadius:3,spanGaps:false},{label:"중수",data:[-842],borderColor:"#10b981",backgroundColor:"#10b98122",tension:0.3,fill:false,pointRadius:3,spanGaps:false}]},options:D});
+
+function showTab(id){
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  document.querySelector('[data-tab="'+id+'"]').classList.add('active');
+  requestAnimationFrame(()=>Object.values(Chart.instances).forEach(c=>{c.resize();c.update('none');}));
+}
+
+
+new Chart('hardcoreRC',{type:'line',data:{labels:["런1"],datasets:[{label:"골드 회수율",data:[106.8],borderColor:"#3b82f6",backgroundColor:"#3b82f622",tension:0.3,fill:false,pointRadius:3,spanGaps:false}]},options:noLegend});
+new Chart('hardcoreRG',{type:'line',data:{labels:["런1"],datasets:[{label:"손익/판",data:[-137],borderColor:"#3b82f6",backgroundColor:"#3b82f622",tension:0.3,fill:false,pointRadius:3,spanGaps:false}]},options:noLegend});
+new Chart('hardcoreGP',{type:'bar', data:{labels:["매치/턴","드로우/턴","와일드/판"],datasets:[{label:"고수",data:[0.67, 0.32, 1.11],backgroundColor:"#3b82f6",borderRadius:5}]},options:noLegend});
+new Chart('hardcoreBT',{type:'line',data:{labels:["x1", "x2", "x4"],datasets:[{label:"손익/판",data:[-48, -1461, 1672],borderColor:"#3b82f6",backgroundColor:"#3b82f622",tension:0.3,fill:false,pointRadius:3,spanGaps:false}]},options:noLegend});
+new Chart('hardcoreSD',{type:'bar', data:{labels:["보통","어려움","매우어려움"],datasets:[{label:"스테이지수",data:[9, 0, 0],backgroundColor:"#3b82f6",borderRadius:5}]},options:noLegend});
+(function(){
+  var L=["1", "2", "3", "4", "5", "6", "7", "8", "9"],G=[993900, 998012, 997806, 996310, 996785, 994887, 999727, 1002049, 1000099],T=[39, 43, 42, 45, 41, 42, 38, 37, 36],D=[2, 2, 2, 2, 2, 2, 2, 2, 2],C=["#4ade80","#4ade80","#4ade80","#4ade80","#4ade80","#4ade80","#4ade80","#4ade80","#4ade80"];
+  var dg='rgba(56,189,248,.06)',tk='#64748b';
+  new Chart('hardcoreGoldSeq',{type:'line',data:{labels:L,datasets:[{label:'골드',data:G,borderColor:'#facc15',backgroundColor:'rgba(250,204,21,0.06)',fill:true,tension:0.3,pointRadius:1,borderWidth:2}]},options:{responsive:true,animation:false,plugins:{legend:{labels:{color:'#e2e8f0',boxWidth:10}}},scales:{x:{ticks:{color:tk,maxTicksLimit:20},grid:{color:dg}},y:{ticks:{color:tk},grid:{color:dg}}}}});
+  new Chart('hardcoreTurnDiff',{type:'line',data:{labels:L,datasets:[{label:'턴 수',data:T,borderColor:'#60a5fa',backgroundColor:C,fill:false,tension:0.3,pointRadius:4,borderWidth:2,pointBorderColor:C,yAxisID:'y'},{label:'난이도',data:D,borderColor:'#f87171',backgroundColor:'transparent',fill:false,tension:0,pointRadius:0,borderWidth:1.5,borderDash:[4,4],yAxisID:'y1'}]},options:{responsive:true,animation:false,plugins:{legend:{labels:{color:'#e2e8f0',boxWidth:10}}},scales:{x:{ticks:{color:tk,maxTicksLimit:20},grid:{color:dg}},y:{ticks:{color:tk},grid:{color:dg},title:{display:true,text:'턴',color:tk}},y1:{position:'right',min:0,max:5,ticks:{color:tk,stepSize:1},grid:{display:false},title:{display:true,text:'난이도',color:tk}}}}});
+})();
+new Chart('hardcoreCombo',{type:'bar',data:{labels:["0", "1", "2"],datasets:[{label:'레벨수',data:[6, 2, 1],backgroundColor:'#3b82f688',borderColor:'#3b82f6',borderWidth:1,borderRadius:3}]},options:{responsive:true,animation:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#64748b'},grid:{color:'rgba(56,189,248,.06)'}},y:{ticks:{color:'#64748b'},grid:{color:'rgba(56,189,248,.06)'}}}}});
+new Chart('hardcoreStar',{type:'bar',data:{labels:["0", "x1", "x2", "x3", "x4", "x6", "x8"],datasets:[{label:'레벨수',data:[1, 1, 1, 2, 2, 1, 1],backgroundColor:'#3b82f688',borderColor:'#3b82f6',borderWidth:1,borderRadius:3}]},options:{responsive:true,animation:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#64748b'},grid:{color:'rgba(56,189,248,.06)'}},y:{ticks:{color:'#64748b'},grid:{color:'rgba(56,189,248,.06)'}}}}});
+new Chart('hardcoreEcon',{type:'bar',data:{labels:['와일드 비용','스트릭 보너스'],datasets:[{label:'골드',data:[-5555.6, 38.7],backgroundColor:['#3b82f644','#3b82f6'],borderColor:'#3b82f6',borderWidth:1,borderRadius:3}]},options:{responsive:true,animation:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#64748b'},grid:{color:'rgba(56,189,248,.06)'}},y:{ticks:{color:'#64748b'},grid:{color:'rgba(56,189,248,.06)'}}}}});
+
+new Chart('averageRC',{type:'line',data:{labels:["런1"],datasets:[{label:"골드 회수율",data:[98.4],borderColor:"#10b981",backgroundColor:"#10b98122",tension:0.3,fill:false,pointRadius:3,spanGaps:false}]},options:noLegend});
+new Chart('averageRG',{type:'line',data:{labels:["런1"],datasets:[{label:"손익/판",data:[-842],borderColor:"#10b981",backgroundColor:"#10b98122",tension:0.3,fill:false,pointRadius:3,spanGaps:false}]},options:noLegend});
+new Chart('averageGP',{type:'bar', data:{labels:["매치/턴","드로우/턴","와일드/판"],datasets:[{label:"중수",data:[0.67, 0.33, 1.10],backgroundColor:"#10b981",borderRadius:5}]},options:noLegend});
+new Chart('averageBT',{type:'line',data:{labels:["x1", "x2", "x4"],datasets:[{label:"손익/판",data:[-1234, 52, -1215],borderColor:"#10b981",backgroundColor:"#10b98122",tension:0.3,fill:false,pointRadius:3,spanGaps:false}]},options:noLegend});
+new Chart('averageSD',{type:'bar', data:{labels:["보통","어려움","매우어려움"],datasets:[{label:"스테이지수",data:[9, 1, 0],backgroundColor:"#10b981",borderRadius:5}]},options:noLegend});
+(function(){
+  var L=["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],G=[997043, 997331, 995823, 995888, 997044, 997054, 995051, 994293, 992545, 992604],T=[40, 43, 40, 28, 38, 44, 43, 48, 41, 31],D=[2, 2, 2, 2, 3, 2, 2, 2, 2, 2],C=["#4ade80","#4ade80","#4ade80","#4ade80","#4ade80","#4ade80","#4ade80","#4ade80","#4ade80","#4ade80"];
+  var dg='rgba(56,189,248,.06)',tk='#64748b';
+  new Chart('averageGoldSeq',{type:'line',data:{labels:L,datasets:[{label:'골드',data:G,borderColor:'#facc15',backgroundColor:'rgba(250,204,21,0.06)',fill:true,tension:0.3,pointRadius:1,borderWidth:2}]},options:{responsive:true,animation:false,plugins:{legend:{labels:{color:'#e2e8f0',boxWidth:10}}},scales:{x:{ticks:{color:tk,maxTicksLimit:20},grid:{color:dg}},y:{ticks:{color:tk},grid:{color:dg}}}}});
+  new Chart('averageTurnDiff',{type:'line',data:{labels:L,datasets:[{label:'턴 수',data:T,borderColor:'#60a5fa',backgroundColor:C,fill:false,tension:0.3,pointRadius:4,borderWidth:2,pointBorderColor:C,yAxisID:'y'},{label:'난이도',data:D,borderColor:'#f87171',backgroundColor:'transparent',fill:false,tension:0,pointRadius:0,borderWidth:1.5,borderDash:[4,4],yAxisID:'y1'}]},options:{responsive:true,animation:false,plugins:{legend:{labels:{color:'#e2e8f0',boxWidth:10}}},scales:{x:{ticks:{color:tk,maxTicksLimit:20},grid:{color:dg}},y:{ticks:{color:tk},grid:{color:dg},title:{display:true,text:'턴',color:tk}},y1:{position:'right',min:0,max:5,ticks:{color:tk,stepSize:1},grid:{display:false},title:{display:true,text:'난이도',color:tk}}}}});
+})();
+new Chart('averageCombo',{type:'bar',data:{labels:["0", "1", "2", "3", "4", "5", "8"],datasets:[{label:'레벨수',data:[2, 2, 2, 1, 1, 1, 1],backgroundColor:'#10b98188',borderColor:'#10b981',borderWidth:1,borderRadius:3}]},options:{responsive:true,animation:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#64748b'},grid:{color:'rgba(56,189,248,.06)'}},y:{ticks:{color:'#64748b'},grid:{color:'rgba(56,189,248,.06)'}}}}});
+new Chart('averageStar',{type:'bar',data:{labels:["x1", "x2", "x3", "x4", "x6", "x8", "x12"],datasets:[{label:'레벨수',data:[2, 1, 1, 3, 1, 1, 1],backgroundColor:'#10b98188',borderColor:'#10b981',borderWidth:1,borderRadius:3}]},options:{responsive:true,animation:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#64748b'},grid:{color:'rgba(56,189,248,.06)'}},y:{ticks:{color:'#64748b'},grid:{color:'rgba(56,189,248,.06)'}}}}});
+new Chart('averageGT',{type:'bar',data:{labels:["러너", "얼음"],datasets:[{label:'발생',data:[2, 2],backgroundColor:'#a78bfa88',borderColor:'#a78bfa',borderWidth:1,borderRadius:3}]},options:{responsive:true,animation:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#64748b'},grid:{color:'rgba(56,189,248,.06)'}},y:{ticks:{color:'#64748b'},grid:{color:'rgba(56,189,248,.06)'}}}}});
+new Chart('averageEcon',{type:'bar',data:{labels:['와일드 비용','스트릭 보너스'],datasets:[{label:'골드',data:[-5500.0, 12.1],backgroundColor:['#10b98144','#10b981'],borderColor:'#10b981',borderWidth:1,borderRadius:3}]},options:{responsive:true,animation:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#64748b'},grid:{color:'rgba(56,189,248,.06)'}},y:{ticks:{color:'#64748b'},grid:{color:'rgba(56,189,248,.06)'}}}}});
 </script>
 </body>
 </html>

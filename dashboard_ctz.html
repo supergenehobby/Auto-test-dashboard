@@ -52,7 +52,7 @@ details[open] summary{border-bottom:1px solid var(--border)}
 <body>
 <div class="topbar">
   <h1>CTZ 프리플레이 대시보드</h1>
-  <span class="ts">갱신: 2026-03-31 17:52:46 · 총 2런</span>
+  <span class="ts">갱신: 2026-03-31 18:07:38 · 총 4런</span>
 </div>
 <div class="tabs"><button class="tab active" onclick="showTab('overview')">종합</button>
 <button class="tab" onclick="showTab('hardcore')">고수</button>
@@ -63,10 +63,11 @@ details[open] summary{border-bottom:1px solid var(--border)}
 <button class="tab" onclick="showTab('issues')">에러/이슈</button>
 </div>
 <div class="content active" id="tab-overview">
-<div class="cards"><div class="card"><div class="label" style="color:#3b82f6">고수</div><div class="val" style="color:#3b82f6">20.0%</div><div class="sub">10판 · 2런</div></div>
+<div class="cards"><div class="card"><div class="label" style="color:#3b82f6">고수</div><div class="val" style="color:#3b82f6">31.6%</div><div class="sub">19판 · 4런</div></div>
 <div class="card dim"><div class="label" style="color:#10b981">중수</div><div class="val" style="color:#10b981">—</div><div class="sub">데이터 없음</div></div>
 <div class="card dim"><div class="label" style="color:#f59e0b">하수</div><div class="val" style="color:#f59e0b">—</div><div class="sub">데이터 없음</div></div>
 <div class="card dim"><div class="label" style="color:#ef4444">초보</div><div class="val" style="color:#ef4444">—</div><div class="sub">데이터 없음</div></div>
+<div class="card"><div class="label" style="color:#f59e0b">슬롯풀 노출</div><div class="val" style="color:#f59e0b">5</div><div class="sub">게임오버 팝업 총 횟수</div></div>
 </div>
 <div class="chart-row">
   <div class="chart-wrap"><h2>페르소나별 클리어율</h2><canvas id="personaCrChart" height="160"></canvas></div>
@@ -83,21 +84,25 @@ details[open] summary{border-bottom:1px solid var(--border)}
       <th>평균점수</th><th>평균시간</th><th>난이도</th><th>기획CR</th>
     </tr></thead>
     <tbody><tr><td>TF_139</td><td>10</td><td>2</td><td>20.0%</td><td>1721</td><td>12초</td><td>3.0</td><td>79%</td></tr>
+<tr><td>TF_141</td><td>6</td><td>2</td><td>33.3%</td><td>1743</td><td>10초</td><td>3.0</td><td>88%</td></tr>
+<tr><td>ZM_114</td><td>3</td><td>2</td><td>66.7%</td><td>1720</td><td>7초</td><td>3.0</td><td>79%</td></tr>
 </tbody>
   </table>
 </div>
 </div>
 <div class="content" id="tab-hardcore">
-<div class="cards"><div class="card"><div class="label" style="color:#3b82f6">클리어율</div><div class="val" style="color:#3b82f6">20.0%</div><div class="sub">10판 · 2런</div></div><div class="card"><div class="label">평균 소요시간/판</div><div class="val">12초</div></div><div class="card"><div class="label">평균 점수</div><div class="val">1721</div></div></div>
+<div class="cards"><div class="card"><div class="label" style="color:#3b82f6">클리어율</div><div class="val" style="color:#3b82f6">31.6%</div><div class="sub">19판 · 4런</div></div><div class="card"><div class="label">평균 소요시간/판</div><div class="val">10초</div></div><div class="card"><div class="label">평균 점수</div><div class="val">1728</div></div></div>
 <div class="chart-wrap"><h2>런별 클리어율 추이</h2><canvas id="trendChart_hardcore" height="120"></canvas></div>
 <div class="tbl-wrap">
   <table>
     <thead><tr><th>스테이지</th><th>등장</th><th>클리어</th><th>클리어율</th><th>평균점수</th><th>평균시간</th></tr></thead>
     <tbody><tr><td>TF_139</td><td>10</td><td>2</td><td>20.0%</td><td>1721</td><td>12초</td></tr>
+<tr><td>TF_141</td><td>6</td><td>2</td><td>33.3%</td><td>1743</td><td>10초</td></tr>
+<tr><td>ZM_114</td><td>3</td><td>2</td><td>66.7%</td><td>1720</td><td>7초</td></tr>
 </tbody>
   </table>
 </div>
-<script>(function(){var ctx=document.getElementById('trendChart_hardcore');if(!ctx)return;new Chart(ctx,{type:'line',data:{labels:["2026-03-31 17:38", "2026-03-31 17:51"],datasets:[{label:"클리어율(%)",data:[0.0, 40.0],borderColor:'#3b82f6',backgroundColor:'#3b82f622',fill:true,tension:0.3,pointRadius:3,borderWidth:2}]},options:{responsive:true,animation:false,plugins:{legend:{labels:{color:'#cdd9e8',boxWidth:10}}},scales:{x:{ticks:{color:'#4e6a85',maxTicksLimit:20},grid:{color:'rgba(56,189,248,.06)'}},y:{min:0,max:100,ticks:{color:'#4e6a85'},grid:{color:'rgba(56,189,248,.06)'}}}}});})();</script>
+<script>(function(){var ctx=document.getElementById('trendChart_hardcore');if(!ctx)return;new Chart(ctx,{type:'line',data:{labels:["2026-03-31 17:38", "2026-03-31 17:51", "2026-03-31 17:56", "2026-03-31 17:58"],datasets:[{label:"클리어율(%)",data:[0.0, 40.0, 20.0, 75.0],borderColor:'#3b82f6',backgroundColor:'#3b82f622',fill:true,tension:0.3,pointRadius:3,borderWidth:2}]},options:{responsive:true,animation:false,plugins:{legend:{labels:{color:'#cdd9e8',boxWidth:10}}},scales:{x:{ticks:{color:'#4e6a85',maxTicksLimit:20},grid:{color:'rgba(56,189,248,.06)'}},y:{min:0,max:100,ticks:{color:'#4e6a85'},grid:{color:'rgba(56,189,248,.06)'}}}}});})();</script>
 </div>
 <div class="content" id="tab-average">
 <div class="cards"><div class="card dim"><div class="label" style="color:#10b981">클리어율</div><div class="val" style="color:#10b981">0.0%</div><div class="sub">0판 · 0런</div></div><div class="card dim"><div class="label">평균 소요시간/판</div><div class="val">—</div></div><div class="card dim"><div class="label">평균 점수</div><div class="val">0</div></div></div>
@@ -106,6 +111,8 @@ details[open] summary{border-bottom:1px solid var(--border)}
   <table>
     <thead><tr><th>스테이지</th><th>등장</th><th>클리어</th><th>클리어율</th><th>평균점수</th><th>평균시간</th></tr></thead>
     <tbody><tr><td>TF_139</td><td>10</td><td>2</td><td>20.0%</td><td>1721</td><td>12초</td></tr>
+<tr><td>TF_141</td><td>6</td><td>2</td><td>33.3%</td><td>1743</td><td>10초</td></tr>
+<tr><td>ZM_114</td><td>3</td><td>2</td><td>66.7%</td><td>1720</td><td>7초</td></tr>
 </tbody>
   </table>
 </div>
@@ -118,6 +125,8 @@ details[open] summary{border-bottom:1px solid var(--border)}
   <table>
     <thead><tr><th>스테이지</th><th>등장</th><th>클리어</th><th>클리어율</th><th>평균점수</th><th>평균시간</th></tr></thead>
     <tbody><tr><td>TF_139</td><td>10</td><td>2</td><td>20.0%</td><td>1721</td><td>12초</td></tr>
+<tr><td>TF_141</td><td>6</td><td>2</td><td>33.3%</td><td>1743</td><td>10초</td></tr>
+<tr><td>ZM_114</td><td>3</td><td>2</td><td>66.7%</td><td>1720</td><td>7초</td></tr>
 </tbody>
   </table>
 </div>
@@ -130,6 +139,8 @@ details[open] summary{border-bottom:1px solid var(--border)}
   <table>
     <thead><tr><th>스테이지</th><th>등장</th><th>클리어</th><th>클리어율</th><th>평균점수</th><th>평균시간</th></tr></thead>
     <tbody><tr><td>TF_139</td><td>10</td><td>2</td><td>20.0%</td><td>1721</td><td>12초</td></tr>
+<tr><td>TF_141</td><td>6</td><td>2</td><td>33.3%</td><td>1743</td><td>10초</td></tr>
+<tr><td>ZM_114</td><td>3</td><td>2</td><td>66.7%</td><td>1720</td><td>7초</td></tr>
 </tbody>
   </table>
 </div>
@@ -138,10 +149,54 @@ details[open] summary{border-bottom:1px solid var(--border)}
 <div class="content" id="tab-recent">
 <details>
   <summary>
+    <span style="color:var(--text2);font-size:.8rem">2026-03-31 17:58</span>
+    <span class="badge" style="background:#3b82f6">고수</span>
+    <span>4판</span>
+    <span style="color:var(--accent);font-weight:700">75.0%</span>
+    <span style="color:#f59e0b;font-size:.8rem">슬롯풀 1회</span>
+    <span style="color:var(--text2)">1분 23초</span>
+  </summary>
+  <div class="inner-tbl">
+    <table>
+      <thead><tr><th>stage_id</th><th>난이도</th><th>기획CR</th><th>점수</th><th>시간</th><th>클리어</th></tr></thead>
+      <tbody><tr><td>TF_141</td><td>3</td><td>88%</td><td>3290</td><td>0초</td><td style='color:#00e5a0;font-weight:700'>✓</td></tr>
+<tr><td>ZM_114</td><td>3</td><td>79%</td><td>960</td><td>7초</td><td style='color:#ef4444;font-weight:700'>✗</td></tr>
+<tr><td>ZM_114</td><td>3</td><td>79%</td><td>2100</td><td>15초</td><td style='color:#00e5a0;font-weight:700'>✓</td></tr>
+<tr><td>ZM_114</td><td>3</td><td>79%</td><td>2100</td><td>0초</td><td style='color:#00e5a0;font-weight:700'>✓</td></tr>
+</tbody>
+    </table>
+  </div>
+</details>
+
+<details>
+  <summary>
+    <span style="color:var(--text2);font-size:.8rem">2026-03-31 17:56</span>
+    <span class="badge" style="background:#3b82f6">고수</span>
+    <span>5판</span>
+    <span style="color:var(--accent);font-weight:700">20.0%</span>
+    <span style="color:#f59e0b;font-size:.8rem">슬롯풀 4회</span>
+    <span style="color:var(--text2)">2분 0초</span>
+  </summary>
+  <div class="inner-tbl">
+    <table>
+      <thead><tr><th>stage_id</th><th>난이도</th><th>기획CR</th><th>점수</th><th>시간</th><th>클리어</th></tr></thead>
+      <tbody><tr><td>TF_141</td><td>3</td><td>88%</td><td>660</td><td>5초</td><td style='color:#ef4444;font-weight:700'>✗</td></tr>
+<tr><td>TF_141</td><td>3</td><td>88%</td><td>860</td><td>11초</td><td style='color:#ef4444;font-weight:700'>✗</td></tr>
+<tr><td>TF_141</td><td>3</td><td>88%</td><td>1150</td><td>14초</td><td style='color:#ef4444;font-weight:700'>✗</td></tr>
+<tr><td>TF_141</td><td>3</td><td>88%</td><td>1210</td><td>14초</td><td style='color:#ef4444;font-weight:700'>✗</td></tr>
+<tr><td>TF_141</td><td>3</td><td>88%</td><td>3290</td><td>17초</td><td style='color:#00e5a0;font-weight:700'>✓</td></tr>
+</tbody>
+    </table>
+  </div>
+</details>
+
+<details>
+  <summary>
     <span style="color:var(--text2);font-size:.8rem">2026-03-31 17:51</span>
     <span class="badge" style="background:#3b82f6">고수</span>
     <span>5판</span>
     <span style="color:var(--accent);font-weight:700">40.0%</span>
+    <span style="color:#f59e0b;font-size:.8rem">슬롯풀 0회</span>
     <span style="color:var(--text2)">1분 29초</span>
   </summary>
   <div class="inner-tbl">
@@ -163,6 +218,7 @@ details[open] summary{border-bottom:1px solid var(--border)}
     <span class="badge" style="background:#3b82f6">고수</span>
     <span>5판</span>
     <span style="color:var(--accent);font-weight:700">0.0%</span>
+    <span style="color:#f59e0b;font-size:.8rem">슬롯풀 0회</span>
     <span style="color:var(--text2)">1분 29초</span>
   </summary>
   <div class="inner-tbl">
@@ -198,10 +254,10 @@ function showTab(id) {
 }
 </script>
 <script>
-(function(){var ctx=document.getElementById('personaCrChart');if(!ctx)return;new Chart(ctx,{type:'bar',data:{labels:["고수", "중수", "하수", "초보"],datasets:[{label:'클리어율(%)',data:[20.0, 0.0, 0.0, 0.0],backgroundColor:["#3b82f6", "#10b981", "#f59e0b", "#ef4444"],borderRadius:4}]},options:{responsive:true,animation:false,plugins:{legend:{labels:{color:'#cdd9e8',boxWidth:10}}},scales:{x:{ticks:{color:'#4e6a85'},grid:{color:'rgba(56,189,248,.06)'}},y:{min:0,max:100,ticks:{color:'#4e6a85'},grid:{color:'rgba(56,189,248,.06)'}}}}});})();
-(function(){var ctx=document.getElementById('personaTimeChart');if(!ctx)return;new Chart(ctx,{type:'bar',data:{labels:["고수", "중수", "하수", "초보"],datasets:[{label:'평균시간(초)/판',data:[12.0, 0, 0, 0],backgroundColor:["#3b82f6", "#10b981", "#f59e0b", "#ef4444"],borderRadius:4}]},options:{responsive:true,animation:false,plugins:{legend:{labels:{color:'#cdd9e8',boxWidth:10}}},scales:{x:{ticks:{color:'#4e6a85'},grid:{color:'rgba(56,189,248,.06)'}},y:{ticks:{color:'#4e6a85'},grid:{color:'rgba(56,189,248,.06)'}}}}});})();
-(function(){var ctx=document.getElementById('diffChart');if(!ctx)return;new Chart(ctx,{type:'bar',data:{labels:["난이도 3"],datasets:[{label:'클리어율(%)',data:[20.0],backgroundColor:["#3b82f6"],borderRadius:4}]},options:{responsive:true,animation:false,plugins:{legend:{labels:{color:'#cdd9e8',boxWidth:10}}},scales:{x:{ticks:{color:'#4e6a85'},grid:{color:'rgba(56,189,248,.06)'}},y:{min:0,max:100,ticks:{color:'#4e6a85'},grid:{color:'rgba(56,189,248,.06)'}}}}});})();
-(function(){var ctx=document.getElementById('runTrendChart');if(!ctx)return;new Chart(ctx,{type:'line',data:{labels:["2026-03-31 17:38 고수", "2026-03-31 17:51 고수"],datasets:[{label:"클리어율 추이(%)",data:[0.0, 40.0],borderColor:'#00d4ff',backgroundColor:'#00d4ff22',fill:true,tension:0.3,pointRadius:3,borderWidth:2}]},options:{responsive:true,animation:false,plugins:{legend:{labels:{color:'#cdd9e8',boxWidth:10}}},scales:{x:{ticks:{color:'#4e6a85',maxTicksLimit:20},grid:{color:'rgba(56,189,248,.06)'}},y:{min:0,max:100,ticks:{color:'#4e6a85'},grid:{color:'rgba(56,189,248,.06)'}}}}});})();
+(function(){var ctx=document.getElementById('personaCrChart');if(!ctx)return;new Chart(ctx,{type:'bar',data:{labels:["고수", "중수", "하수", "초보"],datasets:[{label:'클리어율(%)',data:[31.6, 0.0, 0.0, 0.0],backgroundColor:["#3b82f6", "#10b981", "#f59e0b", "#ef4444"],borderRadius:4}]},options:{responsive:true,animation:false,plugins:{legend:{labels:{color:'#cdd9e8',boxWidth:10}}},scales:{x:{ticks:{color:'#4e6a85'},grid:{color:'rgba(56,189,248,.06)'}},y:{min:0,max:100,ticks:{color:'#4e6a85'},grid:{color:'rgba(56,189,248,.06)'}}}}});})();
+(function(){var ctx=document.getElementById('personaTimeChart');if(!ctx)return;new Chart(ctx,{type:'bar',data:{labels:["고수", "중수", "하수", "초보"],datasets:[{label:'평균시간(초)/판',data:[10.8, 0, 0, 0],backgroundColor:["#3b82f6", "#10b981", "#f59e0b", "#ef4444"],borderRadius:4}]},options:{responsive:true,animation:false,plugins:{legend:{labels:{color:'#cdd9e8',boxWidth:10}}},scales:{x:{ticks:{color:'#4e6a85'},grid:{color:'rgba(56,189,248,.06)'}},y:{ticks:{color:'#4e6a85'},grid:{color:'rgba(56,189,248,.06)'}}}}});})();
+(function(){var ctx=document.getElementById('diffChart');if(!ctx)return;new Chart(ctx,{type:'bar',data:{labels:["난이도 3"],datasets:[{label:'클리어율(%)',data:[31.6],backgroundColor:["#3b82f6"],borderRadius:4}]},options:{responsive:true,animation:false,plugins:{legend:{labels:{color:'#cdd9e8',boxWidth:10}}},scales:{x:{ticks:{color:'#4e6a85'},grid:{color:'rgba(56,189,248,.06)'}},y:{min:0,max:100,ticks:{color:'#4e6a85'},grid:{color:'rgba(56,189,248,.06)'}}}}});})();
+(function(){var ctx=document.getElementById('runTrendChart');if(!ctx)return;new Chart(ctx,{type:'line',data:{labels:["2026-03-31 17:38 고수", "2026-03-31 17:51 고수", "2026-03-31 17:56 고수", "2026-03-31 17:58 고수"],datasets:[{label:"클리어율 추이(%)",data:[0.0, 40.0, 20.0, 75.0],borderColor:'#00d4ff',backgroundColor:'#00d4ff22',fill:true,tension:0.3,pointRadius:3,borderWidth:2}]},options:{responsive:true,animation:false,plugins:{legend:{labels:{color:'#cdd9e8',boxWidth:10}}},scales:{x:{ticks:{color:'#4e6a85',maxTicksLimit:20},grid:{color:'rgba(56,189,248,.06)'}},y:{min:0,max:100,ticks:{color:'#4e6a85'},grid:{color:'rgba(56,189,248,.06)'}}}}});})();
 </script>
 </body>
 </html>

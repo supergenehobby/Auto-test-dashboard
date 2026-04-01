@@ -187,7 +187,7 @@ details[open] .rr-summary::before{transform:rotate(90deg)}
 </head>
 <body>
 <h1>SCJ 프리플레이 대시보드</h1>
-<div class="meta">기간: 전체 기간 &nbsp;·&nbsp; 생성: 2026-04-01 16:17:14 &nbsp;·&nbsp; <b>29런 409판</b></div>
+<div class="meta">기간: 전체 기간 &nbsp;·&nbsp; 생성: 2026-04-01 16:18:37 &nbsp;·&nbsp; <b>29런 409판</b></div>
 
 <div class="morning-panel"><div class="mp-title">📊 2026-04-01 요약<span class="mp-legend">클리어율 &middot; 골드손익(전일대비) &middot; 문제스테이지</span></div><div class="mp-cards"><div class="mp-card" style="border-left:3px solid #3b82f6" onclick="showTab('hardcore')" title="고수 탭으로 이동"><div class="mp-label" style="color:#3b82f6">고수</div><div class="mp-sigs"><span class="mp-sig mp-green">🟢 97%</span><span class="mp-sig mp-red">🔴 +295/판</span><span class="mp-sig mp-red">🔴 Lv.CC_0004 50%</span></div></div><div class="mp-card" style="border-left:3px solid #10b981" onclick="showTab('average')" title="중수 탭으로 이동"><div class="mp-label" style="color:#10b981">중수</div><div class="mp-sigs"><span class="mp-sig mp-green">🟢 100%</span><span class="mp-sig mp-red">🔴 +1199/판</span><span class="mp-sig mp-green">🟢 이상없음</span></div></div><div class="mp-card" style="border-left:3px solid #f59e0b" onclick="showTab('casual')" title="하수 탭으로 이동"><div class="mp-label" style="color:#f59e0b">하수</div><div class="mp-sigs"><span class="mp-sig mp-yellow">🟡 95%</span><span class="mp-sig mp-yellow">🟡 -1220/판</span><span class="mp-sig mp-red">🔴 Lv.CC_0045 0%</span></div></div><div class="mp-card" style="border-left:3px solid #ef4444" onclick="showTab('struggling')" title="초보 탭으로 이동"><div class="mp-label" style="color:#ef4444">초보</div><div class="mp-sigs"><span class="mp-sig mp-yellow">🟡 91%</span><span class="mp-sig mp-yellow">🟡 -1542/판</span><span class="mp-sig mp-red">🔴 Lv.CC_0036 50%</span></div></div></div></div>
 <div class="tabs">
@@ -213,13 +213,13 @@ details[open] .rr-summary::before{transform:rotate(90deg)}
   <div class="box"><div class="sec-title">기믹·플러스카드 /판</div><div class="sec-desc">판당 기믹(키&amp;자물쇠·얼음·러너) 및 플러스카드 평균 발생 횟수. 높을수록 변수가 많은 구성.</div><canvas id="cGimmick" height="180"></canvas></div>
 </div>
 
-<!-- 추이 차트 -->
+<details class="sec-collapsible">
+<summary class="sec-summary">📈 추이 분석</summary>
+<div class="sec-collapsible-body">
 <div class="g2">
   <div class="box"><div class="sec-title">런별 골드 회수율 추이</div><div class="sec-desc">실행(런) 순서별 골드 회수율 변화. 100% 기준으로 수익/손실 구간 추적.</div><canvas id="cRunEff" height="140"></canvas></div>
   <div class="box"><div class="sec-title">런별 골드 손익 추이</div><div class="sec-desc">실행 순서별 판당 평균 골드 손익 변화. 수익성 추세 파악에 활용.</div><canvas id="cRunGold" height="140"></canvas></div>
 </div>
-
-<!-- 모드별 시계열 분석 -->
 <div class="g2">
   <div class="box full"><div class="sec-title">모드별 일별 골드 회수율 추이</div><div class="sec-desc">날짜별 각 모드의 골드 회수율(보상/비용) 변화. 패치 전후 수익성 변화를 모드별로 비교.</div><canvas id="cDayEff" height="120"></canvas></div>
 </div>
@@ -227,26 +227,24 @@ details[open] .rr-summary::before{transform:rotate(90deg)}
   <div class="box"><div class="sec-title">모드별 일별 평균 턴수 추이</div><div class="sec-desc">날짜별 각 모드의 판당 평균 턴 수 변화. 턴이 늘면 스테이지가 어려워지거나 덱 효율이 떨어진 것.</div><canvas id="cDayTurns" height="140"></canvas></div>
   <div class="box"><div class="sec-title">모드별 일별 평균 난이도 추이</div><div class="sec-desc">날짜별 각 모드의 평균 스테이지 난이도 (1=튜토리얼·2=보통·3=어려움·4=매우어려움). 테스트 구성 변화 추적.</div><canvas id="cDayDiff" height="140"></canvas></div>
 </div>
+</div>
+</details>
 
-<!-- 게임플레이 세부 + 배팅 -->
+<details class="sec-collapsible">
+<summary class="sec-summary">⚙️ 세부 지표</summary>
+<div class="sec-collapsible-body">
 <div class="g2">
   <div class="box"><div class="sec-title">게임플레이 세부 지표</div><div class="sec-desc">매치/턴: 전체 턴 중 카드가 매치(제거)된 비율 · 드로우/턴: 덱에서 카드를 뽑은 비율 · 와일드/판: 판당 와일드 카드 사용 횟수</div><canvas id="cGP" height="150"></canvas></div>
   <div class="box"><div class="sec-title">배팅 배수별 골드 손익 /판</div><div class="sec-desc">배팅 배수(x1·x2·x4)별 판당 평균 골드 손익. 배수가 높을수록 보상과 손실 모두 커짐.</div><canvas id="cBet" height="150"></canvas></div>
 </div>
-
-<!-- 경제 지표 -->
 <div class="g4">
   <div class="box"><div class="sec-title">와일드 비용 /판</div><div class="sec-desc">판당 평균 와일드 카드 구매 비용.</div><canvas id="cWild" height="150"></canvas></div>
   <div class="box"><div class="sec-title">스트릭 보너스 /판</div><div class="sec-desc">판당 평균 스트릭 보너스 골드.</div><canvas id="cStreak" height="150"></canvas></div>
   <div class="box"><div class="sec-title">미스드로우 /판</div><div class="sec-desc">판당 평균 미스드로우(덱 소진) 횟수. 높을수록 덱 운용 비효율.</div><canvas id="cMiss" height="150"></canvas></div>
   <div class="box"><div class="sec-title">평균 콤보 /판</div><div class="sec-desc">판당 평균 콤보 횟수.</div><canvas id="cCombo" height="150"></canvas></div>
 </div>
-
-<!-- 일별 트렌드 -->
-<div class="g2" style="margin-bottom:14px">
+<div class="g2">
   <div class="box"><div class="sec-title">모드별 일별 손익/판 트렌드</div><div class="sec-desc">날짜별 각 모드의 판당 평균 손익. 모드 간 수익성 격차와 추세를 한눈에 비교.</div><canvas id="cTrend" height="130"></canvas></div>
-
-  <!-- 밸런스 검증 -->
   <div class="box">
     <div class="sec-title">밸런스 검증</div>
     <div class="sec-desc">게임 내부 골드 계산(입장료·아이템·보상)이 예상 값과 일치하는지 판별 결과.</div>
@@ -260,6 +258,8 @@ details[open] .rr-summary::before{transform:rotate(90deg)}
     </table>
   </div>
 </div>
+</div>
+</details>
 
 <!-- 이슈/특이사항 + 스테이지 -->
 <div class="g2" style="margin-bottom:14px">
@@ -281,15 +281,18 @@ details[open] .rr-summary::before{transform:rotate(90deg)}
   </div>
 </div>
 
-<!-- 최근 런 목록 -->
+<details class="sec-collapsible">
+<summary class="sec-summary">📋 최근 런 목록</summary>
+<div class="sec-collapsible-body">
 <div class="box">
-  <div class="sec-title">최근 런 목록</div>
   <div class="sec-desc">손익/판: 판당 평균 골드 순수익 · 골드변화: 런 시작~종료 잔액 차이 · 해머변화: 해머 잔량 변화</div>
   <table>
     <tr><th>날짜</th><th>모드</th><th>판수</th><th>평균턴</th><th>손익/판</th><th>골드변화</th><th>해머변화</th><th>소요</th><th></th></tr>
     <tr><td>2026-04-01 15:54</td><td><span class="pbadge" style="background:#3b82f622;color:#3b82f6;border:1px solid #3b82f644">고수</span></td><td>5</td><td>28.4</td><td>+2554</td><td>+12,772</td><td>+0</td><td>2분 28초</td><td><a href="../../games/SCJ/results/20260401/freeplay/hardcore/freeplay_report_1554_batch01.html" target="_blank" class="rl">상세</a></td></tr><tr><td>2026-04-01 15:50</td><td><span class="pbadge" style="background:#3b82f622;color:#3b82f6;border:1px solid #3b82f644">고수</span></td><td>5</td><td>31.4</td><td>-848</td><td>-4,238</td><td>+0</td><td>2분 36초</td><td><a href="../../games/SCJ/results/20260401/freeplay/hardcore/freeplay_report_1550_batch01.html" target="_blank" class="rl">상세</a></td></tr><tr><td>2026-04-01 15:47</td><td><span class="pbadge" style="background:#3b82f622;color:#3b82f6;border:1px solid #3b82f644">고수</span></td><td>5</td><td>30.6</td><td>-855</td><td>-4,275</td><td>+0</td><td>2분 38초</td><td><a href="../../games/SCJ/results/20260401/freeplay/hardcore/freeplay_report_1547_batch01.html" target="_blank" class="rl">상세</a></td></tr><tr><td>2026-04-01 15:37</td><td><span class="pbadge" style="background:#3b82f622;color:#3b82f6;border:1px solid #3b82f644">고수</span></td><td>9</td><td>32.0</td><td>+1084</td><td>+9,758</td><td>+0</td><td>5분 27초</td><td><a href="../../games/SCJ/results/20260401/freeplay/hardcore/freeplay_report_1537_batch01.html" target="_blank" class="rl">상세</a></td></tr><tr><td>2026-04-01 14:18</td><td><span class="pbadge" style="background:#3b82f622;color:#3b82f6;border:1px solid #3b82f644">고수</span></td><td>10</td><td>32.1</td><td>+2392</td><td>+23,923</td><td>+0</td><td>5분 4초</td><td><a href="../../games/SCJ/results/20260401/freeplay/hardcore/freeplay_report_1418_batch01.html" target="_blank" class="rl">상세</a></td></tr><tr><td>2026-04-01 12:02</td><td><span class="pbadge" style="background:#3b82f622;color:#3b82f6;border:1px solid #3b82f644">고수</span></td><td>49</td><td>34.9</td><td>+429</td><td>+34,405</td><td>+0</td><td>28분 17초</td><td><a href="../../games/SCJ/results/20260401/freeplay/hardcore/freeplay_report_1202_batch01.html" target="_blank" class="rl">상세</a></td></tr><tr><td>2026-04-01 10:57</td><td><span class="pbadge" style="background:#3b82f622;color:#3b82f6;border:1px solid #3b82f644">고수</span></td><td>9</td><td>36.6</td><td>-575</td><td>-5,177</td><td>+0</td><td>6분 25초</td><td><a href="../../games/SCJ/results/20260401/freeplay/hardcore/freeplay_report_1057.html" target="_blank" class="rl">상세</a></td></tr><tr><td>2026-04-01 10:28</td><td><span class="pbadge" style="background:#3b82f622;color:#3b82f6;border:1px solid #3b82f644">고수</span></td><td>9</td><td>38.2</td><td>-605</td><td>-5,445</td><td>+0</td><td>6분 33초</td><td><a href="../../games/SCJ/results/20260401/freeplay/hardcore/freeplay_report_1028_batch01.html" target="_blank" class="rl">상세</a></td></tr><tr><td>2026-04-01 16:01</td><td><span class="pbadge" style="background:#10b98122;color:#10b981;border:1px solid #10b98144">중수</span></td><td>3</td><td>37.3</td><td>-8840</td><td>-26,521</td><td>+0</td><td>3분 21초</td><td><a href="../../games/SCJ/results/20260401/freeplay/average/freeplay_report_1601_batch01.html" target="_blank" class="rl">상세</a></td></tr><tr><td>2026-04-01 14:24</td><td><span class="pbadge" style="background:#10b98122;color:#10b981;border:1px solid #10b98144">중수</span></td><td>10</td><td>35.6</td><td>+671</td><td>+6,709</td><td>+0</td><td>5분 48초</td><td><a href="../../games/SCJ/results/20260401/freeplay/average/freeplay_report_1424_batch01.html" target="_blank" class="rl">상세</a></td></tr><tr><td>2026-04-01 12:32</td><td><span class="pbadge" style="background:#10b98122;color:#10b981;border:1px solid #10b98144">중수</span></td><td>50</td><td>37.3</td><td>+769</td><td>+38,432</td><td>+0</td><td>29분 32초</td><td><a href="../../games/SCJ/results/20260401/freeplay/average/freeplay_report_1232_batch01.html" target="_blank" class="rl">상세</a></td></tr><tr><td>2026-04-01 11:03</td><td><span class="pbadge" style="background:#10b98122;color:#10b981;border:1px solid #10b98144">중수</span></td><td>10</td><td>39.8</td><td>-2301</td><td>-23,006</td><td>+0</td><td>6분 39초</td><td><a href="../../games/SCJ/results/20260401/freeplay/average/freeplay_report_1103.html" target="_blank" class="rl">상세</a></td></tr><tr><td>2026-04-01 10:35</td><td><span class="pbadge" style="background:#10b98122;color:#10b981;border:1px solid #10b98144">중수</span></td><td>10</td><td>35.7</td><td>-2052</td><td>-19,325</td><td>+0</td><td>6분 46초</td><td><a href="../../games/SCJ/results/20260401/freeplay/average/freeplay_report_1035_batch01.html" target="_blank" class="rl">상세</a></td></tr><tr><td>2026-04-01 14:30</td><td><span class="pbadge" style="background:#f59e0b22;color:#f59e0b;border:1px solid #f59e0b44">하수</span></td><td>10</td><td>35.1</td><td>-267</td><td>-2,670</td><td>+0</td><td>6분 9초</td><td><a href="../../games/SCJ/results/20260401/freeplay/casual/freeplay_report_1430_batch01.html" target="_blank" class="rl">상세</a></td></tr><tr><td>2026-04-01 13:07</td><td><span class="pbadge" style="background:#f59e0b22;color:#f59e0b;border:1px solid #f59e0b44">하수</span></td><td>49</td><td>38.7</td><td>-4507</td><td>-189,493</td><td>+0</td><td>34분 17초</td><td><a href="../../games/SCJ/results/20260401/freeplay/casual/freeplay_report_1307_batch01.html" target="_blank" class="rl">상세</a></td></tr><tr><td>2026-04-01 11:10</td><td><span class="pbadge" style="background:#f59e0b22;color:#f59e0b;border:1px solid #f59e0b44">하수</span></td><td>10</td><td>37.9</td><td>-3133</td><td>-31,331</td><td>+0</td><td>6분 46초</td><td><a href="../../games/SCJ/results/20260401/freeplay/casual/freeplay_report_1110.html" target="_blank" class="rl">상세</a></td></tr><tr><td>2026-04-01 10:41</td><td><span class="pbadge" style="background:#f59e0b22;color:#f59e0b;border:1px solid #f59e0b44">하수</span></td><td>9</td><td>25.6</td><td>-3892</td><td>-35,025</td><td>+0</td><td>5분 42초</td><td><a href="../../games/SCJ/results/20260401/freeplay/casual/freeplay_report_1041_batch01.html" target="_blank" class="rl">상세</a></td></tr><tr><td>2026-04-01 14:37</td><td><span class="pbadge" style="background:#ef444422;color:#ef4444;border:1px solid #ef444444">초보</span></td><td>9</td><td>36.9</td><td>-9855</td><td>-52,192</td><td>+0</td><td>6분 52초</td><td><a href="../../games/SCJ/results/20260401/freeplay/struggling/freeplay_report_1437_batch01.html" target="_blank" class="rl">상세</a></td></tr><tr><td>2026-04-01 13:37</td><td><span class="pbadge" style="background:#ef444422;color:#ef4444;border:1px solid #ef444444">초보</span></td><td>41</td><td>35.1</td><td>-5808</td><td>-219,582</td><td>+0</td><td>29분 38초</td><td><a href="../../games/SCJ/results/20260401/freeplay/struggling/freeplay_report_1337_batch01.html" target="_blank" class="rl">상세</a></td></tr><tr><td>2026-04-01 11:17</td><td><span class="pbadge" style="background:#ef444422;color:#ef4444;border:1px solid #ef444444">초보</span></td><td>10</td><td>33.6</td><td>-5724</td><td>-57,239</td><td>+0</td><td>7분 7초</td><td><a href="../../games/SCJ/results/20260401/freeplay/struggling/freeplay_report_1117.html" target="_blank" class="rl">상세</a></td></tr><tr><td>2026-04-01 10:49</td><td><span class="pbadge" style="background:#ef444422;color:#ef4444;border:1px solid #ef444444">초보</span></td><td>10</td><td>34.6</td><td>-6342</td><td>-60,424</td><td>+0</td><td>7분 52초</td><td><a href="../../games/SCJ/results/20260401/freeplay/struggling/freeplay_report_1049_batch01.html" target="_blank" class="rl">상세</a></td></tr><tr><td>2026-03-31 18:14</td><td><span class="pbadge" style="background:#3b82f622;color:#3b82f6;border:1px solid #3b82f644">고수</span></td><td>10</td><td>39.4</td><td>+467</td><td>+6,544</td><td>+11</td><td>6분 18초</td><td><a href="../../games/SCJ/results/20260331/freeplay/hardcore/freeplay_report_1814_batch01.html" target="_blank" class="rl">상세</a></td></tr><tr><td>2026-03-31 18:07</td><td><span class="pbadge" style="background:#3b82f622;color:#3b82f6;border:1px solid #3b82f644">고수</span></td><td>10</td><td>38.1</td><td>-101</td><td>-3,407</td><td>+10</td><td>6분 26초</td><td><a href="../../games/SCJ/results/20260331/freeplay/hardcore/freeplay_report_1807_batch01.html" target="_blank" class="rl">상세</a></td></tr><tr><td>2026-03-31 18:27</td><td><span class="pbadge" style="background:#10b98122;color:#10b981;border:1px solid #10b98144">중수</span></td><td>10</td><td>33.3</td><td>-1296</td><td>-10,158</td><td>+0</td><td>6분 44초</td><td><a href="../../games/SCJ/results/20260331/freeplay/average/freeplay_report_1827_batch01.html" target="_blank" class="rl">상세</a></td></tr><tr><td>2026-03-31 18:20</td><td><span class="pbadge" style="background:#10b98122;color:#10b981;border:1px solid #10b98144">중수</span></td><td>10</td><td>37.7</td><td>-1703</td><td>-17,028</td><td>+4</td><td>6분 36초</td><td><a href="../../games/SCJ/results/20260331/freeplay/average/freeplay_report_1820_batch01.html" target="_blank" class="rl">상세</a></td></tr><tr><td>2026-03-31 18:40</td><td><span class="pbadge" style="background:#f59e0b22;color:#f59e0b;border:1px solid #f59e0b44">하수</span></td><td>9</td><td>32.3</td><td>-2189</td><td>-19,698</td><td>+0</td><td>6분 20초</td><td><a href="../../games/SCJ/results/20260331/freeplay/casual/freeplay_report_1840_batch01.html" target="_blank" class="rl">상세</a></td></tr><tr><td>2026-03-31 18:34</td><td><span class="pbadge" style="background:#f59e0b22;color:#f59e0b;border:1px solid #f59e0b44">하수</span></td><td>9</td><td>32.1</td><td>-2804</td><td>-24,708</td><td>+0</td><td>6분 28초</td><td><a href="../../games/SCJ/results/20260331/freeplay/casual/freeplay_report_1834_batch01.html" target="_blank" class="rl">상세</a></td></tr><tr><td>2026-03-31 18:55</td><td><span class="pbadge" style="background:#ef444422;color:#ef4444;border:1px solid #ef444444">초보</span></td><td>10</td><td>30.7</td><td>-5210</td><td>-52,100</td><td>+0</td><td>7분 1초</td><td><a href="../../games/SCJ/results/20260331/freeplay/struggling/freeplay_report_1855_batch01.html" target="_blank" class="rl">상세</a></td></tr><tr><td>2026-03-31 18:47</td><td><span class="pbadge" style="background:#ef444422;color:#ef4444;border:1px solid #ef444444">초보</span></td><td>9</td><td>34.7</td><td>-4452</td><td>-39,272</td><td>+0</td><td>7분 0초</td><td><a href="../../games/SCJ/results/20260331/freeplay/struggling/freeplay_report_1847_batch01.html" target="_blank" class="rl">상세</a></td></tr>
   </table>
 </div>
+</div>
+</details>
 
 
 </div><!-- end tab-overall -->

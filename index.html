@@ -66,7 +66,7 @@
     <button class="gtab active" style="--gc:#f59e0b" onclick="switchGame('overview',this)">종합</button>
     <button class="gtab" style="--gc:#10b981" onclick="switchGame('ctz',this)">CTZ</button>
     <button class="gtab" style="--gc:#3b82f6" onclick="switchGame('scj',this)">SCJ</button>
-    <span class="ts">갱신: 2026-04-02 15:39:10</span>
+    <span class="ts">갱신: 2026-04-02 15:43:10</span>
   </div>
   <iframe id="frame-ctz" src="dashboard_ctz.html" style="display:none"></iframe>
   <iframe id="frame-scj" src="dashboard_scj.html" style="display:none"></iframe>
@@ -91,7 +91,7 @@
     <b>전체 현황</b> &nbsp;·&nbsp;
     총 런 <b>15</b> &nbsp;·&nbsp;
     총 판 <b>273</b> &nbsp;·&nbsp;
-    갱신: <b>2026-04-02 15:39:10</b>
+    갱신: <b>2026-04-02 15:43:10</b>
   </div>
 
   <div class="ov-cards">
@@ -102,6 +102,14 @@
   <div class="ov-chart-wrap">
     <div class="ov-chart-title">페르소나별 클리어율 비교 (%)</div>
     <canvas id="ovCompareChart" height="160"></canvas>
+  </div>
+  
+  <div class="ov-chart-wrap" style="max-width:600px;margin-top:20px;">
+    <div class="ov-chart-title">SCJ 난이도별 모드 클리어율 (%)</div>
+    <table style="width:100%;border-collapse:collapse;">
+      <thead><tr><th style="padding:8px 14px;font-size:11px;font-weight:600;color:#64748b;text-align:center;border-bottom:1px solid #1e3a5f;white-space:nowrap;text-align:left;">난이도</th><th style="padding:8px 14px;font-size:11px;font-weight:600;color:#64748b;text-align:center;border-bottom:1px solid #1e3a5f;white-space:nowrap;">고수</th><th style="padding:8px 14px;font-size:11px;font-weight:600;color:#64748b;text-align:center;border-bottom:1px solid #1e3a5f;white-space:nowrap;">중수</th><th style="padding:8px 14px;font-size:11px;font-weight:600;color:#64748b;text-align:center;border-bottom:1px solid #1e3a5f;white-space:nowrap;">하수</th><th style="padding:8px 14px;font-size:11px;font-weight:600;color:#64748b;text-align:center;border-bottom:1px solid #1e3a5f;white-space:nowrap;">초보</th></tr></thead>
+      <tbody><tr><td style="padding:8px 14px;text-align:center;font-size:13px;font-weight:600;border-bottom:1px solid #0f1a2e;color:#94a3b8;text-align:left;">튜토리얼</td><td style="padding:8px 14px;text-align:center;font-size:13px;font-weight:600;border-bottom:1px solid #0f1a2e;background:#1e3a5f;color:#64748b;">—</td><td style="padding:8px 14px;text-align:center;font-size:13px;font-weight:600;border-bottom:1px solid #0f1a2e;background:#1e3a5f;color:#64748b;">—</td><td style="padding:8px 14px;text-align:center;font-size:13px;font-weight:600;border-bottom:1px solid #0f1a2e;background:#1e3a5f;color:#64748b;">—</td><td style="padding:8px 14px;text-align:center;font-size:13px;font-weight:600;border-bottom:1px solid #0f1a2e;background:#1e3a5f;color:#64748b;">—</td></tr><tr><td style="padding:8px 14px;text-align:center;font-size:13px;font-weight:600;border-bottom:1px solid #0f1a2e;color:#94a3b8;text-align:left;">보통</td><td style="padding:8px 14px;text-align:center;font-size:13px;font-weight:600;border-bottom:1px solid #0f1a2e;background:rgba(16,185,129,0.18);color:#10b981;">98.1%</td><td style="padding:8px 14px;text-align:center;font-size:13px;font-weight:600;border-bottom:1px solid #0f1a2e;background:rgba(16,185,129,0.18);color:#10b981;">98.1%</td><td style="padding:8px 14px;text-align:center;font-size:13px;font-weight:600;border-bottom:1px solid #0f1a2e;background:rgba(16,185,129,0.18);color:#10b981;">92.5%</td><td style="padding:8px 14px;text-align:center;font-size:13px;font-weight:600;border-bottom:1px solid #0f1a2e;background:rgba(16,185,129,0.18);color:#10b981;">90.4%</td></tr><tr><td style="padding:8px 14px;text-align:center;font-size:13px;font-weight:600;border-bottom:1px solid #0f1a2e;color:#94a3b8;text-align:left;">어려움</td><td style="padding:8px 14px;text-align:center;font-size:13px;font-weight:600;border-bottom:1px solid #0f1a2e;background:rgba(16,185,129,0.18);color:#10b981;">100.0%</td><td style="padding:8px 14px;text-align:center;font-size:13px;font-weight:600;border-bottom:1px solid #0f1a2e;background:rgba(16,185,129,0.18);color:#10b981;">100.0%</td><td style="padding:8px 14px;text-align:center;font-size:13px;font-weight:600;border-bottom:1px solid #0f1a2e;background:rgba(16,185,129,0.18);color:#10b981;">100.0%</td><td style="padding:8px 14px;text-align:center;font-size:13px;font-weight:600;border-bottom:1px solid #0f1a2e;background:rgba(16,185,129,0.18);color:#10b981;">100.0%</td></tr><tr><td style="padding:8px 14px;text-align:center;font-size:13px;font-weight:600;border-bottom:1px solid #0f1a2e;color:#94a3b8;text-align:left;">매우 어려움</td><td style="padding:8px 14px;text-align:center;font-size:13px;font-weight:600;border-bottom:1px solid #0f1a2e;background:#1e3a5f;color:#64748b;">—</td><td style="padding:8px 14px;text-align:center;font-size:13px;font-weight:600;border-bottom:1px solid #0f1a2e;background:#1e3a5f;color:#64748b;">—</td><td style="padding:8px 14px;text-align:center;font-size:13px;font-weight:600;border-bottom:1px solid #0f1a2e;background:#1e3a5f;color:#64748b;">—</td><td style="padding:8px 14px;text-align:center;font-size:13px;font-weight:600;border-bottom:1px solid #0f1a2e;background:#1e3a5f;color:#64748b;">—</td></tr></tbody>
+    </table>
   </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>

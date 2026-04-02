@@ -63,15 +63,15 @@
 <body>
   <div class="top-bar">
     <span class="logo">🎮 통합 대시보드</span>
-    <button class="gtab active" style="--gc:#3b82f6" onclick="switchGame('scj',this)">SCJ</button>
-    <button class="gtab " style="--gc:#10b981" onclick="switchGame('ctz',this)">CTZ</button>
-    <button class="gtab" style="--gc:#f59e0b" onclick="switchGame('overview',this)">종합</button>
-    <span class="ts">갱신: 2026-04-02 11:08:21</span>
+    <button class="gtab active" style="--gc:#f59e0b" onclick="switchGame('overview',this)">종합</button>
+    <button class="gtab" style="--gc:#3b82f6" onclick="switchGame('scj',this)">SCJ</button>
+    <button class="gtab" style="--gc:#10b981" onclick="switchGame('ctz',this)">CTZ</button>
+    <span class="ts">갱신: 2026-04-02 11:10:20</span>
   </div>
-  <iframe id="frame-scj" src="dashboard_scj.html"></iframe>
+  <iframe id="frame-scj" src="dashboard_scj.html" style="display:none"></iframe>
   <iframe id="frame-ctz" src="dashboard_ctz.html" style="display:none"></iframe>
   
-<div id="overview-panel" style="display:none;overflow-y:auto;height:calc(100vh - 45px);padding:24px 28px;color:#e2e8f0;">
+<div id="overview-panel" style="display:block;overflow-y:auto;height:calc(100vh - 45px);padding:24px 28px;color:#e2e8f0;">
   <style>
     .ov-summary{display:flex;gap:8px;align-items:center;margin-bottom:20px;font-size:12px;color:#64748b;}
     .ov-summary b{color:#94a3b8;}
@@ -91,7 +91,7 @@
     <b>전체 현황</b> &nbsp;·&nbsp;
     총 런 <b>13</b> &nbsp;·&nbsp;
     총 판 <b>98</b> &nbsp;·&nbsp;
-    갱신: <b>2026-04-02 11:08:21</b>
+    갱신: <b>2026-04-02 11:10:20</b>
   </div>
 
   <div class="ov-cards">

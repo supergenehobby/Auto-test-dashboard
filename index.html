@@ -64,12 +64,12 @@
   <div class="top-bar">
     <span class="logo">🎮 통합 대시보드</span>
     <button class="gtab active" style="--gc:#f59e0b" onclick="switchGame('overview',this)">종합</button>
-    <button class="gtab" style="--gc:#3b82f6" onclick="switchGame('scj',this)">SCJ</button>
     <button class="gtab" style="--gc:#10b981" onclick="switchGame('ctz',this)">CTZ</button>
-    <span class="ts">갱신: 2026-04-02 14:03:29</span>
+    <button class="gtab" style="--gc:#3b82f6" onclick="switchGame('scj',this)">SCJ</button>
+    <span class="ts">갱신: 2026-04-02 14:16:47</span>
   </div>
-  <iframe id="frame-scj" src="dashboard_scj.html" style="display:none"></iframe>
   <iframe id="frame-ctz" src="dashboard_ctz.html" style="display:none"></iframe>
+  <iframe id="frame-scj" src="dashboard_scj.html" style="display:none"></iframe>
   
 <div id="overview-panel" style="display:block;overflow-y:auto;height:calc(100vh - 45px);padding:24px 28px;color:#e2e8f0;">
   <style>
@@ -89,13 +89,13 @@
 
   <div class="ov-summary">
     <b>전체 현황</b> &nbsp;·&nbsp;
-    총 런 <b>7</b> &nbsp;·&nbsp;
-    총 판 <b>140</b> &nbsp;·&nbsp;
-    갱신: <b>2026-04-02 14:03:29</b>
+    총 런 <b>8</b> &nbsp;·&nbsp;
+    총 판 <b>160</b> &nbsp;·&nbsp;
+    갱신: <b>2026-04-02 14:16:47</b>
   </div>
 
   <div class="ov-cards">
-    <div class="ov-card" style="border-color:#3b82f6"><div class="ov-card-title" style="color:#3b82f6">SCJ</div><div class="ov-item"><span class="ov-label">클리어율</span><span class="ov-val" style="color:#3b82f6">94.2%</span></div><div class="ov-item"><span class="ov-label">골드 손익/판</span><span class="ov-val" style="color:#3b82f6">-585</span></div><div class="ov-item"><span class="ov-label">총 런</span><span class="ov-val" style="color:#3b82f6">6</span></div></div>
+    <div class="ov-card" style="border-color:#3b82f6"><div class="ov-card-title" style="color:#3b82f6">SCJ</div><div class="ov-item"><span class="ov-label">클리어율</span><span class="ov-val" style="color:#3b82f6">90.7%</span></div><div class="ov-item"><span class="ov-label">골드 손익/판</span><span class="ov-val" style="color:#3b82f6">-1,299</span></div><div class="ov-item"><span class="ov-label">총 런</span><span class="ov-val" style="color:#3b82f6">7</span></div></div>
     <div class="ov-card" style="border-color:#10b981"><div class="ov-card-title" style="color:#10b981">#10b981</div><div class="ov-item"><span class="ov-label">클리어율</span><span class="ov-val" style="color:#10b981">10.0%</span></div><div class="ov-item"><span class="ov-label">평균 소요시간/판</span><span class="ov-val" style="color:#10b981">78.0s</span></div><div class="ov-item"><span class="ov-label">총 런</span><span class="ov-val" style="color:#10b981">1</span></div></div>
   </div>
 
@@ -116,7 +116,7 @@
       datasets: [
         {
           label: 'SCJ',
-          data: [95.0,95.0,90.0,95.0],
+          data: [95.0,95.0,80.0,95.0],
           backgroundColor: 'rgba(59,130,246,0.7)',
           borderColor: '#3b82f6',
           borderWidth: 1.5,
@@ -147,7 +147,7 @@
 })();
 </script>
 <script>
-var GAMES = ["scj","ctz"];
+var GAMES = ["ctz","scj"];
 function switchGame(id, btn) {
   document.querySelectorAll('.gtab').forEach(function(b) { b.classList.remove('active'); });
   btn.classList.add('active');

@@ -65,9 +65,11 @@
     <span class="logo">🎮 통합 대시보드</span>
     <button class="gtab active" style="--gc:#f59e0b" onclick="switchGame('overview',this)">종합</button>
     <button class="gtab" style="--gc:#3b82f6" onclick="switchGame('scj',this)">SCJ</button>
-    <span class="ts">갱신: 2026-04-02 13:38:42</span>
+    <button class="gtab" style="--gc:#10b981" onclick="switchGame('ctz',this)">CTZ</button>
+    <span class="ts">갱신: 2026-04-02 13:48:14</span>
   </div>
   <iframe id="frame-scj" src="dashboard_scj.html" style="display:none"></iframe>
+  <div id="frame-ctz" style="display:none" style="display:none;align-items:center;justify-content:center;height:100%;color:#4e6a85;flex-direction:column;gap:12px;"><div style="font-size:48px;opacity:.3">📭</div><div style="font-size:15px;">CTZ 데이터 없음</div><div style="font-size:12px;opacity:.6;">프리플레이를 실행하면 자동으로 표시됩니다</div></div>
   
 <div id="overview-panel" style="display:block;overflow-y:auto;height:calc(100vh - 45px);padding:24px 28px;color:#e2e8f0;">
   <style>
@@ -89,7 +91,7 @@
     <b>전체 현황</b> &nbsp;·&nbsp;
     총 런 <b>4</b> &nbsp;·&nbsp;
     총 판 <b>80</b> &nbsp;·&nbsp;
-    갱신: <b>2026-04-02 13:38:42</b>
+    갱신: <b>2026-04-02 13:48:14</b>
   </div>
 
   <div class="ov-cards">
@@ -145,13 +147,13 @@
 })();
 </script>
 <script>
-var GAMES = ["scj"];
+var GAMES = ["scj","ctz"];
 function switchGame(id, btn) {
   document.querySelectorAll('.gtab').forEach(function(b) { b.classList.remove('active'); });
   btn.classList.add('active');
   GAMES.forEach(function(g) {
     var f = document.getElementById('frame-' + g);
-    if (f) f.style.display = (g === id) ? 'block' : 'none';
+    if (f) f.style.display = (g === id) ? (f.tagName === 'IFRAME' ? 'block' : 'flex') : 'none';
   });
   var ov = document.getElementById('overview-panel');
   if (ov) ov.style.display = (id === 'overview') ? 'block' : 'none';

@@ -66,10 +66,10 @@
     <button class="gtab active" style="--gc:#f59e0b" onclick="switchGame('overview',this)">종합</button>
     <button class="gtab" style="--gc:#3b82f6" onclick="switchGame('scj',this)">SCJ</button>
     <button class="gtab" style="--gc:#10b981" onclick="switchGame('ctz',this)">CTZ</button>
-    <span class="ts">갱신: 2026-04-02 13:51:37</span>
+    <span class="ts">갱신: 2026-04-02 13:58:16</span>
   </div>
   <iframe id="frame-scj" src="dashboard_scj.html" style="display:none"></iframe>
-  <div id="frame-ctz" style="display:none" style="display:none;align-items:center;justify-content:center;height:100%;color:#4e6a85;flex-direction:column;gap:12px;"><div style="font-size:48px;opacity:.3">📭</div><div style="font-size:15px;">CTZ 데이터 없음</div><div style="font-size:12px;opacity:.6;">프리플레이를 실행하면 자동으로 표시됩니다</div></div>
+  <iframe id="frame-ctz" src="dashboard_ctz.html" style="display:none"></iframe>
   
 <div id="overview-panel" style="display:block;overflow-y:auto;height:calc(100vh - 45px);padding:24px 28px;color:#e2e8f0;">
   <style>
@@ -89,14 +89,14 @@
 
   <div class="ov-summary">
     <b>전체 현황</b> &nbsp;·&nbsp;
-    총 런 <b>5</b> &nbsp;·&nbsp;
-    총 판 <b>100</b> &nbsp;·&nbsp;
-    갱신: <b>2026-04-02 13:51:37</b>
+    총 런 <b>6</b> &nbsp;·&nbsp;
+    총 판 <b>120</b> &nbsp;·&nbsp;
+    갱신: <b>2026-04-02 13:58:16</b>
   </div>
 
   <div class="ov-cards">
     <div class="ov-card" style="border-color:#3b82f6"><div class="ov-card-title" style="color:#3b82f6">SCJ</div><div class="ov-item"><span class="ov-label">클리어율</span><span class="ov-val" style="color:#3b82f6">93.0%</span></div><div class="ov-item"><span class="ov-label">골드 손익/판</span><span class="ov-val" style="color:#3b82f6">-968</span></div><div class="ov-item"><span class="ov-label">총 런</span><span class="ov-val" style="color:#3b82f6">5</span></div></div>
-    <div class="ov-card ov-empty">CTZ 데이터 없음</div>
+    <div class="ov-card" style="border-color:#10b981"><div class="ov-card-title" style="color:#10b981">#10b981</div><div class="ov-item"><span class="ov-label">클리어율</span><span class="ov-val" style="color:#10b981">10.0%</span></div><div class="ov-item"><span class="ov-label">평균 소요시간/판</span><span class="ov-val" style="color:#10b981">78.0s</span></div><div class="ov-item"><span class="ov-label">총 런</span><span class="ov-val" style="color:#10b981">1</span></div></div>
   </div>
 
   <div class="ov-chart-wrap">
@@ -124,7 +124,7 @@
         },
         {
           label: 'CTZ',
-          data: [null,null,null,null],
+          data: [10.0,null,null,null],
           backgroundColor: 'rgba(16,185,129,0.7)',
           borderColor: '#10b981',
           borderWidth: 1.5,

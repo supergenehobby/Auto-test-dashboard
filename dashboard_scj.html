@@ -187,7 +187,7 @@ details[open] .rr-summary::before{transform:rotate(90deg)}
 </head>
 <body>
 <h1>SCJ 프리플레이 대시보드</h1>
-<div class="meta">기간: 전체 기간 &nbsp;·&nbsp; 생성: 2026-04-06 14:39:17 &nbsp;·&nbsp; <b>30런 407판</b></div>
+<div class="meta">기간: 전체 기간 &nbsp;·&nbsp; 생성: 2026-04-06 18:01:20 &nbsp;·&nbsp; <b>30런 407판</b></div>
 
 <div class="morning-panel"><div class="mp-title">📊 2026-04-06 요약<span class="mp-legend">클리어율 &middot; 골드손익(전일대비) &middot; 문제스테이지</span></div><div class="mp-cards"><div class="mp-card" style="border-left:3px solid #3b82f6" onclick="showTab('hardcore')" title="고수 탭으로 이동"><div class="mp-label" style="color:#3b82f6">고수</div><div class="mp-sigs"><span class="mp-sig mp-green">🟢 100%</span><span class="mp-sig mp-green">🟢 -272/판</span><span class="mp-sig mp-green">🟢 이상없음</span></div></div><div class="mp-card" style="border-left:3px solid #10b981" onclick="showTab('average')" title="중수 탭으로 이동"><div class="mp-label" style="color:#10b981">중수</div><div class="mp-sigs"><span class="mp-sig mp-green">🟢 100%</span><span class="mp-sig mp-red">🔴 -1099/판</span><span class="mp-sig mp-green">🟢 이상없음</span></div></div><div class="mp-card" style="border-left:3px solid #f59e0b" onclick="showTab('casual')" title="하수 탭으로 이동"><div class="mp-label" style="color:#f59e0b">하수</div><div class="mp-sigs"><span class="mp-sig mp-green">🟢 100%</span><span class="mp-sig mp-red">🔴 -2101/판</span><span class="mp-sig mp-green">🟢 이상없음</span></div></div><div class="mp-card" style="border-left:3px solid #ef4444" onclick="showTab('struggling')" title="초보 탭으로 이동"><div class="mp-label" style="color:#ef4444">초보</div><div class="mp-sigs"><span class="mp-sig mp-green">🟢 100%</span><span class="mp-sig mp-red">🔴 -1275/판</span><span class="mp-sig mp-green">🟢 이상없음</span></div></div></div></div>
 <div class="tabs">
@@ -198,6 +198,7 @@ details[open] .rr-summary::before{transform:rotate(90deg)}
   <button class="tab-btn" data-tab="struggling" onclick="showTab('struggling')" style="color:#ef4444">초보</button>
   <button class="tab-btn" data-tab="recent"     onclick="showTab('recent')"     style="color:#a78bfa">최근 런</button>
   <button class="tab-btn" data-tab="issues"     onclick="showTab('issues')"     style="color:#ef4444">에러/이슈</button>
+  <button class="tab-btn" data-tab="nru-bvt"   onclick="showTab('nru-bvt')"   style="color:#22d3ee">NRU BVT</button>
 </div>
 
 <div id="tab-overall" class="tab-panel active">
@@ -1641,6 +1642,50 @@ function iFilter(btn,cat){
   }
 }
 </script>
+</div>
+
+<div id="tab-nru-bvt" class="tab-panel">
+<div style="display:flex;align-items:center;gap:16px;margin-bottom:20px">
+  <div style="background:#22c55e;color:#fff;font-weight:700;font-size:1.1rem;padding:10px 24px;border-radius:8px;letter-spacing:.05em">BVT PASS ✓</div>
+  <div style="color:#94a3b8;font-size:.9rem">2026-04-06 09:30 &nbsp;·&nbsp; 24/24 레벨 클리어 &nbsp;·&nbsp; 골드 2,500 &nbsp;·&nbsp; 해머 3</div>
+</div>
+
+<div class="g2" style="margin-bottom:14px">
+  <div class="box">
+    <div class="sec-title">레벨별 결과 (최신 실행)</div>
+    <div class="sec-desc">Lv1~24 각 레벨 클리어 여부. 녹색=성공, 빨강=실패, 회색=미실행.</div>
+    <div style="display:grid;grid-template-columns:repeat(8,1fr);gap:6px;margin-top:10px">
+      <div class="nru-cell" style="background:#15803d" title="Lv1: PASS (12s, 8턴)"><span class="nru-lv">Lv1</span><span class="nru-icon">✓</span></div><div class="nru-cell" style="background:#15803d" title="Lv2: PASS (15s, 10턴)"><span class="nru-lv">Lv2</span><span class="nru-icon">✓</span></div><div class="nru-cell" style="background:#15803d" title="Lv3: PASS (12s, 7턴)"><span class="nru-lv">Lv3</span><span class="nru-icon">✓</span></div><div class="nru-cell" style="background:#15803d" title="Lv4: PASS (20s, 14턴)"><span class="nru-lv">Lv4</span><span class="nru-icon">✓</span></div><div class="nru-cell" style="background:#15803d" title="Lv5: PASS (19s, 12턴)"><span class="nru-lv">Lv5</span><span class="nru-icon">✓</span></div><div class="nru-cell" style="background:#15803d" title="Lv6: PASS (25s, 16턴)"><span class="nru-lv">Lv6</span><span class="nru-icon">✓</span></div><div class="nru-cell" style="background:#15803d" title="Lv7: PASS (23s, 15턴)"><span class="nru-lv">Lv7</span><span class="nru-icon">✓</span></div><div class="nru-cell" style="background:#15803d" title="Lv8: PASS (30s, 20턴)"><span class="nru-lv">Lv8</span><span class="nru-icon">✓</span></div><div class="nru-cell" style="background:#15803d" title="Lv9: PASS (36s, 23턴)"><span class="nru-lv">Lv9</span><span class="nru-icon">✓</span></div><div class="nru-cell" style="background:#15803d" title="Lv10: PASS (28s, 19턴)"><span class="nru-lv">Lv10</span><span class="nru-icon">✓</span></div><div class="nru-cell" style="background:#15803d" title="Lv11: PASS (32s, 21턴)"><span class="nru-lv">Lv11</span><span class="nru-icon">✓</span></div><div class="nru-cell" style="background:#15803d" title="Lv12: PASS (30s, 20턴)"><span class="nru-lv">Lv12</span><span class="nru-icon">✓</span></div><div class="nru-cell" style="background:#15803d" title="Lv13: PASS (38s, 25턴)"><span class="nru-lv">Lv13</span><span class="nru-icon">✓</span></div><div class="nru-cell" style="background:#15803d" title="Lv14: PASS (42s, 27턴)"><span class="nru-lv">Lv14</span><span class="nru-icon">✓</span></div><div class="nru-cell" style="background:#15803d" title="Lv15: PASS (45s, 29턴)"><span class="nru-lv">Lv15</span><span class="nru-icon">✓</span></div><div class="nru-cell" style="background:#15803d" title="Lv16: PASS (41s, 26턴)"><span class="nru-lv">Lv16</span><span class="nru-icon">✓</span></div><div class="nru-cell" style="background:#15803d" title="Lv17: PASS (50s, 32턴)"><span class="nru-lv">Lv17</span><span class="nru-icon">✓</span></div><div class="nru-cell" style="background:#15803d" title="Lv18: PASS (49s, 31턴)"><span class="nru-lv">Lv18</span><span class="nru-icon">✓</span></div><div class="nru-cell" style="background:#15803d" title="Lv19: PASS (55s, 35턴)"><span class="nru-lv">Lv19</span><span class="nru-icon">✓</span></div><div class="nru-cell" style="background:#15803d" title="Lv20: PASS (52s, 33턴)"><span class="nru-lv">Lv20</span><span class="nru-icon">✓</span></div><div class="nru-cell" style="background:#15803d" title="Lv21: PASS (60s, 38턴)"><span class="nru-lv">Lv21</span><span class="nru-icon">✓</span></div><div class="nru-cell" style="background:#15803d" title="Lv22: PASS (59s, 37턴)"><span class="nru-lv">Lv22</span><span class="nru-icon">✓</span></div><div class="nru-cell" style="background:#15803d" title="Lv23: PASS (65s, 41턴)"><span class="nru-lv">Lv23</span><span class="nru-icon">✓</span></div><div class="nru-cell" style="background:#15803d" title="Lv24: PASS (71s, 44턴)"><span class="nru-lv">Lv24</span><span class="nru-icon">✓</span></div>
+    </div>
+  </div>
+  <div class="box">
+    <div class="sec-title">BVT 통과율 추이</div>
+    <div class="sec-desc">날짜별 BVT 통과율 (%). 100%=모든 실행 통과.</div>
+    <canvas id="cNruTrend" height="120"></canvas>
+    <script>
+    (function(){
+      new Chart('cNruTrend',{type:'line',data:{labels:["2026-04-06"],datasets:[{label:'통과율',data:[100],borderColor:'#22d3ee',backgroundColor:'rgba(34,211,238,.1)',tension:.3,fill:true,pointRadius:4}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{min:0,max:100,ticks:{callback:v=>v+'%',color:'#64748b',font:{size:10}},grid:{color:'#1e293b'}},x:{ticks:{color:'#64748b',font:{size:10}},grid:{color:'#1e293b'}}}}});
+    })();
+    </script>
+  </div>
+</div>
+
+<div class="g2" style="margin-bottom:14px">
+  <div class="box">
+    <div class="sec-title">실패 레벨 상세 (최신 실행)</div>
+    <table><tr><th>레벨</th><th>결과</th><th>시간</th><th>턴수</th><th>원인</th></tr><tr><td colspan="5" class="nd">전 레벨 클리어 ✓</td></tr></table>
+  </div>
+  <div class="box">
+    <div class="sec-title">실행 이력 (최근 20건)</div>
+    <table><tr><th>일시</th><th>BVT</th><th>클리어</th><th>골드</th><th>해머</th></tr><tr><td>2026-04-06 09:30</td><td style="color:#22c55e">PASS</td><td>24/24</td><td>2,500</td><td>3</td></tr></table>
+  </div>
+</div>
+
+<style>
+.nru-cell{display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:6px;padding:8px 4px;cursor:default}
+.nru-lv{font-size:.65rem;color:#cbd5e1;margin-bottom:2px}
+.nru-icon{font-size:.9rem;font-weight:700;color:#fff}
+</style>
 </div>
 
 <script>

@@ -187,7 +187,7 @@ details[open] .rr-summary::before{transform:rotate(90deg)}
 </head>
 <body>
 <h1>SCJ 프리플레이 대시보드</h1>
-<div class="meta">기간: 전체 기간 &nbsp;·&nbsp; 생성: 2026-04-09 17:33:30 &nbsp;·&nbsp; <b>15런 112판</b></div>
+<div class="meta">기간: 전체 기간 &nbsp;·&nbsp; 생성: 2026-04-09 18:00:14 &nbsp;·&nbsp; <b>15런 112판</b></div>
 
 <div class="morning-panel"><div class="mp-title">📊 2026-04-09 요약<span class="mp-legend">클리어율 &middot; 골드손익(전일대비) &middot; 문제스테이지</span></div><div class="mp-cards"><div class="mp-card" style="border-left:3px solid #3b82f6" onclick="showTab('hardcore')" title="고수 탭으로 이동"><div class="mp-label" style="color:#3b82f6">고수</div><div class="mp-sigs"><span class="mp-sig mp-yellow">🟡 92%</span><span class="mp-sig mp-green">🟢 -2233/판</span><span class="mp-sig mp-red">🔴 Lv.CC_0197 0%</span></div></div><div class="mp-card" style="border-left:3px solid #10b981" onclick="showTab('average')" title="중수 탭으로 이동"><div class="mp-label" style="color:#10b981">중수</div><div class="mp-sigs"><span class="mp-sig mp-green">🟢 100%</span><span class="mp-sig mp-green">🟢 -692/판</span><span class="mp-sig mp-green">🟢 이상없음</span></div></div><div class="mp-card" style="border-left:3px solid #f59e0b" onclick="showTab('casual')" title="하수 탭으로 이동"><div class="mp-label" style="color:#f59e0b">하수</div><div class="mp-sigs"><span class="mp-sig mp-green">🟢 100%</span><span class="mp-sig mp-green">🟢 -2652/판</span><span class="mp-sig mp-green">🟢 이상없음</span></div></div></div></div>
 <div class="tabs">
@@ -602,26 +602,6 @@ details[open] .rr-summary::before{transform:rotate(90deg)}
     <div class="box"><div class="sec-title">판 번호별 클리어율</div><div class="sec-desc">세션 내 몇 번째 판인지에 따른 클리어율 변화. 피로도 패턴 확인.</div><canvas id="hardcorePosCR" height="160"></canvas></div>
     <div class="box"><div class="sec-title">판 번호별 평균 소요시간</div><div class="sec-desc">세션 내 판 순서별 평균 소요시간(초). 첫 판과 마지막 판의 소요시간 차이 확인.</div><canvas id="hardcorePosTime" height="160"></canvas></div>
   </div>
-  <div class="box" style="margin-top:14px">
-    <div class="sec-title">실패 패턴 분석</div>
-    <div class="sec-desc">연속 실패(max_consecutive_fails) · 피티 트리거 횟수 — 런별 추이. 평균 연속실패 <b>0.6회</b> &nbsp;·&nbsp; 피티 트리거 누계 <b>0회</b> &nbsp;·&nbsp; 실패 스파이럴 누계 <b>0회</b></div>
-    <div class="g2" style="margin-top:8px">
-      <canvas id="hardcoreFTLine" height="120"></canvas>
-      <canvas id="hardcoreFTStreak" height="120"></canvas>
-    </div>
-  </div>
-  <div class="g2" style="margin-top:14px">
-    <div class="box">
-      <div class="sec-title">런별 평균 Undo 횟수</div>
-      <div class="sec-desc">런마다 레벨당 평균 undo_count 추이. 증가 추세는 레벨 난이도 상승 또는 전략 불안정을 시사.</div>
-      <canvas id="hardcoreUndoLine" height="120"></canvas>
-    </div>
-    <div class="box">
-      <div class="sec-title">런별 평균 Retry 횟수</div>
-      <div class="sec-desc">런마다 레벨당 평균 retry_count 추이. retry 급증은 특정 스테이지 구간의 난이도 스파이크를 반영.</div>
-      <canvas id="hardcoreRetryLine" height="120"></canvas>
-    </div>
-  </div>
 </div>
 
 <div id="tab-average" class="tab-panel">
@@ -677,26 +657,6 @@ details[open] .rr-summary::before{transform:rotate(90deg)}
     <div class="box"><div class="sec-title">판 번호별 클리어율</div><div class="sec-desc">세션 내 몇 번째 판인지에 따른 클리어율 변화. 피로도 패턴 확인.</div><canvas id="averagePosCR" height="160"></canvas></div>
     <div class="box"><div class="sec-title">판 번호별 평균 소요시간</div><div class="sec-desc">세션 내 판 순서별 평균 소요시간(초). 첫 판과 마지막 판의 소요시간 차이 확인.</div><canvas id="averagePosTime" height="160"></canvas></div>
   </div>
-  <div class="box" style="margin-top:14px">
-    <div class="sec-title">실패 패턴 분석</div>
-    <div class="sec-desc">연속 실패(max_consecutive_fails) · 피티 트리거 횟수 — 런별 추이. 평균 연속실패 <b>0.0회</b> &nbsp;·&nbsp; 피티 트리거 누계 <b>0회</b> &nbsp;·&nbsp; 실패 스파이럴 누계 <b>0회</b></div>
-    <div class="g2" style="margin-top:8px">
-      <canvas id="averageFTLine" height="120"></canvas>
-      <canvas id="averageFTStreak" height="120"></canvas>
-    </div>
-  </div>
-  <div class="g2" style="margin-top:14px">
-    <div class="box">
-      <div class="sec-title">런별 평균 Undo 횟수</div>
-      <div class="sec-desc">런마다 레벨당 평균 undo_count 추이. 증가 추세는 레벨 난이도 상승 또는 전략 불안정을 시사.</div>
-      <canvas id="averageUndoLine" height="120"></canvas>
-    </div>
-    <div class="box">
-      <div class="sec-title">런별 평균 Retry 횟수</div>
-      <div class="sec-desc">런마다 레벨당 평균 retry_count 추이. retry 급증은 특정 스테이지 구간의 난이도 스파이크를 반영.</div>
-      <canvas id="averageRetryLine" height="120"></canvas>
-    </div>
-  </div>
 </div>
 
 <div id="tab-casual" class="tab-panel">
@@ -751,26 +711,6 @@ details[open] .rr-summary::before{transform:rotate(90deg)}
   <div class="g2" style="margin-top:14px">
     <div class="box"><div class="sec-title">판 번호별 클리어율</div><div class="sec-desc">세션 내 몇 번째 판인지에 따른 클리어율 변화. 피로도 패턴 확인.</div><canvas id="casualPosCR" height="160"></canvas></div>
     <div class="box"><div class="sec-title">판 번호별 평균 소요시간</div><div class="sec-desc">세션 내 판 순서별 평균 소요시간(초). 첫 판과 마지막 판의 소요시간 차이 확인.</div><canvas id="casualPosTime" height="160"></canvas></div>
-  </div>
-  <div class="box" style="margin-top:14px">
-    <div class="sec-title">실패 패턴 분석</div>
-    <div class="sec-desc">연속 실패(max_consecutive_fails) · 피티 트리거 횟수 — 런별 추이. 평균 연속실패 <b>0.0회</b> &nbsp;·&nbsp; 피티 트리거 누계 <b>0회</b> &nbsp;·&nbsp; 실패 스파이럴 누계 <b>0회</b></div>
-    <div class="g2" style="margin-top:8px">
-      <canvas id="casualFTLine" height="120"></canvas>
-      <canvas id="casualFTStreak" height="120"></canvas>
-    </div>
-  </div>
-  <div class="g2" style="margin-top:14px">
-    <div class="box">
-      <div class="sec-title">런별 평균 Undo 횟수</div>
-      <div class="sec-desc">런마다 레벨당 평균 undo_count 추이. 증가 추세는 레벨 난이도 상승 또는 전략 불안정을 시사.</div>
-      <canvas id="casualUndoLine" height="120"></canvas>
-    </div>
-    <div class="box">
-      <div class="sec-title">런별 평균 Retry 횟수</div>
-      <div class="sec-desc">런마다 레벨당 평균 retry_count 추이. retry 급증은 특정 스테이지 구간의 난이도 스파이크를 반영.</div>
-      <canvas id="casualRetryLine" height="120"></canvas>
-    </div>
   </div>
 </div>
 <div id="tab-struggling" class="tab-panel"><div class="box"><div class="nd">데이터 없음</div></div></div>
@@ -949,6 +889,11 @@ details[open] .rr-summary::before{transform:rotate(90deg)}
       <tr><td><span class="pbadge" style="background:#3b82f622;color:#3b82f6;border:1px solid #3b82f644">고수</span></td><td>218</td><td class="cr-low">20</td><td class="cr-low">92%</td></tr><tr><td><span class="pbadge" style="background:#10b98122;color:#10b981;border:1px solid #10b98144">중수</span></td><td>68</td><td class="cr-low">5</td><td class="cr-low">93%</td></tr><tr><td><span class="pbadge" style="background:#f59e0b22;color:#f59e0b;border:1px solid #f59e0b44">하수</span></td><td>36</td><td class="cr-low">7</td><td class="cr-low">84%</td></tr><tr><td><span class="pbadge" style="background:#ef444422;color:#ef4444;border:1px solid #ef444444">초보</span></td><td>—</td><td>—</td><td>—</td></tr>
     </table>
   </div>
+</div>
+<div class="box" style="margin-bottom:14px">
+  <div class="sec-title">네트워크 오류 추이</div>
+  <div class="sec-desc">런 기준 날짜별 콘솔 warn / error 발생 횟수. 급증 구간은 클라이언트 또는 네트워크 이상을 의심.</div>
+  <canvas id="netErrChart" style="max-height:220px"></canvas>
 </div>
 <div class="box">
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px">
@@ -1282,6 +1227,7 @@ function iFilter(btn,cat){
     empty.style.display=n===0?'block':'none';
   }
 }
+(function(){var ctx=document.getElementById('netErrChart');if(!ctx)return;new Chart(ctx,{type:'line',data:{labels:["20260409"],datasets:[{label:'경고(warn)',data:[1479],borderColor:'#f59e0b',backgroundColor:'rgba(245,158,11,0.08)',fill:true,tension:0.3,pointRadius:3,borderWidth:2,spanGaps:false},{label:'오류(error)',data:[1],borderColor:'#ef4444',backgroundColor:'rgba(239,68,68,0.08)',fill:true,tension:0.3,pointRadius:3,borderWidth:2,spanGaps:false}]},options:{responsive:true,animation:false,plugins:{legend:{labels:{color:'#94a3b8',boxWidth:10}}},scales:{x:{ticks:{color:'#64748b',maxTicksLimit:20},grid:{color:'rgba(56,189,248,.06)'}},y:{min:0,ticks:{color:'#64748b'},grid:{color:'#1e293b'}}}}});})();
 </script>
 </div>
 
@@ -1296,10 +1242,10 @@ const D={responsive:true,
   }};
 const noLegend = {...D,plugins:{legend:{display:false}}};
 
-new Chart('cEff',  {type:'line',data:{labels:["고수", "중수", "하수", "초보"],datasets:[{label:"골드 회수율",data:[70.3, 88.6, 52.1, 0.0],borderColor:"#6366f1",backgroundColor:"#6366f122",tension:0.3,fill:false,pointRadius:3,spanGaps:false}]},   options:noLegend});
-new Chart('cGold', {type:'line',data:{labels:["고수", "중수", "하수", "초보"],datasets:[{label:"골드손익",data:[-2233, -692, -2652, 0],borderColor:"#f59e0b",backgroundColor:"#f59e0b22",tension:0.3,fill:false,pointRadius:3,spanGaps:false}]},   options:noLegend});
-new Chart('cTurns',{type:'line',data:{labels:["고수", "중수", "하수", "초보"],datasets:[{label:"평균턴",data:[46.4, 29.1, 29.9, 0.0],borderColor:"#3b82f6",backgroundColor:"#3b82f622",tension:0.3,fill:false,pointRadius:3,spanGaps:false}]},  options:noLegend});
-new Chart('cGimmick',{type:'line',data:{labels:["고수", "중수", "하수", "초보"],datasets:[{label:"기믹",data:[0.2, 0.2, 0.2, 0.0],borderColor:"#ef4444",backgroundColor:"#ef444422",tension:0.3,fill:false,pointRadius:3,spanGaps:false},{label:"플러스카드",data:[0.0, 0.0, 0.0, 0.0],borderColor:"#a78bfa",backgroundColor:"#a78bfa22",tension:0.3,fill:false,pointRadius:3,spanGaps:false}]},options:D});
+new Chart('cEff',  {type:'bar', data:{labels:["고수", "중수", "하수", "초보"],datasets:[{label:"골드 회수율",data:[70.3, 88.6, 52.1, 0.0],backgroundColor:"#6366f1",borderRadius:5}]},   options:noLegend});
+new Chart('cGold', {type:'bar', data:{labels:["고수", "중수", "하수", "초보"],datasets:[{label:"골드손익",data:[-2233, -692, -2652, 0],backgroundColor:"#f59e0b",borderRadius:5}]},   options:noLegend});
+new Chart('cTurns',{type:'bar', data:{labels:["고수", "중수", "하수", "초보"],datasets:[{label:"평균턴",data:[46.4, 29.1, 29.9, 0.0],backgroundColor:"#3b82f6",borderRadius:5}]},  options:noLegend});
+new Chart('cGimmick',{type:'bar',data:{labels:["고수", "중수", "하수", "초보"],datasets:[{label:"기믹",data:[0.2, 0.2, 0.2, 0.0],backgroundColor:"#ef4444",borderRadius:5},{label:"플러스카드",data:[0.0, 0.0, 0.0, 0.0],backgroundColor:"#a78bfa",borderRadius:5}]},options:D});
 
 new Chart('cRunEff', {type:'line',data:{labels:["런1", "런2", "런3", "런4", "런5", "런6", "런7", "런8", "런9", "런10"],datasets:[{label:"고수",data:[139.9, 124.0, 113.5, 84.8, 65.5, 106.3, 89.3, 116.6, 122.1, 124.3],borderColor:"#3b82f6",backgroundColor:"#3b82f622",tension:0.3,fill:false,pointRadius:3,spanGaps:false},{label:"중수",data:[90.8, 98.9, 87.4],borderColor:"#10b981",backgroundColor:"#10b98122",tension:0.3,fill:false,pointRadius:3,spanGaps:false},{label:"하수",data:[50.4, 64.2],borderColor:"#f59e0b",backgroundColor:"#f59e0b22",tension:0.3,fill:false,pointRadius:3,spanGaps:false}]},  options:D});
 new Chart('cRunGold',{type:'line',data:{labels:["런1", "런2", "런3", "런4", "런5", "런6", "런7", "런8", "런9", "런10"],datasets:[{label:"고수",data:[2383, 1344, 205, -599, -40651, -429, -257, 893, 854, 486],borderColor:"#3b82f6",backgroundColor:"#3b82f622",tension:0.3,fill:false,pointRadius:3,spanGaps:false},{label:"중수",data:[-693, -786, -597],borderColor:"#10b981",backgroundColor:"#10b98122",tension:0.3,fill:false,pointRadius:3,spanGaps:false},{label:"하수",data:[-5336, -1579],borderColor:"#f59e0b",backgroundColor:"#f59e0b22",tension:0.3,fill:false,pointRadius:3,spanGaps:false}]},options:D});
@@ -1350,10 +1296,6 @@ new Chart('hardcoreGT',{type:'bar',data:{labels:["러너", "얼음"],datasets:[{
 new Chart('hardcoreEcon',{type:'bar',data:{labels:['와일드 비용','스트릭 보너스'],datasets:[{label:'골드',data:[-3592.4, 26.9],backgroundColor:['#3b82f644','#3b82f6'],borderColor:'#3b82f6',borderWidth:1,borderRadius:3}]},options:{responsive:true,animation:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#64748b'},grid:{color:'rgba(56,189,248,.06)'}},y:{ticks:{color:'#64748b'},grid:{color:'rgba(56,189,248,.06)'}}}}});
 (function(){var ctx=document.getElementById('hardcorePosCR');if(!ctx)return;new Chart(ctx,{type:'line',data:{labels:["1번째 판", "2번째 판", "3번째 판", "4번째 판", "5번째 판", "6번째 판", "7번째 판", "8번째 판", "9번째 판", "10번째 판", "11번째 판", "12번째 판", "13번째 판", "14번째 판", "15번째 판"],datasets:[{label:"클리어율(%)",data:[100.0, 100.0, 90.0, 88.9, 88.9, 66.7, 66.7, 66.7, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0],borderColor:'#3b82f6',backgroundColor:'#3b82f622',fill:true,tension:0.3,pointRadius:3,borderWidth:2}]},options:{responsive:true,animation:false,plugins:{legend:{labels:{color:'#94a3b8',boxWidth:10}}},scales:{x:{ticks:{color:'#64748b',maxTicksLimit:20},grid:{color:'#1e293b'}},y:{min:0,max:100,ticks:{color:'#64748b'},grid:{color:'#334155'}}}}});})();
 (function(){var ctx=document.getElementById('hardcorePosTime');if(!ctx)return;new Chart(ctx,{type:'line',data:{labels:["1번째 판", "2번째 판", "3번째 판", "4번째 판", "5번째 판", "6번째 판", "7번째 판", "8번째 판", "9번째 판", "10번째 판", "11번째 판", "12번째 판", "13번째 판", "14번째 판", "15번째 판"],datasets:[{label:"평균시간(초)",data:[25.2, 25.1, 20.0, 31.9, 32.1, 13.6, 45.4, 46.8, 19.0, 19.0, 20.1, 20.4, 19.6, 18.2, 20.7],borderColor:'#3b82f6',backgroundColor:'#3b82f622',fill:true,tension:0.3,pointRadius:3,borderWidth:2}]},options:{responsive:true,animation:false,plugins:{legend:{labels:{color:'#94a3b8',boxWidth:10}}},scales:{x:{ticks:{color:'#64748b',maxTicksLimit:20},grid:{color:'#1e293b'}},y:{min:0,ticks:{color:'#64748b'},grid:{color:'#334155'}}}}});})();
-new Chart('hardcoreFTLine',{type:'line',data:{labels:["런1", "런2", "런3", "런4", "런5", "런6", "런7", "런8", "런9", "런10"],datasets:[{label:"최대 연속실패",data:[0, 0, 0, 0, 2, 0, 1, 3, 0, 0],borderColor:"#3b82f6",backgroundColor:"#3b82f622",tension:0.3,fill:false,pointRadius:3,spanGaps:false},{label:"피티 트리거",data:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],borderColor:"#f59e0b",backgroundColor:"#f59e0b22",tension:0.3,fill:false,pointRadius:3,spanGaps:false},{label:"실패 스파이럴",data:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],borderColor:"#ef4444",backgroundColor:"#ef444422",tension:0.3,fill:false,pointRadius:3,spanGaps:false}]},options:{plugins:{legend:{display:true}},scales:{y:{beginAtZero:true}}}});
-new Chart('hardcoreFTStreak',{type:'bar',data:{labels:["0"],datasets:[{label:"연속실패 길이 분포",data:[1],backgroundColor:"#3b82f6",borderRadius:5}]},options:{plugins:{legend:{display:false}},scales:{x:{title:{display:true,text:'연속 실패 횟수'}},y:{beginAtZero:true,title:{display:true,text:'빈도'}}}}});
-new Chart('hardcoreUndoLine',{type:'line',data:{labels:["런1", "런2", "런3", "런4", "런5", "런6", "런7", "런8", "런9", "런10"],datasets:[{label:"평균 Undo 횟수",data:[0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00],borderColor:"#3b82f6",backgroundColor:"#3b82f622",tension:0.3,fill:false,pointRadius:3,spanGaps:false}]},options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});
-new Chart('hardcoreRetryLine',{type:'line',data:{labels:["런1", "런2", "런3", "런4", "런5", "런6", "런7", "런8", "런9", "런10"],datasets:[{label:"평균 Retry 횟수",data:[0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00],borderColor:"#f97316",backgroundColor:"#f9731622",tension:0.3,fill:false,pointRadius:3,spanGaps:false}]},options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}}});
 
 new Chart('averageRC',{type:'line',data:{labels:["런1", "런2", "런3"],datasets:[{label:"골드 회수율",data:[90.8, 98.9, 87.4],borderColor:"#10b981",backgroundColor:"#10b98122",tension:0.3,fill:false,pointRadius:3,spanGaps:false}]},options:noLegend});
 new Chart('averageRG',{type:'line',data:{labels:["런1", "런2", "런3"],datasets:[{label:"손익/판",data:[-693, -786, -597],borderColor:"#10b981",backgroundColor:"#10b98122",tension:0.3,fill:false,pointRadius:3,spanGaps:false}]},options:noLegend});
@@ -1372,10 +1314,6 @@ new Chart('averageGT',{type:'bar',data:{labels:["러너", "얼음"],datasets:[{l
 new Chart('averageEcon',{type:'bar',data:{labels:['와일드 비용','스트릭 보너스'],datasets:[{label:'골드',data:[-1080.0, 26.2],backgroundColor:['#10b98144','#10b981'],borderColor:'#10b981',borderWidth:1,borderRadius:3}]},options:{responsive:true,animation:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#64748b'},grid:{color:'rgba(56,189,248,.06)'}},y:{ticks:{color:'#64748b'},grid:{color:'rgba(56,189,248,.06)'}}}}});
 (function(){var ctx=document.getElementById('averagePosCR');if(!ctx)return;new Chart(ctx,{type:'line',data:{labels:["1번째 판", "2번째 판", "3번째 판", "4번째 판", "5번째 판", "6번째 판", "7번째 판", "8번째 판", "9번째 판", "10번째 판"],datasets:[{label:"클리어율(%)",data:[100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0],borderColor:'#10b981',backgroundColor:'#10b98122',fill:true,tension:0.3,pointRadius:3,borderWidth:2}]},options:{responsive:true,animation:false,plugins:{legend:{labels:{color:'#94a3b8',boxWidth:10}}},scales:{x:{ticks:{color:'#64748b',maxTicksLimit:20},grid:{color:'#1e293b'}},y:{min:0,max:100,ticks:{color:'#64748b'},grid:{color:'#334155'}}}}});})();
 (function(){var ctx=document.getElementById('averagePosTime');if(!ctx)return;new Chart(ctx,{type:'line',data:{labels:["1번째 판", "2번째 판", "3번째 판", "4번째 판", "5번째 판", "6번째 판", "7번째 판", "8번째 판", "9번째 판", "10번째 판"],datasets:[{label:"평균시간(초)",data:[22.6, 18.7, 15.0, 15.4, 17.7, 19.6, 13.7, 18.8, 19.1, 13.1],borderColor:'#10b981',backgroundColor:'#10b98122',fill:true,tension:0.3,pointRadius:3,borderWidth:2}]},options:{responsive:true,animation:false,plugins:{legend:{labels:{color:'#94a3b8',boxWidth:10}}},scales:{x:{ticks:{color:'#64748b',maxTicksLimit:20},grid:{color:'#1e293b'}},y:{min:0,ticks:{color:'#64748b'},grid:{color:'#334155'}}}}});})();
-new Chart('averageFTLine',{type:'line',data:{labels:["런1", "런2", "런3"],datasets:[{label:"최대 연속실패",data:[0, 0, 0],borderColor:"#10b981",backgroundColor:"#10b98122",tension:0.3,fill:false,pointRadius:3,spanGaps:false},{label:"피티 트리거",data:[0, 0, 0],borderColor:"#f59e0b",backgroundColor:"#f59e0b22",tension:0.3,fill:false,pointRadius:3,spanGaps:false},{label:"실패 스파이럴",data:[0, 0, 0],borderColor:"#ef4444",backgroundColor:"#ef444422",tension:0.3,fill:false,pointRadius:3,spanGaps:false}]},options:{plugins:{legend:{display:true}},scales:{y:{beginAtZero:true}}}});
-new Chart('averageFTStreak',{type:'bar',data:{labels:[],datasets:[{label:"연속실패 길이 분포",data:[],backgroundColor:"#10b981",borderRadius:5}]},options:{plugins:{legend:{display:false}},scales:{x:{title:{display:true,text:'연속 실패 횟수'}},y:{beginAtZero:true,title:{display:true,text:'빈도'}}}}});
-new Chart('averageUndoLine',{type:'line',data:{labels:["런1", "런2", "런3"],datasets:[{label:"평균 Undo 횟수",data:[0.00, 0.00, 0.00],borderColor:"#10b981",backgroundColor:"#10b98122",tension:0.3,fill:false,pointRadius:3,spanGaps:false}]},options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});
-new Chart('averageRetryLine',{type:'line',data:{labels:["런1", "런2", "런3"],datasets:[{label:"평균 Retry 횟수",data:[0.00, 0.00, 0.00],borderColor:"#f97316",backgroundColor:"#f9731622",tension:0.3,fill:false,pointRadius:3,spanGaps:false}]},options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}}});
 
 new Chart('casualRC',{type:'line',data:{labels:["런1", "런2"],datasets:[{label:"골드 회수율",data:[50.4, 64.2],borderColor:"#f59e0b",backgroundColor:"#f59e0b22",tension:0.3,fill:false,pointRadius:3,spanGaps:false}]},options:noLegend});
 new Chart('casualRG',{type:'line',data:{labels:["런1", "런2"],datasets:[{label:"손익/판",data:[-5336, -1579],borderColor:"#f59e0b",backgroundColor:"#f59e0b22",tension:0.3,fill:false,pointRadius:3,spanGaps:false}]},options:noLegend});
@@ -1394,10 +1332,6 @@ new Chart('casualGT',{type:'bar',data:{labels:["얼음", "러너"],datasets:[{la
 new Chart('casualEcon',{type:'bar',data:{labels:['와일드 비용','스트릭 보너스'],datasets:[{label:'골드',data:[-3141.4, 13.8],backgroundColor:['#f59e0b44','#f59e0b'],borderColor:'#f59e0b',borderWidth:1,borderRadius:3}]},options:{responsive:true,animation:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#64748b'},grid:{color:'rgba(56,189,248,.06)'}},y:{ticks:{color:'#64748b'},grid:{color:'rgba(56,189,248,.06)'}}}}});
 (function(){var ctx=document.getElementById('casualPosCR');if(!ctx)return;new Chart(ctx,{type:'line',data:{labels:["1번째 판", "2번째 판", "3번째 판", "4번째 판", "5번째 판", "6번째 판", "7번째 판", "8번째 판", "9번째 판", "10번째 판"],datasets:[{label:"클리어율(%)",data:[100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0],borderColor:'#f59e0b',backgroundColor:'#f59e0b22',fill:true,tension:0.3,pointRadius:3,borderWidth:2}]},options:{responsive:true,animation:false,plugins:{legend:{labels:{color:'#94a3b8',boxWidth:10}}},scales:{x:{ticks:{color:'#64748b',maxTicksLimit:20},grid:{color:'#1e293b'}},y:{min:0,max:100,ticks:{color:'#64748b'},grid:{color:'#334155'}}}}});})();
 (function(){var ctx=document.getElementById('casualPosTime');if(!ctx)return;new Chart(ctx,{type:'line',data:{labels:["1번째 판", "2번째 판", "3번째 판", "4번째 판", "5번째 판", "6번째 판", "7번째 판", "8번째 판", "9번째 판", "10번째 판"],datasets:[{label:"평균시간(초)",data:[12.7, 18.1, 17.3, 34.2, 13.2, 19.9, 11.6, 13.2, 13.2, 22.6],borderColor:'#f59e0b',backgroundColor:'#f59e0b22',fill:true,tension:0.3,pointRadius:3,borderWidth:2}]},options:{responsive:true,animation:false,plugins:{legend:{labels:{color:'#94a3b8',boxWidth:10}}},scales:{x:{ticks:{color:'#64748b',maxTicksLimit:20},grid:{color:'#1e293b'}},y:{min:0,ticks:{color:'#64748b'},grid:{color:'#334155'}}}}});})();
-new Chart('casualFTLine',{type:'line',data:{labels:["런1", "런2"],datasets:[{label:"최대 연속실패",data:[0, 0],borderColor:"#f59e0b",backgroundColor:"#f59e0b22",tension:0.3,fill:false,pointRadius:3,spanGaps:false},{label:"피티 트리거",data:[0, 0],borderColor:"#f59e0b",backgroundColor:"#f59e0b22",tension:0.3,fill:false,pointRadius:3,spanGaps:false},{label:"실패 스파이럴",data:[0, 0],borderColor:"#ef4444",backgroundColor:"#ef444422",tension:0.3,fill:false,pointRadius:3,spanGaps:false}]},options:{plugins:{legend:{display:true}},scales:{y:{beginAtZero:true}}}});
-new Chart('casualFTStreak',{type:'bar',data:{labels:[],datasets:[{label:"연속실패 길이 분포",data:[],backgroundColor:"#f59e0b",borderRadius:5}]},options:{plugins:{legend:{display:false}},scales:{x:{title:{display:true,text:'연속 실패 횟수'}},y:{beginAtZero:true,title:{display:true,text:'빈도'}}}}});
-new Chart('casualUndoLine',{type:'line',data:{labels:["런1", "런2"],datasets:[{label:"평균 Undo 횟수",data:[0.00, 0.00],borderColor:"#f59e0b",backgroundColor:"#f59e0b22",tension:0.3,fill:false,pointRadius:3,spanGaps:false}]},options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});
-new Chart('casualRetryLine',{type:'line',data:{labels:["런1", "런2"],datasets:[{label:"평균 Retry 횟수",data:[0.00, 0.00],borderColor:"#f97316",backgroundColor:"#f9731622",tension:0.3,fill:false,pointRadius:3,spanGaps:false}]},options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}}});
 </script>
 </body>
 </html>

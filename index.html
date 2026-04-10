@@ -45,48 +45,8 @@
   }
   .gtab:hover:not(.active) { opacity: 0.9; }
 
-  .date-filter-wrap {
-    margin-left: auto;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .date-filter-label {
-    font-size: 11px;
-    color: #475569;
-    white-space: nowrap;
-  }
-  .date-filter-select {
-    appearance: none;
-    -webkit-appearance: none;
-    background: #0b1120;
-    border: 1px solid #1e3a5f;
-    border-radius: 6px;
-    color: #94a3b8;
-    font-size: 12px;
-    padding: 4px 24px 4px 10px;
-    cursor: pointer;
-    outline: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%2364748b'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 8px center;
-    transition: border-color 0.15s;
-  }
-  .date-filter-select:hover { border-color: #3b82f6; }
-  .date-filter-select:focus { border-color: #3b82f6; }
-  .period-badge {
-    font-size: 11px;
-    color: #475569;
-    background: #0f2040;
-    border: 1px solid #1e3a5f;
-    border-radius: 4px;
-    padding: 3px 8px;
-    white-space: nowrap;
-    display: none;
-  }
-  .period-badge.visible { display: inline-block; }
-
   .ts {
+    margin-left: auto;
     font-size: 11px;
     color: #334155;
     white-space: nowrap;
@@ -98,40 +58,15 @@
     border: none;
     display: block;
   }
-
-  .iframe-filter-notice {
-    display: none;
-    position: fixed;
-    bottom: 16px;
-    right: 16px;
-    background: #0f1a2e;
-    border: 1px solid #1e3a5f;
-    border-radius: 8px;
-    padding: 10px 16px;
-    font-size: 12px;
-    color: #64748b;
-    z-index: 200;
-    max-width: 280px;
-  }
-  .iframe-filter-notice.visible { display: block; }
 </style>
 </head>
 <body>
   <div class="top-bar">
-    <span class="logo">통합 대시보드</span>
+    <span class="logo">🎮 통합 대시보드</span>
     <button class="gtab active" style="--gc:#f59e0b" onclick="switchGame('overview',this)">종합</button>
     <button class="gtab" style="--gc:#10b981" onclick="switchGame('ctz',this)">CTZ</button>
     <button class="gtab" style="--gc:#3b82f6" onclick="switchGame('scj',this)">SCJ</button>
-    <div class="date-filter-wrap">
-      <span class="date-filter-label">조회 기간</span>
-      <select class="date-filter-select" id="dateRangeSelect" onchange="onDateRangeChange(this.value)">
-        <option value="all" selected>전체</option>
-        <option value="30d">최근 30일</option>
-        <option value="7d">최근 7일</option>
-      </select>
-      <span class="period-badge" id="periodBadge">데이터 없음</span>
-      <span class="ts">갱신: 2026-04-09 17:33:31</span>
-    </div>
+    <span class="ts">갱신: 2026-04-10 11:37:08</span>
   </div>
   <div id="frame-ctz" style="display:none" style="display:none;align-items:center;justify-content:center;height:100%;color:#4e6a85;flex-direction:column;gap:12px;"><div style="font-size:48px;opacity:.3">📭</div><div style="font-size:15px;">CTZ 데이터 없음</div><div style="font-size:12px;opacity:.6;">프리플레이를 실행하면 자동으로 표시됩니다</div></div>
   <iframe id="frame-scj" src="dashboard_scj.html" style="display:none"></iframe>
@@ -152,15 +87,15 @@
     .ov-chart-title{font-size:13px;font-weight:600;color:#94a3b8;margin-bottom:14px;}
   </style>
 
-  <div class="ov-summary" id="ov-summary-bar">
+  <div class="ov-summary">
     <b>전체 현황</b> &nbsp;·&nbsp;
-    총 런 <b>18</b> &nbsp;·&nbsp;
-    총 판 <b>119</b> &nbsp;·&nbsp;
-    갱신: <b>2026-04-09 17:33:31</b>
+    총 런 <b>19</b> &nbsp;·&nbsp;
+    총 판 <b>124</b> &nbsp;·&nbsp;
+    갱신: <b>2026-04-10 11:37:08</b>
   </div>
 
   <div class="ov-cards">
-    <div class="ov-card" style="border-color:#3b82f6"><div class="ov-card-title" style="color:#3b82f6">SCJ</div><div class="ov-item"><span class="ov-label">클리어율</span><span class="ov-val" style="color:#3b82f6">89.1%</span></div><div class="ov-item"><span class="ov-label">골드 손익/판</span><span class="ov-val" style="color:#3b82f6">+8,437</span></div><div class="ov-item"><span class="ov-label">총 런</span><span class="ov-val" style="color:#3b82f6">18</span></div></div>
+    <div class="ov-card" style="border-color:#3b82f6"><div class="ov-card-title" style="color:#3b82f6">SCJ</div><div class="ov-item"><span class="ov-label">클리어율</span><span class="ov-val" style="color:#3b82f6">89.5%</span></div><div class="ov-item"><span class="ov-label">골드 손익/판</span><span class="ov-val" style="color:#3b82f6">+8,194</span></div><div class="ov-item"><span class="ov-label">총 런</span><span class="ov-val" style="color:#3b82f6">19</span></div></div>
     <div class="ov-card ov-empty">CTZ 데이터 없음</div>
   </div>
 
@@ -173,7 +108,7 @@
     <div class="ov-chart-title">SCJ 난이도별 모드 클리어율 (%)</div>
     <table style="width:100%;border-collapse:collapse;">
       <thead><tr><th style="padding:8px 14px;font-size:11px;font-weight:600;color:#64748b;text-align:center;border-bottom:1px solid #1e3a5f;white-space:nowrap;text-align:left;">난이도</th><th style="padding:8px 14px;font-size:11px;font-weight:600;color:#64748b;text-align:center;border-bottom:1px solid #1e3a5f;white-space:nowrap;">고수</th><th style="padding:8px 14px;font-size:11px;font-weight:600;color:#64748b;text-align:center;border-bottom:1px solid #1e3a5f;white-space:nowrap;">중수</th><th style="padding:8px 14px;font-size:11px;font-weight:600;color:#64748b;text-align:center;border-bottom:1px solid #1e3a5f;white-space:nowrap;">하수</th><th style="padding:8px 14px;font-size:11px;font-weight:600;color:#64748b;text-align:center;border-bottom:1px solid #1e3a5f;white-space:nowrap;">초보</th></tr></thead>
-      <tbody><tr><td style="padding:8px 14px;text-align:center;font-size:13px;font-weight:600;border-bottom:1px solid #0f1a2e;color:#94a3b8;text-align:left;">튜토리얼</td><td style="padding:8px 14px;text-align:center;font-size:13px;font-weight:600;border-bottom:1px solid #0f1a2e;background:#1e3a5f;color:#64748b;">—</td><td style="padding:8px 14px;text-align:center;font-size:13px;font-weight:600;border-bottom:1px solid #0f1a2e;background:#1e3a5f;color:#64748b;">—</td><td style="padding:8px 14px;text-align:center;font-size:13px;font-weight:600;border-bottom:1px solid #0f1a2e;background:#1e3a5f;color:#64748b;">—</td><td style="padding:8px 14px;text-align:center;font-size:13px;font-weight:600;border-bottom:1px solid #0f1a2e;background:#1e3a5f;color:#64748b;">—</td></tr><tr><td style="padding:8px 14px;text-align:center;font-size:13px;font-weight:600;border-bottom:1px solid #0f1a2e;color:#94a3b8;text-align:left;">보통</td><td style="padding:8px 14px;text-align:center;font-size:13px;font-weight:600;border-bottom:1px solid #0f1a2e;background:rgba(16,185,129,0.18);color:#10b981;">89.5%</td><td style="padding:8px 14px;text-align:center;font-size:13px;font-weight:600;border-bottom:1px solid #0f1a2e;background:rgba(16,185,129,0.18);color:#10b981;">100.0%</td><td style="padding:8px 14px;text-align:center;font-size:13px;font-weight:600;border-bottom:1px solid #0f1a2e;background:rgba(16,185,129,0.18);color:#10b981;">100.0%</td><td style="padding:8px 14px;text-align:center;font-size:13px;font-weight:600;border-bottom:1px solid #0f1a2e;background:#1e3a5f;color:#64748b;">—</td></tr><tr><td style="padding:8px 14px;text-align:center;font-size:13px;font-weight:600;border-bottom:1px solid #0f1a2e;color:#94a3b8;text-align:left;">어려움</td><td style="padding:8px 14px;text-align:center;font-size:13px;font-weight:600;border-bottom:1px solid #0f1a2e;background:rgba(16,185,129,0.18);color:#10b981;">100.0%</td><td style="padding:8px 14px;text-align:center;font-size:13px;font-weight:600;border-bottom:1px solid #0f1a2e;background:rgba(16,185,129,0.18);color:#10b981;">100.0%</td><td style="padding:8px 14px;text-align:center;font-size:13px;font-weight:600;border-bottom:1px solid #0f1a2e;background:rgba(16,185,129,0.18);color:#10b981;">100.0%</td><td style="padding:8px 14px;text-align:center;font-size:13px;font-weight:600;border-bottom:1px solid #0f1a2e;background:#1e3a5f;color:#64748b;">—</td></tr><tr><td style="padding:8px 14px;text-align:center;font-size:13px;font-weight:600;border-bottom:1px solid #0f1a2e;color:#94a3b8;text-align:left;">매우 어려움</td><td style="padding:8px 14px;text-align:center;font-size:13px;font-weight:600;border-bottom:1px solid #0f1a2e;background:rgba(16,185,129,0.18);color:#10b981;">100.0%</td><td style="padding:8px 14px;text-align:center;font-size:13px;font-weight:600;border-bottom:1px solid #0f1a2e;background:rgba(16,185,129,0.18);color:#10b981;">100.0%</td><td style="padding:8px 14px;text-align:center;font-size:13px;font-weight:600;border-bottom:1px solid #0f1a2e;background:rgba(16,185,129,0.18);color:#10b981;">100.0%</td><td style="padding:8px 14px;text-align:center;font-size:13px;font-weight:600;border-bottom:1px solid #0f1a2e;background:#1e3a5f;color:#64748b;">—</td></tr></tbody>
+      <tbody><tr><td style="padding:8px 14px;text-align:center;font-size:13px;font-weight:600;border-bottom:1px solid #0f1a2e;color:#94a3b8;text-align:left;">튜토리얼</td><td style="padding:8px 14px;text-align:center;font-size:13px;font-weight:600;border-bottom:1px solid #0f1a2e;background:#1e3a5f;color:#64748b;">—</td><td style="padding:8px 14px;text-align:center;font-size:13px;font-weight:600;border-bottom:1px solid #0f1a2e;background:#1e3a5f;color:#64748b;">—</td><td style="padding:8px 14px;text-align:center;font-size:13px;font-weight:600;border-bottom:1px solid #0f1a2e;background:#1e3a5f;color:#64748b;">—</td><td style="padding:8px 14px;text-align:center;font-size:13px;font-weight:600;border-bottom:1px solid #0f1a2e;background:#1e3a5f;color:#64748b;">—</td></tr><tr><td style="padding:8px 14px;text-align:center;font-size:13px;font-weight:600;border-bottom:1px solid #0f1a2e;color:#94a3b8;text-align:left;">보통</td><td style="padding:8px 14px;text-align:center;font-size:13px;font-weight:600;border-bottom:1px solid #0f1a2e;background:rgba(16,185,129,0.18);color:#10b981;">90.2%</td><td style="padding:8px 14px;text-align:center;font-size:13px;font-weight:600;border-bottom:1px solid #0f1a2e;background:rgba(16,185,129,0.18);color:#10b981;">100.0%</td><td style="padding:8px 14px;text-align:center;font-size:13px;font-weight:600;border-bottom:1px solid #0f1a2e;background:rgba(16,185,129,0.18);color:#10b981;">100.0%</td><td style="padding:8px 14px;text-align:center;font-size:13px;font-weight:600;border-bottom:1px solid #0f1a2e;background:#1e3a5f;color:#64748b;">—</td></tr><tr><td style="padding:8px 14px;text-align:center;font-size:13px;font-weight:600;border-bottom:1px solid #0f1a2e;color:#94a3b8;text-align:left;">어려움</td><td style="padding:8px 14px;text-align:center;font-size:13px;font-weight:600;border-bottom:1px solid #0f1a2e;background:rgba(16,185,129,0.18);color:#10b981;">100.0%</td><td style="padding:8px 14px;text-align:center;font-size:13px;font-weight:600;border-bottom:1px solid #0f1a2e;background:rgba(16,185,129,0.18);color:#10b981;">100.0%</td><td style="padding:8px 14px;text-align:center;font-size:13px;font-weight:600;border-bottom:1px solid #0f1a2e;background:rgba(16,185,129,0.18);color:#10b981;">100.0%</td><td style="padding:8px 14px;text-align:center;font-size:13px;font-weight:600;border-bottom:1px solid #0f1a2e;background:#1e3a5f;color:#64748b;">—</td></tr><tr><td style="padding:8px 14px;text-align:center;font-size:13px;font-weight:600;border-bottom:1px solid #0f1a2e;color:#94a3b8;text-align:left;">매우 어려움</td><td style="padding:8px 14px;text-align:center;font-size:13px;font-weight:600;border-bottom:1px solid #0f1a2e;background:rgba(16,185,129,0.18);color:#10b981;">100.0%</td><td style="padding:8px 14px;text-align:center;font-size:13px;font-weight:600;border-bottom:1px solid #0f1a2e;background:rgba(16,185,129,0.18);color:#10b981;">100.0%</td><td style="padding:8px 14px;text-align:center;font-size:13px;font-weight:600;border-bottom:1px solid #0f1a2e;background:rgba(16,185,129,0.18);color:#10b981;">100.0%</td><td style="padding:8px 14px;text-align:center;font-size:13px;font-weight:600;border-bottom:1px solid #0f1a2e;background:#1e3a5f;color:#64748b;">—</td></tr></tbody>
     </table>
   </div>
 </div>
@@ -183,31 +118,25 @@
   var ctx = document.getElementById('ovCompareChart');
   if (!ctx) return;
   new Chart(ctx, {
-    type: 'line',
+    type: 'bar',
     data: {
       labels: ["고수","중수","하수","초보"],
       datasets: [
         {
           label: 'SCJ',
-          data: [83.8,100.0,100.0,null],
-          backgroundColor: 'rgba(59,130,246,0.15)',
+          data: [84.7,100.0,100.0,null],
+          backgroundColor: 'rgba(59,130,246,0.7)',
           borderColor: '#3b82f6',
-          borderWidth: 2,
-          pointRadius: 5,
-          pointHoverRadius: 7,
-          tension: 0.3,
-          fill: true,
+          borderWidth: 1.5,
+          borderRadius: 4,
         },
         {
           label: 'CTZ',
           data: [null,null,null,null],
-          backgroundColor: 'rgba(16,185,129,0.15)',
+          backgroundColor: 'rgba(16,185,129,0.7)',
           borderColor: '#10b981',
-          borderWidth: 2,
-          pointRadius: 5,
-          pointHoverRadius: 7,
-          tension: 0.3,
-          fill: true,
+          borderWidth: 1.5,
+          borderRadius: 4,
         }
       ]
     },
@@ -225,14 +154,8 @@
   });
 })();
 </script>
-  <div class="iframe-filter-notice" id="iframeNotice">
-    게임별 탭은 날짜 필터 재빌드가 필요합니다.<br>
-    <code style="font-size:11px;color:#3b82f6;">python3 analysis/dashboard_multi.py --date-range &lt;범위&gt;</code>
-  </div>
 <script>
 var GAMES = ["ctz","scj"];
-var CURRENT_RANGE = 'all';
-
 function switchGame(id, btn) {
   document.querySelectorAll('.gtab').forEach(function(b) { b.classList.remove('active'); });
   btn.classList.add('active');
@@ -242,75 +165,7 @@ function switchGame(id, btn) {
   });
   var ov = document.getElementById('overview-panel');
   if (ov) ov.style.display = (id === 'overview') ? 'block' : 'none';
-
-  // 게임별 탭(iframe) 선택 시 날짜 필터 안내 표시
-  var notice = document.getElementById('iframeNotice');
-  if (notice) {
-    var isIframeTab = (id !== 'overview') && CURRENT_RANGE !== 'all';
-    notice.classList.toggle('visible', isIframeTab);
-    if (isIframeTab) {
-      setTimeout(function() { notice.classList.remove('visible'); }, 5000);
-    }
-  }
 }
-
-function onDateRangeChange(val) {
-  // URL 쿼리 파라미터 업데이트 (북마크 가능)
-  var url = new URL(window.location.href);
-  if (val === 'all') {
-    url.searchParams.delete('range');
-  } else {
-    url.searchParams.set('range', val);
-  }
-  history.replaceState(null, '', url.toString());
-
-  // 종합 탭 활성 여부 확인
-  var overviewActive = false;
-  document.querySelectorAll('.gtab').forEach(function(b) {
-    if (b.classList.contains('active') && b.textContent.trim() === '종합') {
-      overviewActive = true;
-    }
-  });
-
-  // 종합 탭이라면 페이지 리로드로 서버 측 재집계 적용
-  // iframe 탭이라면 안내 메시지만 표시
-  if (overviewActive) {
-    // 종합 탭: 파라미터 붙여서 리로드 (정적 HTML이므로 실제 필터는 안내로 대체)
-    showRangeAppliedBadge(val);
-  } else {
-    var notice = document.getElementById('iframeNotice');
-    if (notice && val !== 'all') {
-      notice.classList.add('visible');
-      setTimeout(function() { notice.classList.remove('visible'); }, 5000);
-    }
-  }
-  CURRENT_RANGE = val;
-}
-
-function showRangeAppliedBadge(val) {
-  var labelMap = { 'all': '전체', '30d': '최근 30일', '7d': '최근 7일' };
-  var label = labelMap[val] || val;
-  var badge = document.getElementById('periodBadge');
-  if (badge) {
-    badge.classList.add('visible');
-  }
-  // 안내 토스트
-  var toast = document.createElement('div');
-  toast.style.cssText = 'position:fixed;bottom:16px;right:16px;background:#0f1a2e;border:1px solid #3b82f6;border-radius:8px;padding:10px 16px;font-size:12px;color:#94a3b8;z-index:300;';
-  toast.innerHTML = '<b style="color:#3b82f6">' + label + '</b> 적용됨 — 종합 탭 통계는 재빌드 시 반영됩니다.<br><span style="font-size:11px;opacity:.7">python3 analysis/dashboard_multi.py --date-range ' + val + '</span>';
-  document.body.appendChild(toast);
-  setTimeout(function() { toast.remove(); }, 4500);
-}
-
-// 페이지 로드 시 URL 파라미터 읽어 셀렉터 초기화
-(function() {
-  var params = new URLSearchParams(window.location.search);
-  var range = params.get('range') || 'all';
-  var sel = document.getElementById('dateRangeSelect');
-  if (sel && range !== 'all') {
-    sel.value = range;
-  }
-})();
 </script>
 </body>
 </html>

@@ -66,9 +66,9 @@
     <button class="gtab active" style="--gc:#f59e0b" onclick="switchGame('overview',this)">종합</button>
     <button class="gtab" style="--gc:#10b981" onclick="switchGame('ctz',this)">CTZ</button>
     <button class="gtab" style="--gc:#3b82f6" onclick="switchGame('scj',this)">SCJ</button>
-    <span class="ts">갱신: 2026-04-11 15:25:55</span>
+    <span class="ts">갱신: 2026-04-11 15:29:33</span>
   </div>
-  <div id="frame-ctz" style="display:none" style="display:none;align-items:center;justify-content:center;height:100%;color:#4e6a85;flex-direction:column;gap:12px;"><div style="font-size:48px;opacity:.3">📭</div><div style="font-size:15px;">CTZ 데이터 없음</div><div style="font-size:12px;opacity:.6;">프리플레이를 실행하면 자동으로 표시됩니다</div></div>
+  <iframe id="frame-ctz" src="dashboard_ctz.html" style="display:none"></iframe>
   <div id="frame-scj" style="display:none" style="display:none;align-items:center;justify-content:center;height:100%;color:#4e6a85;flex-direction:column;gap:12px;"><div style="font-size:48px;opacity:.3">📭</div><div style="font-size:15px;">SCJ 데이터 없음</div><div style="font-size:12px;opacity:.6;">프리플레이를 실행하면 자동으로 표시됩니다</div></div>
   
 <div id="overview-panel" style="display:block;overflow-y:auto;height:calc(100vh - 45px);padding:24px 28px;color:#e2e8f0;">
@@ -89,14 +89,14 @@
 
   <div class="ov-summary">
     <b>전체 현황</b> &nbsp;·&nbsp;
-    총 런 <b>0</b> &nbsp;·&nbsp;
-    총 판 <b>0</b> &nbsp;·&nbsp;
-    갱신: <b>2026-04-11 15:25:55</b>
+    총 런 <b>1</b> &nbsp;·&nbsp;
+    총 판 <b>5</b> &nbsp;·&nbsp;
+    갱신: <b>2026-04-11 15:29:33</b>
   </div>
 
   <div class="ov-cards">
     <div class="ov-card ov-empty">SCJ 데이터 없음</div>
-    <div class="ov-card ov-empty">CTZ 데이터 없음</div>
+    <div class="ov-card" style="border-color:#10b981"><div class="ov-card-title" style="color:#10b981">#10b981</div><div class="ov-item"><span class="ov-label">클리어율</span><span class="ov-val" style="color:#10b981">80.0%</span></div><div class="ov-item"><span class="ov-label">평균 소요시간/판</span><span class="ov-val" style="color:#10b981">48.5s</span></div><div class="ov-item"><span class="ov-label">총 런</span><span class="ov-val" style="color:#10b981">1</span></div></div>
   </div>
 
   <div class="ov-chart-wrap">
@@ -125,7 +125,7 @@
         },
         {
           label: 'CTZ',
-          data: [null,null,null,null],
+          data: [80.0,null,null,null],
           backgroundColor: 'rgba(16,185,129,0.7)',
           borderColor: '#10b981',
           borderWidth: 1.5,

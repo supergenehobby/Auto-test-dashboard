@@ -20,7 +20,7 @@
     --fs-scale: 1;
   }
   [data-theme="light"] {
-    --bg-body: #f1f5f9;
+    --bg-body: #ffffff;
     --bg-card: #ffffff;
     --bg-topbar: #ffffff;
     --border: #cbd5e1;
@@ -143,7 +143,7 @@
       <button class="ctrl-btn" onclick="downloadCSV()" title="CSV 다운로드">CSV</button>
       <button class="ctrl-btn" onclick="window.print()" title="인쇄">Print</button>
       <button class="ctrl-btn" id="patchBtn" onclick="togglePatchCompare()" title="패치 비교">vs</button>
-      <span class="ts">갱신: 2026-04-13 15:58:39</span>
+      <span class="ts">갱신: 2026-04-13 16:05:55</span>
     </div>
   </div>
   <iframe id="frame-ctz" src="dashboard_ctz.html" style="display:none"></iframe>
@@ -166,7 +166,7 @@
     .ov-row>.ov-section{flex:1;min-width:280px;}
   </style>
 
-  <div class="ov-summary"><b>전체 현황</b> &nbsp;·&nbsp; 게임 <b>2종</b> &nbsp;·&nbsp; 총 런 <b>59</b> &nbsp;·&nbsp; 총 판 <b>756</b> &nbsp;·&nbsp; 전체 클리어율 <b>95.1%</b> &nbsp;·&nbsp; 총 <b>29.1h</b> &nbsp;·&nbsp; 갱신: <b>2026-04-13 15:58:39</b></div>
+  <div class="ov-summary"><b>전체 현황</b> &nbsp;·&nbsp; 게임 <b>2종</b> &nbsp;·&nbsp; 총 런 <b>59</b> &nbsp;·&nbsp; 총 판 <b>756</b> &nbsp;·&nbsp; 전체 클리어율 <b>95.1%</b> &nbsp;·&nbsp; 총 <b>29.1h</b> &nbsp;·&nbsp; 갱신: <b>2026-04-13 16:05:55</b></div>
 
   <div class="ov-cards">
     <div class="ov-card" style="border-color:#10b981"><div class="ov-card-title" style="color:#10b981">CTZ</div><div class="ov-item"><span class="ov-label">클리어율 <span style="color:#10b981;font-size:14px">▲</span></span><span class="ov-val" style="color:#10b981"><span style="color:#10b981">●</span> 97.8%</span></div><div class="ov-item"><span class="ov-label">평균 소요시간/판</span><span class="ov-val" style="color:#10b981">367.0s</span></div><div class="ov-item"><span class="ov-label">총 런 / 판</span><span class="ov-val" style="color:#10b981">21 / 230</span></div><div class="ov-item"><span class="ov-label">마지막 테스트</span><span class="ov-val" style="color:#10b981">4/14</span></div><div class="ov-item"><span class="ov-label">이슈</span><span class="ov-val" style="color:#10b981"><span style="color:#ef4444">469건</span></span></div></div>
@@ -259,6 +259,8 @@ function switchGame(id, btn) {
   });
   var ov = document.getElementById('overview-panel');
   if (ov) ov.style.display = (id === 'overview') ? 'block' : 'none';
+  // 탭 전환 시 iframe에 zoom + theme 재적용
+  setTimeout(function() { applyFontSize(); applyTheme(getTheme()); }, 100);
 }
 
 /* ── 글자 크기 조절 ──────────────────────────── */
@@ -272,12 +274,13 @@ function changeFontSize(dir) {
 function applyFontSize() {
   var scale = FS_STEPS[fsIdx];
   document.documentElement.style.setProperty('--fs-scale', scale);
-  // iframe 전파
+  // iframe 전파 — zoom으로 전체 스케일 변경 (고정 px에도 동작)
   GAMES.forEach(function(g) {
     var fr = document.getElementById('frame-' + g);
-    if (fr && fr.contentDocument) {
-      try { fr.contentDocument.documentElement.style.setProperty('--fs-scale', scale); } catch(e) {}
-    }
+    if (!fr || !fr.contentDocument) return;
+    try {
+      fr.contentDocument.documentElement.style.zoom = scale;
+    } catch(e) {}
   });
 }
 

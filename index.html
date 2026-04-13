@@ -17,6 +17,9 @@
     --text-empty: #475569;
     --fs-scale: 1;
   }
+  [data-theme="light"] {
+    background: #f8f9fa;
+  }
   [data-theme="light"] body {
     filter: invert(0.88) hue-rotate(180deg);
   }
@@ -104,6 +107,20 @@
     border: none;
     display: block;
   }
+
+  @media print {
+    .top-bar { position: static; }
+    .ctrl-group button { display: none; }
+    .ts { display: inline; }
+    iframe { display: none !important; }
+    #overview-panel { height: auto !important; overflow: visible !important; }
+    .ov-section, .ov-card { break-inside: avoid; }
+    body { filter: none !important; background: #fff !important; color: #000 !important; }
+    .ov-card, .ov-section { background: #fff !important; border-color: #ccc !important; }
+    .ov-label, .ov-section-title, .ov-summary { color: #333 !important; }
+    .ov-summary b { color: #000 !important; }
+    canvas { max-height: 200px; }
+  }
 </style>
 </head>
 <body>
@@ -116,7 +133,10 @@
       <button class="ctrl-btn" onclick="changeFontSize(-1)" title="글자 축소">A-</button>
       <button class="ctrl-btn" onclick="changeFontSize(1)" title="글자 확대">A+</button>
       <button class="ctrl-btn" id="themeBtn" onclick="toggleTheme()" title="테마 전환">☀</button>
-      <span class="ts">갱신: 2026-04-13 15:10:59</span>
+      <button class="ctrl-btn" onclick="downloadCSV()" title="CSV 다운로드">CSV</button>
+      <button class="ctrl-btn" onclick="window.print()" title="인쇄">Print</button>
+      <button class="ctrl-btn" id="patchBtn" onclick="togglePatchCompare()" title="패치 비교">vs</button>
+      <span class="ts">갱신: 2026-04-13 15:30:55</span>
     </div>
   </div>
   <iframe id="frame-ctz" src="dashboard_ctz.html" style="display:none"></iframe>
@@ -139,7 +159,7 @@
     .ov-row>.ov-section{flex:1;min-width:280px;}
   </style>
 
-  <div class="ov-summary"><b>전체 현황</b> &nbsp;·&nbsp; 게임 <b>2종</b> &nbsp;·&nbsp; 총 런 <b>57</b> &nbsp;·&nbsp; 총 판 <b>750</b> &nbsp;·&nbsp; 전체 클리어율 <b>95.1%</b> &nbsp;·&nbsp; 총 <b>29.0h</b> &nbsp;·&nbsp; 갱신: <b>2026-04-13 15:10:59</b></div>
+  <div class="ov-summary"><b>전체 현황</b> &nbsp;·&nbsp; 게임 <b>2종</b> &nbsp;·&nbsp; 총 런 <b>57</b> &nbsp;·&nbsp; 총 판 <b>750</b> &nbsp;·&nbsp; 전체 클리어율 <b>95.1%</b> &nbsp;·&nbsp; 총 <b>29.0h</b> &nbsp;·&nbsp; 갱신: <b>2026-04-13 15:30:55</b></div>
 
   <div class="ov-cards">
     <div class="ov-card" style="border-color:#10b981"><div class="ov-card-title" style="color:#10b981">CTZ</div><div class="ov-item"><span class="ov-label">클리어율 <span style="color:#10b981;font-size:14px">▲</span></span><span class="ov-val" style="color:#10b981"><span style="color:#10b981">●</span> 97.8%</span></div><div class="ov-item"><span class="ov-label">평균 소요시간/판</span><span class="ov-val" style="color:#10b981">367.0s</span></div><div class="ov-item"><span class="ov-label">총 런 / 판</span><span class="ov-val" style="color:#10b981">21 / 230</span></div><div class="ov-item"><span class="ov-label">마지막 테스트</span><span class="ov-val" style="color:#10b981">4/14</span></div><div class="ov-item"><span class="ov-label">이슈</span><span class="ov-val" style="color:#10b981"><span style="color:#ef4444">469건</span></span></div></div>
@@ -171,11 +191,31 @@
     </div>
   </div>
 
+  <div class="ov-row">
+    <div class="ov-section">
+      <div class="ov-section-title">이상 감지 / 경고 (0건)</div>
+      <div style="color:#10b981;font-size:13px;text-align:center;padding:12px;">모든 지표 정상 범위</div>
+    </div>
+  </div>
+
   <div class="ov-section">
     <div class="ov-section-title">최근 테스트 활동</div>
     <div style="display:flex;align-items:center;gap:10px;padding:5px 0;border-bottom:1px solid #1e3a5f;font-size:12px;"><span style="color:#10b981;font-weight:600;min-width:36px">CTZ</span><span style="color:#64748b;min-width:65px">4/14 08:59</span><span style="color:#94a3b8;min-width:28px">고수</span><span style="color:#94a3b8">2판</span><span style="color:#10b981;font-weight:600">100.0%</span></div><div style="display:flex;align-items:center;gap:10px;padding:5px 0;border-bottom:1px solid #1e3a5f;font-size:12px;"><span style="color:#10b981;font-weight:600;min-width:36px">CTZ</span><span style="color:#64748b;min-width:65px">4/13 15:10</span><span style="color:#94a3b8;min-width:28px">초보</span><span style="color:#94a3b8">10판</span><span style="color:#10b981;font-weight:600">100.0%</span></div><div style="display:flex;align-items:center;gap:10px;padding:5px 0;border-bottom:1px solid #1e3a5f;font-size:12px;"><span style="color:#10b981;font-weight:600;min-width:36px">CTZ</span><span style="color:#64748b;min-width:65px">4/13 15:03</span><span style="color:#94a3b8;min-width:28px">하수</span><span style="color:#94a3b8">10판</span><span style="color:#10b981;font-weight:600">100.0%</span></div><div style="display:flex;align-items:center;gap:10px;padding:5px 0;border-bottom:1px solid #1e3a5f;font-size:12px;"><span style="color:#3b82f6;font-weight:600;min-width:36px">SCJ</span><span style="color:#64748b;min-width:65px">4/13 14:58</span><span style="color:#94a3b8;min-width:28px">초보</span><span style="color:#94a3b8">10판</span><span style="color:#10b981;font-weight:600">100.0%</span> <span style="color:#f59e0b">⚠27</span></div><div style="display:flex;align-items:center;gap:10px;padding:5px 0;border-bottom:1px solid #1e3a5f;font-size:12px;"><span style="color:#10b981;font-weight:600;min-width:36px">CTZ</span><span style="color:#64748b;min-width:65px">4/13 14:54</span><span style="color:#94a3b8;min-width:28px">중수</span><span style="color:#94a3b8">10판</span><span style="color:#10b981;font-weight:600">100.0%</span></div><div style="display:flex;align-items:center;gap:10px;padding:5px 0;border-bottom:1px solid #1e3a5f;font-size:12px;"><span style="color:#3b82f6;font-weight:600;min-width:36px">SCJ</span><span style="color:#64748b;min-width:65px">4/13 14:49</span><span style="color:#94a3b8;min-width:28px">하수</span><span style="color:#94a3b8">10판</span><span style="color:#10b981;font-weight:600">100.0%</span> <span style="color:#f59e0b">⚠22</span></div><div style="display:flex;align-items:center;gap:10px;padding:5px 0;border-bottom:1px solid #1e3a5f;font-size:12px;"><span style="color:#3b82f6;font-weight:600;min-width:36px">SCJ</span><span style="color:#64748b;min-width:65px">4/13 14:43</span><span style="color:#94a3b8;min-width:28px">중수</span><span style="color:#94a3b8">10판</span><span style="color:#10b981;font-weight:600">100.0%</span> <span style="color:#f59e0b">⚠21</span></div><div style="display:flex;align-items:center;gap:10px;padding:5px 0;border-bottom:1px solid #1e3a5f;font-size:12px;"><span style="color:#10b981;font-weight:600;min-width:36px">CTZ</span><span style="color:#64748b;min-width:65px">4/13 14:39</span><span style="color:#94a3b8;min-width:28px">고수</span><span style="color:#94a3b8">10판</span><span style="color:#10b981;font-weight:600">100.0%</span></div><div style="display:flex;align-items:center;gap:10px;padding:5px 0;border-bottom:1px solid #1e3a5f;font-size:12px;"><span style="color:#3b82f6;font-weight:600;min-width:36px">SCJ</span><span style="color:#64748b;min-width:65px">4/13 14:37</span><span style="color:#94a3b8;min-width:28px">고수</span><span style="color:#94a3b8">10판</span><span style="color:#10b981;font-weight:600">100.0%</span> <span style="color:#f59e0b">⚠25</span></div><div style="display:flex;align-items:center;gap:10px;padding:5px 0;border-bottom:1px solid #1e3a5f;font-size:12px;"><span style="color:#3b82f6;font-weight:600;min-width:36px">SCJ</span><span style="color:#64748b;min-width:65px">4/13 14:30</span><span style="color:#94a3b8;min-width:28px">초보</span><span style="color:#94a3b8">0판</span><span style="color:#ef4444;font-weight:600">0%</span></div><div style="display:flex;align-items:center;gap:10px;padding:5px 0;border-bottom:1px solid #1e3a5f;font-size:12px;"><span style="color:#3b82f6;font-weight:600;min-width:36px">SCJ</span><span style="color:#64748b;min-width:65px">4/13 14:30</span><span style="color:#94a3b8;min-width:28px">하수</span><span style="color:#94a3b8">0판</span><span style="color:#ef4444;font-weight:600">0%</span></div><div style="display:flex;align-items:center;gap:10px;padding:5px 0;border-bottom:1px solid #1e3a5f;font-size:12px;"><span style="color:#3b82f6;font-weight:600;min-width:36px">SCJ</span><span style="color:#64748b;min-width:65px">4/13 14:30</span><span style="color:#94a3b8;min-width:28px">중수</span><span style="color:#94a3b8">0판</span><span style="color:#ef4444;font-weight:600">0%</span></div><div style="display:flex;align-items:center;gap:10px;padding:5px 0;border-bottom:1px solid #1e3a5f;font-size:12px;"><span style="color:#3b82f6;font-weight:600;min-width:36px">SCJ</span><span style="color:#64748b;min-width:65px">4/13 14:29</span><span style="color:#94a3b8;min-width:28px">고수</span><span style="color:#94a3b8">0판</span><span style="color:#ef4444;font-weight:600">0%</span></div><div style="display:flex;align-items:center;gap:10px;padding:5px 0;border-bottom:1px solid #1e3a5f;font-size:12px;"><span style="color:#3b82f6;font-weight:600;min-width:36px">SCJ</span><span style="color:#64748b;min-width:65px">4/13 14:16</span><span style="color:#94a3b8;min-width:28px">초보</span><span style="color:#94a3b8">5판</span><span style="color:#ef4444;font-weight:600">20.0%</span> <span style="color:#f59e0b">⚠19</span></div><div style="display:flex;align-items:center;gap:10px;padding:5px 0;border-bottom:1px solid #1e3a5f;font-size:12px;"><span style="color:#3b82f6;font-weight:600;min-width:36px">SCJ</span><span style="color:#64748b;min-width:65px">4/13 14:12</span><span style="color:#94a3b8;min-width:28px">고수</span><span style="color:#94a3b8">5판</span><span style="color:#10b981;font-weight:600">100.0%</span> <span style="color:#f59e0b">⚠22</span></div><div style="display:flex;align-items:center;gap:10px;padding:5px 0;border-bottom:1px solid #1e3a5f;font-size:12px;"><span style="color:#10b981;font-weight:600;min-width:36px">CTZ</span><span style="color:#64748b;min-width:65px">4/13 14:10</span><span style="color:#94a3b8;min-width:28px">고수</span><span style="color:#94a3b8">10판</span><span style="color:#10b981;font-weight:600">100.0%</span></div><div style="display:flex;align-items:center;gap:10px;padding:5px 0;border-bottom:1px solid #1e3a5f;font-size:12px;"><span style="color:#3b82f6;font-weight:600;min-width:36px">SCJ</span><span style="color:#64748b;min-width:65px">4/13 12:51</span><span style="color:#94a3b8;min-width:28px">초보</span><span style="color:#94a3b8">50판</span><span style="color:#f59e0b;font-weight:600">84.0%</span> <span style="color:#f59e0b">⚠66</span></div><div style="display:flex;align-items:center;gap:10px;padding:5px 0;border-bottom:1px solid #1e3a5f;font-size:12px;"><span style="color:#10b981;font-weight:600;min-width:36px">CTZ</span><span style="color:#64748b;min-width:65px">4/13 12:19</span><span style="color:#94a3b8;min-width:28px">고수</span><span style="color:#94a3b8">10판</span><span style="color:#10b981;font-weight:600">100.0%</span></div><div style="display:flex;align-items:center;gap:10px;padding:5px 0;border-bottom:1px solid #1e3a5f;font-size:12px;"><span style="color:#3b82f6;font-weight:600;min-width:36px">SCJ</span><span style="color:#64748b;min-width:65px">4/13 12:14</span><span style="color:#94a3b8;min-width:28px">하수</span><span style="color:#94a3b8">50판</span><span style="color:#10b981;font-weight:600">98.0%</span> <span style="color:#f59e0b">⚠38</span></div><div style="display:flex;align-items:center;gap:10px;padding:5px 0;border-bottom:1px solid #1e3a5f;font-size:12px;"><span style="color:#10b981;font-weight:600;min-width:36px">CTZ</span><span style="color:#64748b;min-width:65px">4/13 11:48</span><span style="color:#94a3b8;min-width:28px">고수</span><span style="color:#94a3b8">5판</span><span style="color:#10b981;font-weight:600">100.0%</span></div>
   </div>
+
+  <div class="ov-section" id="patch-compare-section" style="display:none;">
+    <div class="ov-section-title">패치 전후 비교</div>
+    <div style="display:flex;gap:12px;align-items:center;margin-bottom:14px;flex-wrap:wrap;">
+      <label style="font-size:12px;color:var(--text-secondary,#94a3b8);">기준일:
+        <input type="date" id="patchDate" style="background:var(--bg-body,#0b1120);color:var(--text-primary,#e2e8f0);border:1px solid var(--border,#1e3a5f);border-radius:6px;padding:4px 8px;font-size:12px;" />
+      </label>
+      <button onclick="runPatchCompare()" style="padding:4px 14px;border:1px solid #3b82f6;border-radius:6px;background:transparent;color:#3b82f6;font-size:12px;font-weight:600;cursor:pointer;">비교</button>
+    </div>
+    <div id="patchResult"></div>
+  </div>
 </div>
+<script>var OV_STATS = {"CTZ": {"label": "CTZ", "color": "#10b981", "daily_raw": {"20260412": {"played": 153, "cleared": 151}, "20260413": {"played": 75, "cleared": 72}, "20260414": {"played": 2, "cleared": 2}}, "daily_clear_rates": {"20260412": 98.7, "20260413": 96.0, "20260414": 100.0}, "clear_rate": 97.8, "total_runs": 21, "total_levels": 230, "persona_clear_rates": {"hardcore": 95.1, "average": 100.0, "casual": 100.0, "struggling": 100.0}}, "SCJ": {"label": "SCJ", "color": "#3b82f6", "daily_raw": {"20260412": {"played": 270, "cleared": 251}, "20260413": {"played": 250, "cleared": 237}}, "daily_clear_rates": {"20260412": 93.0, "20260413": 94.8}, "clear_rate": 93.8, "total_runs": 36, "total_levels": 520, "persona_clear_rates": {"hardcore": 100.0, "average": 100.0, "casual": 98.3, "struggling": 82.4}}};</script>
+<script>var OV_CSV = "게임,클리어율(%),총런,총판,고수(%),중수(%),하수(%),초보(%)\\nCTZ,97.8,21,230,95.1,100.0,100.0,100.0\\nSCJ,93.8,36,520,100.0,100.0,98.3,82.4";</script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
 <script>
 (function(){
@@ -281,6 +321,68 @@ GAMES.forEach(function(g) {
     });
   }
 });
+
+/* ── CSV 다운로드 ──────────────────────────────── */
+function downloadCSV() {
+  if (typeof OV_CSV === 'undefined') return;
+  var blob = new Blob([OV_CSV], {type: 'text/csv;charset=utf-8;'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'dashboard_summary.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+/* ── 패치 전후 비교 ────────────────────────────── */
+function togglePatchCompare() {
+  var sec = document.getElementById('patch-compare-section');
+  if (!sec) return;
+  sec.style.display = sec.style.display === 'none' ? 'block' : 'none';
+  // 종합탭으로 이동
+  if (sec.style.display === 'block') {
+    var ovBtn = document.querySelector('.gtab[onclick*="overview"]');
+    if (ovBtn && !ovBtn.classList.contains('active')) ovBtn.click();
+    sec.scrollIntoView({behavior: 'smooth'});
+  }
+}
+
+function runPatchCompare() {
+  if (typeof OV_STATS === 'undefined') return;
+  var cutoff = document.getElementById('patchDate').value;
+  if (!cutoff) { alert('기준일을 선택해주세요.'); return; }
+  var cutKey = cutoff.replace(/-/g, '');  // YYYY-MM-DD → YYYYMMDD
+
+  var html = '<table style="width:100%;border-collapse:collapse;font-size:12px;">';
+  html += '<thead><tr><th style="padding:6px 10px;text-align:left;border-bottom:1px solid #1e3a5f;color:#64748b;">게임</th>';
+  html += '<th style="padding:6px 10px;text-align:center;border-bottom:1px solid #1e3a5f;color:#64748b;">Before CR</th>';
+  html += '<th style="padding:6px 10px;text-align:center;border-bottom:1px solid #1e3a5f;color:#64748b;">After CR</th>';
+  html += '<th style="padding:6px 10px;text-align:center;border-bottom:1px solid #1e3a5f;color:#64748b;">변화</th></tr></thead><tbody>';
+
+  for (var gid in OV_STATS) {
+    var g = OV_STATS[gid];
+    var raw = g.daily_raw || {};
+    var bP = 0, bC = 0, aP = 0, aC = 0;
+    for (var d in raw) {
+      if (d < cutKey) { bP += raw[d].played; bC += raw[d].cleared; }
+      else { aP += raw[d].played; aC += raw[d].cleared; }
+    }
+    var bRate = bP > 0 ? (bC / bP * 100).toFixed(1) : '-';
+    var aRate = aP > 0 ? (aC / aP * 100).toFixed(1) : '-';
+    var diff = (bRate !== '-' && aRate !== '-') ? (parseFloat(aRate) - parseFloat(bRate)).toFixed(1) : '-';
+    var diffColor = diff === '-' ? '#64748b' : parseFloat(diff) >= 0 ? '#10b981' : '#ef4444';
+    var diffStr = diff !== '-' ? (parseFloat(diff) >= 0 ? '+' : '') + diff + '%' : '-';
+
+    html += '<tr>';
+    html += '<td style="padding:6px 10px;color:' + g.color + ';font-weight:600;border-bottom:1px solid #1e3a5f;">' + g.label + '</td>';
+    html += '<td style="padding:6px 10px;text-align:center;color:#94a3b8;border-bottom:1px solid #1e3a5f;">' + bRate + '%<br><span style="font-size:10px;color:#64748b">' + bP + '판</span></td>';
+    html += '<td style="padding:6px 10px;text-align:center;color:#94a3b8;border-bottom:1px solid #1e3a5f;">' + aRate + '%<br><span style="font-size:10px;color:#64748b">' + aP + '판</span></td>';
+    html += '<td style="padding:6px 10px;text-align:center;font-weight:700;color:' + diffColor + ';border-bottom:1px solid #1e3a5f;">' + diffStr + '</td>';
+    html += '</tr>';
+  }
+  html += '</tbody></table>';
+  document.getElementById('patchResult').innerHTML = html;
+}
 
 // 초기 적용
 (function() {

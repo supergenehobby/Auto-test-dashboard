@@ -138,7 +138,7 @@ details.sec-collapsible[open] .sec-summary::before{transform:rotate(90deg)}
 </head>
 <body>
 <h1>CTZ 프리플레이 대시보드</h1>
-<div class="meta">생성: 2026-04-15 11:47:18 &nbsp;·&nbsp; <b>3런 8판</b></div>
+<div class="meta">생성: 2026-04-15 11:55:40 &nbsp;·&nbsp; <b>3런 8판</b></div>
 
 <div class="morning-panel"><div class="mp-title">📊 2026-04-15 11:07 요약<span class="mp-legend">클리어율(베이스라인 대비) &middot; 이어하기 &middot; 문제스테이지</span></div><div class="mp-cards"><div class="mp-card" style="border-left:3px solid #3b82f6" onclick="showTab('hardcore')" title="고수 탭으로 이동"><div class="mp-label" style="color:#3b82f6">고수</div><div class="mp-sigs"><span class="mp-sig mp-green">🟢 100% (+0%p)</span><span class="mp-sig mp-green">🟢 이어하기 0.0회/판</span><span class="mp-sig mp-green">🟢 이상없음</span></div></div><div class="mp-card" style="border-left:3px solid #10b981" onclick="showTab('average')" title="중수 탭으로 이동"><div class="mp-label" style="color:#10b981">중수</div><div class="mp-sigs"><span class="mp-sig mp-green">🟢 100% (+0%p)</span><span class="mp-sig mp-green">🟢 이어하기 0.0회/판</span><span class="mp-sig mp-green">🟢 이상없음</span></div></div><div class="mp-card" style="border-left:3px solid #f59e0b" onclick="showTab('casual')" title="하수 탭으로 이동"><div class="mp-label" style="color:#f59e0b">하수</div><div class="mp-sigs"><span class="mp-sig mp-green">🟢 100% (+0%p)</span><span class="mp-sig mp-green">🟢 이어하기 0.0회/판</span><span class="mp-sig mp-green">🟢 이상없음</span></div></div></div></div>
 <div style="font-size:11px;font-weight:600;color:var(--text2,#64748b);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;">카테고리</div>
@@ -150,6 +150,7 @@ details.sec-collapsible[open] .sec-summary::before{transform:rotate(90deg)}
 <button class="tab-btn" data-tab="struggling" onclick="showTab('struggling')" style="color:#ef4444">초보</button>
 <button class="tab-btn" data-tab="recent" onclick="showTab('recent')" style="color:#a78bfa">최근런</button>
 <button class="tab-btn" data-tab="issues" onclick="showTab('issues')" style="color:#ef4444">에러/이슈</button>
+<button class="tab-btn" data-tab="log-api" onclick="showTab('log-api')" style="color:#38bdf8">로그 &amp; API</button>
 </div>
 <div class="tab-panel active" id="tab-overview">
 <div class="cards"><div class="card"><div class="ct" style="color:#3b82f6">고수</div><div class="cv" style="color:#3b82f6">100%</div><div class="cs">1판 · 1런 · 이어하기 0회 (판당 0.0회)</div></div>
@@ -508,6 +509,50 @@ details.sec-collapsible[open] .sec-summary::before{transform:rotate(90deg)}
   </table>
 </div>
 </div>
+<div class="tab-panel" id="tab-log-api">
+<div class="cards" style="grid-template-columns:repeat(3,1fr)">
+  <div class="card" style="border-left:4px solid #3b82f6">
+    <div class="ct" style="color:#3b82f6">API 호출 수</div>
+    <div class="cv" style="color:#3b82f6">0</div>
+    <div class="cs">전체 런에서 수집된 API 요청 건수</div>
+  </div>
+  <div class="card" style="border-left:4px solid #64748b">
+    <div class="ct" style="color:#64748b">콘솔 로그 수</div>
+    <div class="cv" style="color:#64748b">0</div>
+    <div class="cs">게임/브라우저 콘솔 로그 전체 건수</div>
+  </div>
+  <div class="card" style="border-left:4px solid #00e5a0">
+    <div class="ct" style="color:#00e5a0">API 에러율</div>
+    <div class="cv" style="color:#00e5a0">0.0%</div>
+    <div class="cs">HTTP 4xx/5xx 응답 0건 / 0건</div>
+  </div>
+</div>
+<div class="g2">
+  <div class="box">
+    <div class="sec-title">이벤트 빈도 TOP 20</div>
+    <div class="sec-desc">API post_data의 event 필드 기준 호출 빈도. 상위 20개 이벤트 코드.</div>
+    <canvas id="cEvFreqCtz" height="260"></canvas>
+  </div>
+  <div class="box">
+    <div class="sec-title">콘솔 로그 레벨 분포</div>
+    <div class="sec-desc">log(일반)·warn(경고)·error(오류) 비율. error 비율이 높으면 점검 필요.</div>
+    <canvas id="cLogLevelCtz" height="260"></canvas>
+  </div>
+</div>
+<div class="box" style="margin-bottom:13px">
+  <div class="sec-title">일별 API / 로그 볼륨 추이</div>
+  <div class="sec-desc">날짜별 API 호출 수(파랑), 콘솔 로그 수(회색), 에러 수(빨강) 변화 추이.</div>
+  <canvas id="cLogTrendCtz" height="160"></canvas>
+</div>
+<div class="box">
+  <div class="sec-title">이벤트 코드별 호출 수</div>
+  <div class="sec-desc">API 요청에 포함된 이벤트 코드와 누적 호출 건수.</div>
+  <table>
+    <tr><th>#</th><th>이벤트 코드</th><th>호출 수</th></tr>
+    <tr><td colspan="3" class="nd">이벤트 데이터 없음</td></tr>
+  </table>
+</div>
+</div>
 
 <script>
 function showTab(id) {
@@ -548,6 +593,7 @@ document.querySelectorAll('details.sec-collapsible').forEach(function(d){
 (function(){var ctx=document.getElementById('posCrChart_struggling');if(!ctx)return;new Chart(ctx,{type:'line',data:{labels:[],datasets:[{label:"클리어율(%)",data:[],borderColor:'#ef4444',backgroundColor:'#ef444422',fill:true,tension:0.3,pointRadius:3,borderWidth:2}]},options:{responsive:true,animation:false,plugins:{legend:{labels:{color:'#cdd9e8',boxWidth:10}}},scales:{x:{ticks:{color:'#4e6a85',maxTicksLimit:20},grid:{color:'rgba(56,189,248,.06)'}},y:{min:0,max:100,ticks:{color:'#4e6a85'},grid:{color:'rgba(56,189,248,.06)'}}}}});})();
 (function(){var ctx=document.getElementById('posTimeChart_struggling');if(!ctx)return;new Chart(ctx,{type:'line',data:{labels:[],datasets:[{label:"평균시간(초)",data:[],borderColor:'#f59e0b',backgroundColor:'#f59e0b22',fill:true,tension:0.3,pointRadius:3,borderWidth:2}]},options:{responsive:true,animation:false,plugins:{legend:{labels:{color:'#cdd9e8',boxWidth:10}}},scales:{x:{ticks:{color:'#4e6a85',maxTicksLimit:20},grid:{color:'rgba(56,189,248,.06)'}},y:{min:0,ticks:{color:'#4e6a85'},grid:{color:'rgba(56,189,248,.06)'}}}}});})();
 (function(){var ctx=document.getElementById('diffChart_struggling');if(!ctx)return;new Chart(ctx,{type:'bar',data:{labels:[],datasets:[{label:'클리어율(%)',data:[],backgroundColor:[],borderRadius:4}]},options:{responsive:true,animation:false,plugins:{legend:{labels:{color:'#cdd9e8',boxWidth:10}}},scales:{x:{ticks:{color:'#4e6a85'},grid:{color:'rgba(56,189,248,.06)'}},y:{min:0,max:100,ticks:{color:'#4e6a85'},grid:{color:'rgba(56,189,248,.06)'}}}}});})();
+(function(){var D={responsive:true,animation:false,plugins:{legend:{labels:{color:'#94a3b8',font:{size:10}}}},scales:{x:{ticks:{color:'#64748b',font:{size:10}},grid:{color:'#1e293b'}},y:{ticks:{color:'#64748b',font:{size:10}},grid:{color:'#334155'}}}};var evEl=document.getElementById('cEvFreqCtz');if(evEl){new Chart(evEl,{type:'bar',data:{labels:[],datasets:[{label:'호출수',data:[],backgroundColor:'#3b82f6',borderRadius:3}]},options:{indexAxis:'y',responsive:true,animation:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#64748b'},grid:{color:'#1e293b'}},y:{ticks:{color:'#94a3b8',font:{size:9}},grid:{display:false}}}}});}var llEl=document.getElementById('cLogLevelCtz');if(llEl){new Chart(llEl,{type:'doughnut',data:{labels:["log","warn","error"],datasets:[{data:[0,0,0],backgroundColor:["#3b82f6","#f59e0b","#ef4444"],borderWidth:0}]},options:{responsive:true,animation:false,plugins:{legend:{position:'bottom',labels:{color:'#cdd9e8',boxWidth:12,font:{size:11}}}}}});}var ltEl=document.getElementById('cLogTrendCtz');if(ltEl){new Chart(ltEl,{type:'line',data:{labels:["20260415"],datasets:[{label:'API 호출',data:[0],borderColor:'#3b82f6',backgroundColor:'rgba(59,130,246,.06)',fill:true,tension:0.3,pointRadius:2,borderWidth:2},{label:'콘솔 로그',data:[0],borderColor:'#64748b',backgroundColor:'rgba(100,116,139,.06)',fill:true,tension:0.3,pointRadius:2,borderWidth:2},{label:'에러',data:[0],borderColor:'#ef4444',backgroundColor:'rgba(239,68,68,.06)',fill:true,tension:0.3,pointRadius:2,borderWidth:2}]},options:D});}})();
 </script>
 </body>
 </html>

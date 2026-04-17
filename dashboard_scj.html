@@ -192,7 +192,7 @@ details[open] .rr-summary::before{transform:rotate(90deg)}
 </head>
 <body>
 <h1>SCJ 프리플레이 대시보드</h1>
-<div class="meta">기간: 전체 기간 &nbsp;·&nbsp; 생성: 2026-04-17 11:27:08 &nbsp;·&nbsp; <b>18런 180판</b>&nbsp;·&nbsp; 버전 <span style="background:#1e3a5f;color:#64748b;padding:2px 8px;border-radius:10px;font-size:11px;">v191 <b style="color:#94a3b8">12런</b></span> <span style="background:#1e3a5f;color:#64748b;padding:2px 8px;border-radius:10px;font-size:11px;">v183 <b style="color:#94a3b8">6런</b></span></div>
+<div class="meta">기간: 전체 기간 &nbsp;·&nbsp; 생성: 2026-04-17 11:30:19 &nbsp;·&nbsp; <b>18런 180판</b>&nbsp;·&nbsp; 버전 <span style="background:#1e3a5f;color:#64748b;padding:2px 8px;border-radius:10px;font-size:11px;">v191 <b style="color:#94a3b8">12런</b></span> <span style="background:#1e3a5f;color:#64748b;padding:2px 8px;border-radius:10px;font-size:11px;">v183 <b style="color:#94a3b8">6런</b></span></div>
 
 <div class="morning-panel"><div class="mp-title">📊 2026-04-17 요약<span class="mp-legend">클리어율 &middot; 골드손익(전일대비) &middot; 문제스테이지</span></div><div class="mp-cards"><div class="mp-card" style="border-left:3px solid #3b82f6" onclick="showTab('hardcore')" title="고수 탭으로 이동"><div class="mp-label" style="color:#3b82f6">고수</div><div class="mp-sigs"><span class="mp-sig mp-green">🟢 100%</span><span class="mp-sig mp-red">🔴 -422/판</span><span class="mp-sig mp-green">🟢 이상없음</span></div></div><div class="mp-card" style="border-left:3px solid #10b981" onclick="showTab('average')" title="중수 탭으로 이동"><div class="mp-label" style="color:#10b981">중수</div><div class="mp-sigs"><span class="mp-sig mp-green">🟢 100%</span><span class="mp-sig mp-green">🟢 -90/판</span><span class="mp-sig mp-green">🟢 이상없음</span></div></div><div class="mp-card" style="border-left:3px solid #f59e0b" onclick="showTab('casual')" title="하수 탭으로 이동"><div class="mp-label" style="color:#f59e0b">하수</div><div class="mp-sigs"><span class="mp-sig mp-green">🟢 100%</span><span class="mp-sig mp-green">🟢 +532/판</span><span class="mp-sig mp-green">🟢 이상없음</span></div></div><div class="mp-card" style="border-left:3px solid #ef4444" onclick="showTab('struggling')" title="초보 탭으로 이동"><div class="mp-label" style="color:#ef4444">초보</div><div class="mp-sigs"><span class="mp-sig mp-green">🟢 100%</span><span class="mp-sig mp-green">🟢 -722/판</span><span class="mp-sig mp-green">🟢 이상없음</span></div></div></div></div>
 <div style="font-size:11px;font-weight:600;color:var(--text2,#64748b);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;">카테고리</div>
@@ -642,6 +642,9 @@ details[open] .rr-summary::before{transform:rotate(90deg)}
 
 
 <div id="tab-hardcore" class="tab-panel">
+  <div style="border-left:3px solid #3b82f6;padding:6px 12px;margin-bottom:12px;font-size:11px;color:var(--text2);background:var(--bg2);border-radius:0 6px 6px 0">
+    <b style="color:#3b82f6">고수</b> &mdash; 최적 카드 선택(depth↓) · 실수율 0% · stuck 1회→즉시 아이템 · ExtraDeck 90% · Undo 70%
+  </div>
   <div class="cards" style="margin-bottom:14px">
     <div class="card" style="border-left:4px solid #3b82f6"><div class="ct" style="color:#3b82f6">골드 회수율</div><div class="cv">95%</div><div class="cs">50판 · 5런</div></div>
     <div class="card" style="border-left:4px solid #3b82f6"><div class="ct" style="color:#3b82f6">골드 손익/판</div><div class="cv">-446</div><div class="cs">잔액변화 -4,056/런</div></div>
@@ -711,6 +714,9 @@ details[open] .rr-summary::before{transform:rotate(90deg)}
 </div>
 
 <div id="tab-average" class="tab-panel">
+  <div style="border-left:3px solid #10b981;padding:6px 12px;margin-bottom:12px;font-size:11px;color:var(--text2);background:var(--bg2);border-radius:0 6px 6px 0">
+    <b style="color:#10b981">중수</b> &mdash; 랜덤 카드 선택 · 실수율 5% · stuck 2회 후 아이템 · ExtraDeck 70% · Undo 40%
+  </div>
   <div class="cards" style="margin-bottom:14px">
     <div class="card" style="border-left:4px solid #10b981"><div class="ct" style="color:#10b981">골드 회수율</div><div class="cv">84%</div><div class="cs">50판 · 5런</div></div>
     <div class="card" style="border-left:4px solid #10b981"><div class="ct" style="color:#10b981">골드 손익/판</div><div class="cv">-1,983</div><div class="cs">잔액변화 -19,633/런</div></div>
@@ -780,6 +786,9 @@ details[open] .rr-summary::before{transform:rotate(90deg)}
 </div>
 
 <div id="tab-casual" class="tab-panel">
+  <div style="border-left:3px solid #f59e0b;padding:6px 12px;margin-bottom:12px;font-size:11px;color:var(--text2);background:var(--bg2);border-radius:0 6px 6px 0">
+    <b style="color:#f59e0b">하수</b> &mdash; 비효율 선택(depth↑) · 실수율 20% · stuck 2회 후 아이템 · ExtraDeck 60% · Undo 30%
+  </div>
   <div class="cards" style="margin-bottom:14px">
     <div class="card" style="border-left:4px solid #f59e0b"><div class="ct" style="color:#f59e0b">골드 회수율</div><div class="cv">72%</div><div class="cs">40판 · 4런</div></div>
     <div class="card" style="border-left:4px solid #f59e0b"><div class="ct" style="color:#f59e0b">골드 손익/판</div><div class="cv">-4,506</div><div class="cs">잔액변화 -45,060/런</div></div>
@@ -849,6 +858,9 @@ details[open] .rr-summary::before{transform:rotate(90deg)}
 </div>
 
 <div id="tab-struggling" class="tab-panel">
+  <div style="border-left:3px solid #ef4444;padding:6px 12px;margin-bottom:12px;font-size:11px;color:var(--text2);background:var(--bg2);border-radius:0 6px 6px 0">
+    <b style="color:#ef4444">초보</b> &mdash; 최악 선택(random) · 실수율 40% · stuck 3회 후 아이템 · 골드 ≤1,500 아이템 차단
+  </div>
   <div class="cards" style="margin-bottom:14px">
     <div class="card" style="border-left:4px solid #ef4444"><div class="ct" style="color:#ef4444">골드 회수율</div><div class="cv">66%</div><div class="cs">40판 · 4런</div></div>
     <div class="card" style="border-left:4px solid #ef4444"><div class="ct" style="color:#ef4444">골드 손익/판</div><div class="cv">-7,029</div><div class="cs">잔액변화 -70,294/런</div></div>

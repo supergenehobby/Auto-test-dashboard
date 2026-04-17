@@ -192,7 +192,7 @@ details[open] .rr-summary::before{transform:rotate(90deg)}
 </head>
 <body>
 <h1>SCJ 프리플레이 대시보드</h1>
-<div class="meta">기간: 전체 기간 &nbsp;·&nbsp; 생성: 2026-04-17 11:57:27 &nbsp;·&nbsp; <b>20런 200판</b>&nbsp;·&nbsp; 버전 <span style="background:#1e3a5f;color:#64748b;padding:2px 8px;border-radius:10px;font-size:11px;">v191 <b style="color:#94a3b8">14런</b></span> <span style="background:#1e3a5f;color:#64748b;padding:2px 8px;border-radius:10px;font-size:11px;">v183 <b style="color:#94a3b8">6런</b></span></div>
+<div class="meta">기간: 전체 기간 &nbsp;·&nbsp; 생성: 2026-04-17 15:23:30 &nbsp;·&nbsp; <b>20런 200판</b>&nbsp;·&nbsp; 버전 <span style="background:#1e3a5f;color:#64748b;padding:2px 8px;border-radius:10px;font-size:11px;">v191 <b style="color:#94a3b8">14런</b></span> <span style="background:#1e3a5f;color:#64748b;padding:2px 8px;border-radius:10px;font-size:11px;">v183 <b style="color:#94a3b8">6런</b></span></div>
 
 <div class="morning-panel"><div class="mp-title">📊 2026-04-17 요약<span class="mp-legend">클리어율 &middot; 골드손익(전일대비) &middot; 문제스테이지</span></div><div class="mp-cards"><div class="mp-card" style="border-left:3px solid #3b82f6" onclick="showTab('hardcore')" title="고수 탭으로 이동"><div class="mp-label" style="color:#3b82f6">고수</div><div class="mp-sigs"><span class="mp-sig mp-green">🟢 100%</span><span class="mp-sig mp-red">🔴 -422/판</span><span class="mp-sig mp-green">🟢 이상없음</span></div></div><div class="mp-card" style="border-left:3px solid #10b981" onclick="showTab('average')" title="중수 탭으로 이동"><div class="mp-label" style="color:#10b981">중수</div><div class="mp-sigs"><span class="mp-sig mp-green">🟢 100%</span><span class="mp-sig mp-green">🟢 -90/판</span><span class="mp-sig mp-green">🟢 이상없음</span></div></div><div class="mp-card" style="border-left:3px solid #f59e0b" onclick="showTab('casual')" title="하수 탭으로 이동"><div class="mp-label" style="color:#f59e0b">하수</div><div class="mp-sigs"><span class="mp-sig mp-green">🟢 100%</span><span class="mp-sig mp-green">🟢 +1111/판</span><span class="mp-sig mp-green">🟢 이상없음</span></div></div><div class="mp-card" style="border-left:3px solid #ef4444" onclick="showTab('struggling')" title="초보 탭으로 이동"><div class="mp-label" style="color:#ef4444">초보</div><div class="mp-sigs"><span class="mp-sig mp-green">🟢 100%</span><span class="mp-sig mp-green">🟢 -612/판</span><span class="mp-sig mp-green">🟢 이상없음</span></div></div></div></div>
 <div style="font-size:11px;font-weight:600;color:var(--text2,#64748b);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;">카테고리</div>
@@ -1783,6 +1783,12 @@ function iFilter(btn,cat){
 <details class="sec-collapsible" style="margin-top:18px" open>
 <summary class="sec-summary">로그 정의 커버리지</summary>
 <div class="sec-collapsible-body">
+<div style="border-left:3px solid #38bdf8;padding:6px 12px;margin-bottom:14px;font-size:11px;color:var(--text2);background:var(--bg2);border-radius:0 6px 6px 0;line-height:1.6">
+  <b style="color:#38bdf8">로그 정의 커버리지란?</b><br>
+  log_def.json에 정의된 291개 게임 이벤트 중 프리플레이 자동화에서 <b>실제로 몇 개가 발생했는지</b> 측정합니다.<br>
+  프리플레이 시나리오에서 도달하지 않는 기능(결제, 소셜, 설정 등)은 미호출이 정상이며, 커버리지가 낮다고 문제가 아닙니다.<br>
+  <span style="color:#64748b">※ status=0 이벤트(예: GOLD_TRANSACTION_LOG)는 게임 내부 sendHttp 전송으로 CDP 응답 코드 미캡처 — 에러가 아님</span>
+</div>
 <div class="cards" style="grid-template-columns:repeat(4,1fr)">
   <div class="card" style="border-left:4px solid #38bdf8">
     <div class="ct" style="color:#38bdf8">정의된 이벤트</div>

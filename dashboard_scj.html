@@ -192,7 +192,7 @@ details[open] .rr-summary::before{transform:rotate(90deg)}
 </head>
 <body>
 <h1>SCJ 프리플레이 대시보드</h1>
-<div class="meta">기간: 전체 기간 &nbsp;·&nbsp; 생성: 2026-04-20 16:37:12 &nbsp;·&nbsp; <b>26런 260판</b>&nbsp;·&nbsp; 버전 <span style="background:#1e3a5f;color:#64748b;padding:2px 8px;border-radius:10px;font-size:11px;">v207 <b style="color:#94a3b8">2런</b></span> <span style="background:#1e3a5f;color:#64748b;padding:2px 8px;border-radius:10px;font-size:11px;">v203 <b style="color:#94a3b8">4런</b></span> <span style="background:#1e3a5f;color:#64748b;padding:2px 8px;border-radius:10px;font-size:11px;">v191 <b style="color:#94a3b8">14런</b></span> <span style="background:#1e3a5f;color:#64748b;padding:2px 8px;border-radius:10px;font-size:11px;">v183 <b style="color:#94a3b8">6런</b></span>&nbsp;&nbsp;<select id="versionFilter" onchange="filterByVersion(this.value)" style="background:var(--bg-card2,#0d1e35);color:var(--text,#cdd9e8);border:1px solid var(--border);border-radius:6px;padding:4px 8px;font-size:12px;cursor:pointer;vertical-align:middle"><option value="all">전체 버전</option><option value="207">v207 (2런)</option><option value="203">v203 (4런)</option><option value="191">v191 (14런)</option><option value="183">v183 (6런)</option></select> <span id="versionFilterBadge" style="display:none;background:#7c3aed;color:#e9d5ff;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600;margin-left:6px"></span></div>
+<div class="meta">기간: 전체 기간 &nbsp;·&nbsp; 생성: 2026-04-20 16:38:01 &nbsp;·&nbsp; <b>26런 260판</b>&nbsp;·&nbsp; 버전 <span style="background:#1e3a5f;color:#64748b;padding:2px 8px;border-radius:10px;font-size:11px;">v207 <b style="color:#94a3b8">2런</b></span> <span style="background:#1e3a5f;color:#64748b;padding:2px 8px;border-radius:10px;font-size:11px;">v203 <b style="color:#94a3b8">4런</b></span> <span style="background:#1e3a5f;color:#64748b;padding:2px 8px;border-radius:10px;font-size:11px;">v191 <b style="color:#94a3b8">14런</b></span> <span style="background:#1e3a5f;color:#64748b;padding:2px 8px;border-radius:10px;font-size:11px;">v183 <b style="color:#94a3b8">6런</b></span>&nbsp;&nbsp;<select id="versionFilter" onchange="filterByVersion(this.value)" style="background:var(--bg-card2,#0d1e35);color:var(--text,#cdd9e8);border:1px solid var(--border);border-radius:6px;padding:4px 8px;font-size:12px;cursor:pointer;vertical-align:middle"><option value="all">전체 버전</option><option value="207">v207 (2런)</option><option value="203">v203 (4런)</option><option value="191">v191 (14런)</option><option value="183">v183 (6런)</option></select> <span id="versionFilterBadge" style="display:none;background:#7c3aed;color:#e9d5ff;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600;margin-left:6px"></span></div>
 
 <div class="morning-panel"><div class="mp-title">📊 2026-04-20 요약<span class="mp-legend">클리어율 &middot; 골드손익(전일대비) &middot; 문제스테이지</span></div><div class="mp-cards"><div class="mp-card" style="border-left:3px solid #3b82f6" onclick="showTab('hardcore')" title="고수 탭으로 이동"><div class="mp-label" style="color:#3b82f6">고수</div><div class="mp-sigs"><span class="mp-sig mp-green">🟢 100%</span><span class="mp-sig mp-yellow">🟡 -202/판</span><span class="mp-sig mp-green">🟢 이상없음</span></div></div></div></div>
 <div style="font-size:11px;font-weight:600;color:var(--text2,#64748b);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;">카테고리</div>
@@ -2018,7 +2018,36 @@ document.querySelectorAll('details.sec-collapsible').forEach(d=>{
   });
 });
 
+var _vfOrigData=null;
 function filterByVersion(ver){
+  const pKeys=['hardcore','average','casual','struggling'];
+  // 종합 차트 원본 캐싱 (최초 1회)
+  if(!_vfOrigData){
+    const ids=['cEff','cGold','cTurns'];
+    _vfOrigData={};
+    ids.forEach(id=>{
+      const c=Chart.getChart(id);
+      if(c) _vfOrigData[id]=c.data.datasets[0].data.slice();
+    });
+  }
+  // 종합 차트 업데이트
+  if(ver==='all'){
+    ['cEff','cGold','cTurns'].forEach(id=>{
+      const c=Chart.getChart(id);
+      if(c&&_vfOrigData[id]){c.data.datasets[0].data=_vfOrigData[id].slice();c.update('none');}
+    });
+  } else {
+    const va=__VERSION_AGG__[ver];
+    if(va){
+      const effVals=pKeys.map(k=>va[k]?va[k].efficiency||0:0);
+      const goldVals=pKeys.map(k=>va[k]?va[k].avg_gold_pnl||0:0);
+      const turnsVals=pKeys.map(k=>va[k]?va[k].avg_turns||0:0);
+      [[effVals,'cEff'],[goldVals,'cGold'],[turnsVals,'cTurns']].forEach(([d,id])=>{
+        const c=Chart.getChart(id);
+        if(c){c.data.datasets[0].data=d;c.update('none');}
+      });
+    }
+  }
   // 최근 런 상세 (details) 필터링
   document.querySelectorAll('#tab-recent details[data-version]').forEach(el=>{
     el.style.display=(ver==='all'||el.dataset.version===ver)?'':'none';

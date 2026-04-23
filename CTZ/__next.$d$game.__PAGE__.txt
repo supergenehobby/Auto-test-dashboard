@@ -1,0 +1,6 @@
+1:"$Sreact.fragment"
+2:I[89858,["/Auto-test-dashboard/_next/static/chunks/0a~qw4x9a3o0~.js","/Auto-test-dashboard/_next/static/chunks/0ey34n4nkf61t.js","/Auto-test-dashboard/_next/static/chunks/054argia5~oe2.js","/Auto-test-dashboard/_next/static/chunks/0o8gmqfynrzcm.js"],"default"]
+3:I[53842,["/Auto-test-dashboard/_next/static/chunks/0a~qw4x9a3o0~.js","/Auto-test-dashboard/_next/static/chunks/0ey34n4nkf61t.js"],"OutletBoundary"]
+4:"$Sreact.suspense"
+0:{"rsc":["$","$1","c",{"children":[["$","$L2",null,{"game":"CTZ"}],[["$","script","script-0",{"src":"/Auto-test-dashboard/_next/static/chunks/054argia5~oe2.js","async":true}],["$","script","script-1",{"src":"/Auto-test-dashboard/_next/static/chunks/0o8gmqfynrzcm.js","async":true}]],["$","$L3",null,{"children":["$","$4",null,{"name":"Next.MetadataOutlet","children":"$@5"}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"-F3-CteqIYIAifExvpw40"}
+5:null

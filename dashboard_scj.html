@@ -4,20 +4,20 @@
 <meta charset="UTF-8">
 <title>SCJ 프리플레이 대시보드</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=DM+Sans:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Oxanium:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=DM+Sans:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2/dist/chartjs-plugin-datalabels.min.js"></script>
 <style>
 :root{
   --bg:#060e1a;--bg-card:#0a1628;--bg-card2:#0d1e35;
   --border:rgba(56,189,248,.08);--border-hi:rgba(0,212,255,.32);
-  --text:#cdd9e8;--text2:#4e6a85;--text3:#1e3048;
+  --text:#cdd9e8;--text2:#4e6a85;--text3:#4a5568;
   --accent:#00d4ff;--accent2:#7c6af7;--accent3:#00e5a0;
   --grid:rgba(56,189,248,.016);
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{
-  font-family:'DM Sans',system-ui,sans-serif;
+  font-family:'DM Sans','Noto Sans KR',system-ui,sans-serif;
   background:var(--bg);color:var(--text);
   padding:28px 36px;font-size:13px;line-height:1.55;
   background-image:
@@ -49,7 +49,7 @@ h1::after{content:'SCJ · QA SYSTEM';position:absolute;right:0;bottom:3px;font-f
 .sec-desc{font-size:.67rem;color:#2d4a63;margin-bottom:10px;line-height:1.6}
 
 /* 카드 */
-.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:20px}
 .card{
   background:var(--bg-card);border-radius:8px;padding:16px;
   border:1px solid var(--border);position:relative;overflow:hidden;
@@ -189,11 +189,23 @@ details[open] .rr-summary::before{transform:rotate(90deg)}
 ::-webkit-scrollbar-track{background:var(--bg)}
 ::-webkit-scrollbar-thumb{background:rgba(0,212,255,.18);border-radius:3px}
 ::-webkit-scrollbar-thumb:hover{background:rgba(0,212,255,.35)}
+
+/* 반응형 */
+@media (max-width:768px) {
+  .cards { grid-template-columns: repeat(2, 1fr) !important; }
+  .g2 { grid-template-columns: 1fr !important; }
+  .g4 { grid-template-columns: repeat(2, 1fr) !important; }
+}
+@media (max-width:480px) {
+  .cards { grid-template-columns: 1fr !important; }
+  .g4 { grid-template-columns: 1fr !important; }
+  body { padding: 12px !important; }
+}
 </style>
 </head>
 <body>
 <h1>SCJ 프리플레이 대시보드</h1>
-<div class="meta">기간: 전체 기간 &nbsp;·&nbsp; 생성: 2026-04-24 11:43:48 &nbsp;·&nbsp; <b>8런 160판</b>&nbsp;·&nbsp; 버전 <span style="background:#1e3a5f;color:#64748b;padding:2px 8px;border-radius:10px;font-size:11px;">v236 <b style="color:#94a3b8">4런</b></span> <span style="background:#1e3a5f;color:#64748b;padding:2px 8px;border-radius:10px;font-size:11px;">v235 <b style="color:#94a3b8">4런</b></span>&nbsp;&nbsp;<select id="versionFilter" onchange="filterByVersion(this.value)" style="background:var(--bg-card2,#0d1e35);color:var(--text,#cdd9e8);border:1px solid var(--border);border-radius:6px;padding:4px 8px;font-size:12px;cursor:pointer;vertical-align:middle"><option value="all">전체 버전</option><option value="236">v236 (4런)</option><option value="235">v235 (4런)</option></select> <span id="versionFilterBadge" style="display:none;background:#7c3aed;color:#e9d5ff;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600;margin-left:6px"></span></div>
+<div class="meta">기간: 전체 기간 &nbsp;·&nbsp; 생성: 2026-04-24 13:47:07 &nbsp;·&nbsp; <b>8런 160판</b>&nbsp;·&nbsp; 버전 <span style="background:#1e3a5f;color:#64748b;padding:2px 8px;border-radius:10px;font-size:11px;">v236 <b style="color:#94a3b8">4런</b></span> <span style="background:#1e3a5f;color:#64748b;padding:2px 8px;border-radius:10px;font-size:11px;">v235 <b style="color:#94a3b8">4런</b></span>&nbsp;&nbsp;<select id="versionFilter" onchange="filterByVersion(this.value)" style="background:var(--bg-card2,#0d1e35);color:var(--text,#cdd9e8);border:1px solid var(--border);border-radius:6px;padding:4px 8px;font-size:12px;cursor:pointer;vertical-align:middle"><option value="all">전체 버전</option><option value="236">v236 (4런)</option><option value="235">v235 (4런)</option></select> <span id="versionFilterBadge" style="display:none;background:#7c3aed;color:#e9d5ff;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600;margin-left:6px"></span></div>
 
 <div class="morning-panel"><div class="mp-title">📊 2026-04-23 요약<span class="mp-legend">클리어율 &middot; 골드손익(전일대비) &middot; 문제스테이지</span></div><div class="mp-cards"><div class="mp-card" style="border-left:3px solid #3b82f6" onclick="showTab('hardcore')" title="고수 탭으로 이동"><div class="mp-label" style="color:#3b82f6">고수</div><div class="mp-sigs"><span class="mp-sig mp-yellow">🟡 90%</span><span class="mp-sig mp-green">🟢 -585/판</span><span class="mp-sig mp-red">🔴 Lv.TUT_0002 50%</span></div></div><div class="mp-card" style="border-left:3px solid #10b981" onclick="showTab('average')" title="중수 탭으로 이동"><div class="mp-label" style="color:#10b981">중수</div><div class="mp-sigs"><span class="mp-sig mp-green">🟢 98%</span><span class="mp-sig mp-green">🟢 -1123/판</span><span class="mp-sig mp-red">🔴 Lv.TUT_0008 50%</span></div></div><div class="mp-card" style="border-left:3px solid #f59e0b" onclick="showTab('casual')" title="하수 탭으로 이동"><div class="mp-label" style="color:#f59e0b">하수</div><div class="mp-sigs"><span class="mp-sig mp-green">🟢 98%</span><span class="mp-sig mp-green">🟢 -3405/판</span><span class="mp-sig mp-red">🔴 Lv.TUT_0019 50%</span></div></div><div class="mp-card" style="border-left:3px solid #ef4444" onclick="showTab('struggling')" title="초보 탭으로 이동"><div class="mp-label" style="color:#ef4444">초보</div><div class="mp-sigs"><span class="mp-sig mp-red">🔴 82%</span><span class="mp-sig mp-green">🟢 -7546/판</span><span class="mp-sig mp-red">🔴 Lv.CC_0297 0%</span></div></div></div></div>
 <div style="font-size:11px;font-weight:600;color:var(--text2,#64748b);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;">카테고리</div>
@@ -213,8 +225,30 @@ details[open] .rr-summary::before{transform:rotate(90deg)}
 
 <div id="tab-overall" class="tab-panel active">
 
+<!-- 날짜 범위 필터 -->
+<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+  <label for="dateRangeFilter" style="font-size:12px;color:var(--text2,#64748b);font-weight:600;">기간 필터</label>
+  <select id="dateRangeFilter" onchange="applyDateFilter(this.value)"
+    style="background:var(--bg-card);color:var(--text);border:1px solid var(--border);border-radius:4px;padding:4px 8px;font-size:12px;">
+    <option value="all">전체</option>
+    <option value="7">최근 7일</option>
+    <option value="30">최근 30일</option>
+  </select>
+  <span id="dateFilterInfo" style="font-size:11px;color:var(--text2,#64748b);"></span>
+</div>
+
 <!-- 요약 카드 -->
 <div class="cards"><div class="card" style="border-left:4px solid #3b82f6"><div class="ct" style="color:#3b82f6">고수 <span class="pk">hardcore</span></div><div class="cv">94%</div><div class="cs">40판 · 2런 · 골드 회수율</div><div class="cs">손익 -585/판 · 잔액변화 -11,689/런</div><div class="cs">평균턴 30.5 · 판당 19.6초 · 해머 +2.0/런</div></div><div class="card" style="border-left:4px solid #10b981"><div class="ct" style="color:#10b981">중수 <span class="pk">average</span></div><div class="cv">89%</div><div class="cs">40판 · 2런 · 골드 회수율</div><div class="cs">손익 -1123/판 · 잔액변화 -20,554/런</div><div class="cs">평균턴 37.2 · 판당 24.5초 · 해머 +5.0/런</div></div><div class="card" style="border-left:4px solid #f59e0b"><div class="ct" style="color:#f59e0b">하수 <span class="pk">casual</span></div><div class="cv">78%</div><div class="cs">40판 · 2런 · 골드 회수율</div><div class="cs">손익 -3405/판 · 잔액변화 -64,496/런</div><div class="cs">평균턴 44.6 · 판당 31.8초 · 해머 +6.0/런</div></div><div class="card" style="border-left:4px solid #ef4444"><div class="ct" style="color:#ef4444">초보 <span class="pk">struggling</span></div><div class="cv">65%</div><div class="cs">40판 · 2런 · 골드 회수율</div><div class="cs">손익 -7546/판 · 잔액변화 -150,914/런</div><div class="cs">평균턴 51.9 · 판당 43.3초 · 해머 +1.5/런</div></div></div>
+
+<!-- 4-1: 페르소나 레이더 차트 -->
+<details class="sec-collapsible" open>
+<summary class="sec-summary">페르소나 종합 비교 (레이더)</summary>
+<div class="sec-collapsible-body">
+<div class="g2">
+  <div class="box"><div class="sec-title">페르소나 레이더</div><div class="sec-desc">6축(클리어율·회수율·평균턴역수·기믹/판·와일드/판·콤보/판)으로 페르소나 간 특성을 비교합니다. 각 축은 최대값 기준 0~100 정규화.</div><canvas id="cRadar" height="280"></canvas></div>
+</div>
+</div>
+</details>
 
 <!-- 페르소나 비교 4종 -->
 <div class="g4">
@@ -273,6 +307,78 @@ details[open] .rr-summary::before{transform:rotate(90deg)}
       <tr><td><span class="pbadge" style="background:#3b82f622;color:#3b82f6;border:1px solid #3b82f644">고수</span></td><td>134</td><td class="cr-low">1</td><td class="cr-ok">99%</td></tr><tr><td><span class="pbadge" style="background:#10b98122;color:#10b981;border:1px solid #10b98144">중수</span></td><td>142</td><td class="cr-low">1</td><td class="cr-ok">99%</td></tr><tr><td><span class="pbadge" style="background:#f59e0b22;color:#f59e0b;border:1px solid #f59e0b44">하수</span></td><td>156</td><td class="cr-low">4</td><td class="cr-mid">98%</td></tr><tr><td><span class="pbadge" style="background:#ef444422;color:#ef4444;border:1px solid #ef444444">초보</span></td><td>152</td><td class="cr-ok">0</td><td class="cr-ok">100%</td></tr>
     </table>
   </div>
+</div>
+</div>
+</details>
+
+<!-- Phase 3: DDA 효과 분석 -->
+<details class="sec-collapsible">
+<summary class="sec-summary">DDA 효과 분석</summary>
+<div class="sec-collapsible-body">
+<div class="cards" style="grid-template-columns:repeat(3,1fr)">
+  <div class="card" style="border-left:4px solid #6366f1">
+    <div class="ct" style="color:#6366f1">DDA 발동률</div>
+    <div class="cv" style="color:#6366f1">6.9%</div>
+    <div class="cs">연속실패 1회 이상 진입 비율</div>
+  </div>
+  <div class="card" style="border-left:4px solid #10b981">
+    <div class="ct" style="color:#10b981">발동 시 클리어율</div>
+    <div class="cv" style="color:#10b981">45.5%</div>
+    <div class="cs">DDA 보정 적용 후 클리어율 (11판)</div>
+  </div>
+  <div class="card" style="border-left:4px solid #94a3b8">
+    <div class="ct" style="color:#94a3b8">비발동 시 클리어율</div>
+    <div class="cv" style="color:#94a3b8">95.3%</div>
+    <div class="cs">DDA 미적용 클리어율 (149판)</div>
+  </div>
+</div>
+<div class="g2" style="margin-top:14px">
+  <div class="box"><div class="sec-title">연속실패수별 클리어율</div><div class="sec-desc">연속실패 구간(0, 1, 2, 3+)별 클리어율 변화. DDA 보정 효과를 시각적으로 확인.</div><canvas id="cDDA" height="160"></canvas></div>
+</div>
+</div>
+</details>
+
+<!-- Phase 3: 실패 원인 분류 -->
+<details class="sec-collapsible">
+<summary class="sec-summary">실패 원인 분류</summary>
+<div class="sec-collapsible-body">
+<div class="g2"><div class="box"><div class="sec-title">고수 실패 원인</div><div class="sec-desc">고수 모드의 실패 유형별 비율.</div><canvas id="cFailType_hardcore" height="180"></canvas></div><div class="box"><div class="sec-title">중수 실패 원인</div><div class="sec-desc">중수 모드의 실패 유형별 비율.</div><canvas id="cFailType_average" height="180"></canvas></div><div class="box"><div class="sec-title">하수 실패 원인</div><div class="sec-desc">하수 모드의 실패 유형별 비율.</div><canvas id="cFailType_casual" height="180"></canvas></div><div class="box"><div class="sec-title">초보 실패 원인</div><div class="sec-desc">초보 모드의 실패 유형별 비율.</div><canvas id="cFailType_struggling" height="180"></canvas></div></div>
+</div>
+</details>
+
+<!-- Phase 3: 배팅 배수별 경제성 -->
+<details class="sec-collapsible">
+<summary class="sec-summary">배팅 배수별 경제성</summary>
+<div class="sec-collapsible-body">
+<div class="box"><div class="sec-title">배팅 배수 vs 평균 골드 손익</div><div class="sec-desc">배팅 배수(x1, x2, x4)별 평균 골드 손익. 페르소나별 색상으로 구분.</div><canvas id="cBetScatter" height="200"></canvas></div>
+</div>
+</details>
+
+<!-- Phase 3: 해머 경제 추적 -->
+<details class="sec-collapsible">
+<summary class="sec-summary">해머 경제 추적</summary>
+<div class="sec-collapsible-body">
+<div class="cards" style="grid-template-columns:repeat(4,1fr)"><div class="card" style="border-left:4px solid #3b82f6"><div class="ct" style="color:#3b82f6">고수</div><div class="cv" style="color:#3b82f6">+2.0</div><div class="cs">런당 평균 해머 변화</div></div><div class="card" style="border-left:4px solid #10b981"><div class="ct" style="color:#10b981">중수</div><div class="cv" style="color:#10b981">+5.0</div><div class="cs">런당 평균 해머 변화</div></div><div class="card" style="border-left:4px solid #f59e0b"><div class="ct" style="color:#f59e0b">하수</div><div class="cv" style="color:#f59e0b">+6.0</div><div class="cs">런당 평균 해머 변화</div></div><div class="card" style="border-left:4px solid #ef4444"><div class="ct" style="color:#ef4444">초보</div><div class="cv" style="color:#ef4444">+1.5</div><div class="cs">런당 평균 해머 변화</div></div></div>
+<div class="box" style="margin-top:14px"><div class="sec-title">판별 해머 변화 추이</div><div class="sec-desc">각 판에서의 해머 변화량(delta). 페르소나별 라인.</div><canvas id="cHammer" height="160"></canvas></div>
+</div>
+</details>
+
+<!-- Phase 3: 연속 실패 / 피티 분석 -->
+<details class="sec-collapsible">
+<summary class="sec-summary">연속 실패 / 피티 분석</summary>
+<div class="sec-collapsible-body">
+<div class="cards" style="grid-template-columns:repeat(4,1fr)"><div class="card" style="border-left:4px solid #3b82f6"><div class="ct" style="color:#3b82f6">고수</div><div class="cv" style="font-size:1rem"><span style="color:#3b82f6">최대연패 1</span></div><div class="cs">스파이럴 0회 · 피티 0회</div></div><div class="card" style="border-left:4px solid #10b981"><div class="ct" style="color:#10b981">중수</div><div class="cv" style="font-size:1rem"><span style="color:#10b981">최대연패 1</span></div><div class="cs">스파이럴 0회 · 피티 0회</div></div><div class="card" style="border-left:4px solid #f59e0b"><div class="ct" style="color:#f59e0b">하수</div><div class="cv" style="font-size:1rem"><span style="color:#f59e0b">최대연패 1</span></div><div class="cs">스파이럴 0회 · 피티 0회</div></div><div class="card" style="border-left:4px solid #ef4444"><div class="ct" style="color:#ef4444">초보</div><div class="cv" style="font-size:1rem"><span style="color:#ef4444">최대연패 7</span></div><div class="cs">스파이럴 0회 · 피티 0회</div></div></div>
+</div>
+</details>
+
+<!-- Phase 3: 입장 방식 분포 -->
+<details class="sec-collapsible">
+<summary class="sec-summary">입장 방식 분포</summary>
+<div class="sec-collapsible-body">
+<div class="g2">
+  <div class="box"><div class="sec-title">입장 방식별 비율</div><div class="sec-desc">전체 160판의 입장 방식 분포. 골드/무료/광고 등.</div><canvas id="cEntry" height="180"></canvas></div>
+  <div class="box"><div class="sec-title">입장 방식별 상세</div><div class="sec-desc">입장 방식 | 횟수 | 비율</div>
+    <table><tr><th>입장 방식</th><th>횟수</th><th>비율</th></tr><tr><td>gold</td><td>160</td><td>100.0%</td></tr></table></div>
 </div>
 </div>
 </details>
@@ -519,11 +625,36 @@ details[open] .rr-summary::before{transform:rotate(90deg)}
   </div>
 </div>
 
+<!-- 4-2: 스테이지 경제성 히트맵 -->
+<details class="sec-collapsible">
+<summary class="sec-summary">스테이지 경제성</summary>
+<div class="sec-collapsible-body">
+<div class="box">
+  <div class="sec-title">스테이지별 평균 골드 손익 (손실/수익 TOP10)</div>
+  <div class="sec-desc">스테이지별 평균 골드 손익을 히트맵 스타일로 표시합니다. 배경색이 붉을수록 손실, 녹색일수록 수익입니다.</div>
+  <table>
+    <tr><th>스테이지</th><th style="text-align:right">평균손익</th><th style="text-align:center">횟수</th><th style="text-align:center">평균턴</th></tr>
+    <tr><td colspan="4" style="padding-top:12px;font-weight:700;color:#ef4444;font-size:.72rem">손실 TOP10</td></tr><tr><td class="mono">CC_0116</td><td style="background:rgba(239,68,68,.30);color:#f87171;font-weight:700;text-align:right">-41440</td><td style="text-align:center">1</td><td style="text-align:center">135.0</td></tr><tr><td class="mono">CC_0239</td><td style="background:rgba(239,68,68,.30);color:#f87171;font-weight:700;text-align:right">-17596</td><td style="text-align:center">1</td><td style="text-align:center">80.0</td></tr><tr><td class="mono">CC_0178</td><td style="background:rgba(239,68,68,.30);color:#f87171;font-weight:700;text-align:right">-17560</td><td style="text-align:center">1</td><td style="text-align:center">85.0</td></tr><tr><td class="mono">CC_0081</td><td style="background:rgba(239,68,68,.30);color:#f87171;font-weight:700;text-align:right">-17008</td><td style="text-align:center">1</td><td style="text-align:center">71.0</td></tr><tr><td class="mono">CC_0231</td><td style="background:rgba(239,68,68,.30);color:#f87171;font-weight:700;text-align:right">-14695</td><td style="text-align:center">1</td><td style="text-align:center">67.0</td></tr><tr><td class="mono">CC_0158</td><td style="background:rgba(239,68,68,.30);color:#f87171;font-weight:700;text-align:right">-12566</td><td style="text-align:center">1</td><td style="text-align:center">60.0</td></tr><tr><td class="mono">CC_0073</td><td style="background:rgba(239,68,68,.30);color:#f87171;font-weight:700;text-align:right">-12552</td><td style="text-align:center">1</td><td style="text-align:center">55.0</td></tr><tr><td class="mono">CC_0213</td><td style="background:rgba(239,68,68,.30);color:#f87171;font-weight:700;text-align:right">-11025</td><td style="text-align:center">1</td><td style="text-align:center">51.0</td></tr><tr><td class="mono">CC_0241</td><td style="background:rgba(239,68,68,.30);color:#f87171;font-weight:700;text-align:right">-10626</td><td style="text-align:center">1</td><td style="text-align:center">63.0</td></tr><tr><td class="mono">CC_0236</td><td style="background:rgba(239,68,68,.30);color:#f87171;font-weight:700;text-align:right">-10446</td><td style="text-align:center">1</td><td style="text-align:center">55.0</td></tr><tr><td colspan="4" style="padding-top:12px;font-weight:700;color:#10b981;font-size:.72rem">수익 TOP10</td></tr><tr><td class="mono">CC_0278</td><td style="background:rgba(16,185,129,.35);color:#4ade80;font-weight:700;text-align:right">+5372</td><td style="text-align:center">1</td><td style="text-align:center">44.0</td></tr><tr><td class="mono">CC_0179</td><td style="background:rgba(16,185,129,.35);color:#4ade80;font-weight:700;text-align:right">+4708</td><td style="text-align:center">1</td><td style="text-align:center">34.0</td></tr><tr><td class="mono">CC_0258</td><td style="background:rgba(16,185,129,.35);color:#4ade80;font-weight:700;text-align:right">+4244</td><td style="text-align:center">1</td><td style="text-align:center">45.0</td></tr><tr><td class="mono">CC_0251</td><td style="background:rgba(16,185,129,.35);color:#4ade80;font-weight:700;text-align:right">+3956</td><td style="text-align:center">1</td><td style="text-align:center">49.0</td></tr><tr><td class="mono">CC_0277</td><td style="background:rgba(16,185,129,.35);color:#4ade80;font-weight:700;text-align:right">+3652</td><td style="text-align:center">1</td><td style="text-align:center">48.0</td></tr><tr><td class="mono">CC_0119</td><td style="background:rgba(16,185,129,.35);color:#4ade80;font-weight:700;text-align:right">+2920</td><td style="text-align:center">1</td><td style="text-align:center">41.0</td></tr><tr><td class="mono">CC_0102</td><td style="background:rgba(16,185,129,.35);color:#4ade80;font-weight:700;text-align:right">+2668</td><td style="text-align:center">1</td><td style="text-align:center">38.0</td></tr><tr><td class="mono">CC_0257</td><td style="background:rgba(16,185,129,.35);color:#4ade80;font-weight:700;text-align:right">+2656</td><td style="text-align:center">1</td><td style="text-align:center">46.0</td></tr><tr><td class="mono">CC_0268</td><td style="background:rgba(16,185,129,.35);color:#4ade80;font-weight:700;text-align:right">+2320</td><td style="text-align:center">1</td><td style="text-align:center">44.0</td></tr><tr><td class="mono">CC_0290</td><td style="background:rgba(16,185,129,.35);color:#4ade80;font-weight:700;text-align:right">+2016</td><td style="text-align:center">1</td><td style="text-align:center">49.0</td></tr>
+  </table>
+</div>
+</div>
+</details>
 
+<!-- 4-5: 판 번호별 골드 손익 -->
+<details class="sec-collapsible">
+<summary class="sec-summary">판 번호별 골드 손익</summary>
+<div class="sec-collapsible-body">
+<div class="box">
+  <div class="sec-title">판 번호별 평균 골드 손익</div>
+  <div class="sec-desc">세션 내 몇 번째 판인지에 따른 평균 골드 손익 변화. 후반부에 손익이 악화되면 피로도 영향 가능성.</div>
+  <canvas id="cPosGold" height="160"></canvas>
+</div>
+</div>
+</details>
 
 
 <div class="box" style="margin-top:14px;">
-<div style="color:var(--text-secondary,#94a3b8);font-size:12px;font-weight:600;margin:14px 0 10px;">&#9201; 시간 분석</div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:10px;"><div style="background:#1e293b;border:1px solid #334155;border-radius:8px;padding:10px 14px;"><div style="color:#64748b;font-size:10px;margin-bottom:4px;">총 플레이 시간</div><div style="color:#e2e8f0;font-size:18px;font-weight:700;">1.3h</div><div style="color:#475569;font-size:9px;margin-top:2px;">160판 누적</div></div><div style="background:#1e293b;border:1px solid #334155;border-radius:8px;padding:10px 14px;"><div style="color:#64748b;font-size:10px;margin-bottom:4px;">판당 평균 시간</div><div style="color:#10b981;font-size:18px;font-weight:700;">29.8초</div><div style="color:#475569;font-size:9px;margin-top:2px;">중앙값 27.6초</div></div><div style="background:#1e293b;border:1px solid #334155;border-radius:8px;padding:10px 14px;"><div style="color:#64748b;font-size:10px;margin-bottom:4px;">최장 소요 레벨</div><div style="color:#94a3b8;font-size:18px;font-weight:700;">117.5초</div><div style="color:#475569;font-size:9px;margin-top:2px;">Level 520</div></div></div><div style="background:#1e293b;border:1px solid #334155;border-radius:8px;padding:12px 14px;margin-bottom:10px;"><div style="color:#94a3b8;font-size:11px;font-weight:600;margin-bottom:8px;">시간 분포</div><div style="display:flex;height:20px;border-radius:6px;overflow:hidden;margin-bottom:6px;"><div style="width:60.0%;background:#10b981;min-width:2px;" title="< 30초: 96판 (60.0%)"></div><div style="width:36.2%;background:#22d3ee;min-width:2px;" title="30~60초: 58판 (36.2%)"></div><div style="width:3.8%;background:#f59e0b;min-width:2px;" title="1~2분: 6판 (3.8%)"></div></div><div style="display:flex;gap:12px;flex-wrap:wrap;"><div style="display:flex;align-items:center;gap:4px;"><div style="width:8px;height:8px;border-radius:2px;background:#10b981;"></div><span style="color:#94a3b8;font-size:9px;">< 30초 96판 (60.0%)</span></div><div style="display:flex;align-items:center;gap:4px;"><div style="width:8px;height:8px;border-radius:2px;background:#22d3ee;"></div><span style="color:#94a3b8;font-size:9px;">30~60초 58판 (36.2%)</span></div><div style="display:flex;align-items:center;gap:4px;"><div style="width:8px;height:8px;border-radius:2px;background:#f59e0b;"></div><span style="color:#94a3b8;font-size:9px;">1~2분 6판 (3.8%)</span></div><div style="display:flex;align-items:center;gap:4px;"><div style="width:8px;height:8px;border-radius:2px;background:#fb923c;"></div><span style="color:#94a3b8;font-size:9px;">2~5분 0판 (0.0%)</span></div><div style="display:flex;align-items:center;gap:4px;"><div style="width:8px;height:8px;border-radius:2px;background:#ef4444;"></div><span style="color:#94a3b8;font-size:9px;">5분+ 0판 (0.0%)</span></div></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;"><div style="background:#1e293b;border:1px solid #334155;border-radius:8px;padding:12px 14px;"><div style="color:#94a3b8;font-size:11px;font-weight:600;margin-bottom:8px;">페르소나별 평균 시간</div><div style="display:flex;justify-content:space-between;padding:3px 0;"><span style="color:#94a3b8;font-size:10px;">고수</span><span style="color:#10b981;font-size:10px;font-weight:700;">19.6초</span></div><div style="display:flex;justify-content:space-between;padding:3px 0;"><span style="color:#94a3b8;font-size:10px;">중수</span><span style="color:#10b981;font-size:10px;font-weight:700;">24.5초</span></div><div style="display:flex;justify-content:space-between;padding:3px 0;"><span style="color:#94a3b8;font-size:10px;">하수</span><span style="color:#10b981;font-size:10px;font-weight:700;">31.8초</span></div><div style="display:flex;justify-content:space-between;padding:3px 0;"><span style="color:#94a3b8;font-size:10px;">초보</span><span style="color:#10b981;font-size:10px;font-weight:700;">43.3초</span></div></div><div style="background:#1e293b;border:1px solid #334155;border-radius:8px;padding:12px 14px;"><div style="color:#94a3b8;font-size:11px;font-weight:600;margin-bottom:8px;">난이도별 평균 시간</div><div style="display:flex;justify-content:space-between;padding:3px 0;"><span style="color:#94a3b8;font-size:10px;">노말</span><span style="color:#10b981;font-size:10px;font-weight:700;">27.8초</span></div><div style="display:flex;justify-content:space-between;padding:3px 0;"><span style="color:#94a3b8;font-size:10px;">하드</span><span style="color:#10b981;font-size:10px;font-weight:700;">36.9초</span></div><div style="display:flex;justify-content:space-between;padding:3px 0;"><span style="color:#94a3b8;font-size:10px;">슈퍼 하드</span><span style="color:#10b981;font-size:10px;font-weight:700;">46.0초</span></div></div></div>
+<div style="color:var(--text-secondary,#94a3b8);font-size:12px;font-weight:600;margin:14px 0 10px;">&#9201; 시간 분석</div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:10px;"><div style="background:#1e293b;border:1px solid #334155;border-radius:8px;padding:10px 14px;"><div style="color:#64748b;font-size:10px;margin-bottom:4px;">총 플레이 시간</div><div style="color:#e2e8f0;font-size:18px;font-weight:700;">1.3h</div><div style="color:#94a3b8;font-size:9px;margin-top:2px;">160판 누적</div></div><div style="background:#1e293b;border:1px solid #334155;border-radius:8px;padding:10px 14px;"><div style="color:#64748b;font-size:10px;margin-bottom:4px;">판당 평균 시간</div><div style="color:#10b981;font-size:18px;font-weight:700;">29.8초</div><div style="color:#94a3b8;font-size:9px;margin-top:2px;">중앙값 27.6초</div></div><div style="background:#1e293b;border:1px solid #334155;border-radius:8px;padding:10px 14px;"><div style="color:#64748b;font-size:10px;margin-bottom:4px;">최장 소요 레벨</div><div style="color:#94a3b8;font-size:18px;font-weight:700;">117.5초</div><div style="color:#94a3b8;font-size:9px;margin-top:2px;">Level 520</div></div></div><div style="background:#1e293b;border:1px solid #334155;border-radius:8px;padding:12px 14px;margin-bottom:10px;"><div style="color:#94a3b8;font-size:11px;font-weight:600;margin-bottom:8px;">시간 분포</div><div style="display:flex;height:20px;border-radius:6px;overflow:hidden;margin-bottom:6px;"><div style="width:60.0%;background:#10b981;min-width:2px;" title="< 30초: 96판 (60.0%)"></div><div style="width:36.2%;background:#22d3ee;min-width:2px;" title="30~60초: 58판 (36.2%)"></div><div style="width:3.8%;background:#f59e0b;min-width:2px;" title="1~2분: 6판 (3.8%)"></div></div><div style="display:flex;gap:12px;flex-wrap:wrap;"><div style="display:flex;align-items:center;gap:4px;"><div style="width:8px;height:8px;border-radius:2px;background:#10b981;"></div><span style="color:#94a3b8;font-size:9px;">< 30초 96판 (60.0%)</span></div><div style="display:flex;align-items:center;gap:4px;"><div style="width:8px;height:8px;border-radius:2px;background:#22d3ee;"></div><span style="color:#94a3b8;font-size:9px;">30~60초 58판 (36.2%)</span></div><div style="display:flex;align-items:center;gap:4px;"><div style="width:8px;height:8px;border-radius:2px;background:#f59e0b;"></div><span style="color:#94a3b8;font-size:9px;">1~2분 6판 (3.8%)</span></div><div style="display:flex;align-items:center;gap:4px;"><div style="width:8px;height:8px;border-radius:2px;background:#fb923c;"></div><span style="color:#94a3b8;font-size:9px;">2~5분 0판 (0.0%)</span></div><div style="display:flex;align-items:center;gap:4px;"><div style="width:8px;height:8px;border-radius:2px;background:#ef4444;"></div><span style="color:#94a3b8;font-size:9px;">5분+ 0판 (0.0%)</span></div></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;"><div style="background:#1e293b;border:1px solid #334155;border-radius:8px;padding:12px 14px;"><div style="color:#94a3b8;font-size:11px;font-weight:600;margin-bottom:8px;">페르소나별 평균 시간</div><div style="display:flex;justify-content:space-between;padding:3px 0;"><span style="color:#94a3b8;font-size:10px;">고수</span><span style="color:#10b981;font-size:10px;font-weight:700;">19.6초</span></div><div style="display:flex;justify-content:space-between;padding:3px 0;"><span style="color:#94a3b8;font-size:10px;">중수</span><span style="color:#10b981;font-size:10px;font-weight:700;">24.5초</span></div><div style="display:flex;justify-content:space-between;padding:3px 0;"><span style="color:#94a3b8;font-size:10px;">하수</span><span style="color:#10b981;font-size:10px;font-weight:700;">31.8초</span></div><div style="display:flex;justify-content:space-between;padding:3px 0;"><span style="color:#94a3b8;font-size:10px;">초보</span><span style="color:#10b981;font-size:10px;font-weight:700;">43.3초</span></div></div><div style="background:#1e293b;border:1px solid #334155;border-radius:8px;padding:12px 14px;"><div style="color:#94a3b8;font-size:11px;font-weight:600;margin-bottom:8px;">난이도별 평균 시간</div><div style="display:flex;justify-content:space-between;padding:3px 0;"><span style="color:#94a3b8;font-size:10px;">노말</span><span style="color:#10b981;font-size:10px;font-weight:700;">27.8초</span></div><div style="display:flex;justify-content:space-between;padding:3px 0;"><span style="color:#94a3b8;font-size:10px;">하드</span><span style="color:#10b981;font-size:10px;font-weight:700;">36.9초</span></div><div style="display:flex;justify-content:space-between;padding:3px 0;"><span style="color:#94a3b8;font-size:10px;">슈퍼 하드</span><span style="color:#10b981;font-size:10px;font-weight:700;">46.0초</span></div></div></div>
 </div>
 </div><!-- end tab-overall -->
 
@@ -1522,6 +1653,25 @@ function iFilter(btn,cat){
 <div id="tab-nru-bvt" class="tab-panel"><div class="box"><div class="nd">NRU 실행 데이터 없음 — run_nru.py를 실행하면 여기에 결과가 표시됩니다.</div></div></div>
 
 <div id="tab-version-cmp" class="tab-panel">
+<div class="box" style="margin-bottom:14px">
+  <div class="sec-title">버전별 클리어율 추이</div>
+  <div class="sec-desc">게임 버전별 전체 클리어율 + 페르소나별 클리어율 변화. 좌측이 이전, 우측이 최신 버전입니다.</div>
+  <canvas id="cVerCR" height="160"></canvas>
+</div>
+<script>
+(function(){
+  var el=document.getElementById('cVerCR');
+  if(el){
+    var allDs=[{label:"고수",data:[100.0,60.0],borderColor:"#3b82f6",backgroundColor:"#3b82f622",tension:0.3,fill:false,pointRadius:4,borderWidth:2,spanGaps:true},{label:"중수",data:[100.0,90.0],borderColor:"#10b981",backgroundColor:"#10b98122",tension:0.3,fill:false,pointRadius:4,borderWidth:2,spanGaps:true},{label:"하수",data:[100.0,90.0],borderColor:"#f59e0b",backgroundColor:"#f59e0b22",tension:0.3,fill:false,pointRadius:4,borderWidth:2,spanGaps:true},{label:"초보",data:[100.0,30.0],borderColor:"#ef4444",backgroundColor:"#ef444422",tension:0.3,fill:false,pointRadius:4,borderWidth:2,spanGaps:true}];
+    allDs.unshift({label:'전체',data:[100.0, 67.5],borderColor:'#00d4ff',backgroundColor:'#00d4ff22',tension:0.3,fill:false,pointRadius:5,borderWidth:3,borderDash:[]});
+    new Chart(el,{type:'line',data:{labels:["v235", "v236"],datasets:allDs},
+      options:{responsive:true,animation:false,
+        plugins:{legend:{labels:{color:'#94a3b8',font:{size:11}}},datalabels:{display:false}},
+        scales:{x:{ticks:{color:'#64748b'},grid:{color:'#1e293b'}},
+          y:{min:0,max:100,ticks:{color:'#64748b',callback:function(v){return v+'%'}},grid:{color:'#334155'}}}}});
+  }
+})();
+</script>
 <div class="box">
   <div class="sec-title">버전별 비교</div>
   <div class="sec-desc">게임 버전별 주요 지표를 비교합니다. 우측 버전이 이전, 좌측이 최신입니다. 델타 값은 이전 버전 대비 변화량입니다.</div>
@@ -1553,6 +1703,20 @@ const D={responsive:true,
 const noLegend = {...D,plugins:{legend:{display:false},datalabels:_dlBar}};
 const withDL = {...D,plugins:{...D.plugins,datalabels:_dlBar}};
 
+/* 4-1: 페르소나 레이더 차트 */
+(function(){
+  var el=document.getElementById('cRadar');
+  if(el){
+    new Chart(el,{type:'radar',data:{labels:["클리어율", "회수율", "평균턴(역수)", "기믹/판", "와일드/판", "콤보/판"],datasets:[{label:"고수",data:[92.3, 100.0, 100.0, 38.3, 37.7, 69.6],borderColor:"#3b82f6",backgroundColor:"#3b82f61a",fill:true,pointRadius:3,borderWidth:2,tension:0},{label:"중수",data:[100.0, 94.7, 82.0, 55.0, 44.8, 62.4],borderColor:"#10b981",backgroundColor:"#10b9811a",fill:true,pointRadius:3,borderWidth:2,tension:0},{label:"하수",data:[100.0, 82.5, 68.4, 100.0, 63.0, 89.6],borderColor:"#f59e0b",backgroundColor:"#f59e0b1a",fill:true,pointRadius:3,borderWidth:2,tension:0},{label:"초보",data:[84.6, 68.8, 58.7, 62.5, 100.0, 100.0],borderColor:"#ef4444",backgroundColor:"#ef44441a",fill:true,pointRadius:3,borderWidth:2,tension:0}]},
+      options:{responsive:true,animation:false,
+        plugins:{legend:{labels:{color:'#94a3b8',font:{size:11}}},datalabels:{display:false}},
+        scales:{r:{min:0,max:100,ticks:{stepSize:25,color:'#475569',backdropColor:'transparent',font:{size:9}},
+          grid:{color:'rgba(56,189,248,.12)'},
+          angleLines:{color:'rgba(56,189,248,.08)'},
+          pointLabels:{color:'#94a3b8',font:{size:11}}}}}});
+  }
+})();
+
 new Chart('cEff',  {type:'bar', data:{labels:["고수", "중수", "하수", "초보"],datasets:[{label:"골드 회수율",data:[94.3, 89.4, 77.8, 64.8],backgroundColor:"#6366f1",borderRadius:5}]},   options:noLegend});
 new Chart('cGold', {type:'bar', data:{labels:["고수", "중수", "하수", "초보"],datasets:[{label:"골드손익",data:[-585, -1123, -3405, -7546],backgroundColor:"#f59e0b",borderRadius:5}]},   options:noLegend});
 new Chart('cTurns',{type:'bar', data:{labels:["고수", "중수", "하수", "초보"],datasets:[{label:"평균턴",data:[30.5, 37.2, 44.6, 51.9],backgroundColor:"#3b82f6",borderRadius:5}]},  options:noLegend});
@@ -1579,6 +1743,92 @@ new Chart('cMiss',{type:'bar',data:{labels:["고수", "중수", "하수", "초�
 new Chart('cCombo',{type:'bar',data:{labels:["고수", "중수", "하수", "초보"],datasets:[{label:"콤보",data:[2.17, 1.95, 2.80, 3.12],backgroundColor:"#818cf8",borderRadius:5}]},options:withDL});
 
 new Chart('cTrend',{type:'line',data:{labels:["20260423"],datasets:[{label:"고수",data:[-585],borderColor:"#3b82f6",backgroundColor:"#3b82f622",tension:0.3,fill:false,pointRadius:3,spanGaps:false},{label:"중수",data:[-1123],borderColor:"#10b981",backgroundColor:"#10b98122",tension:0.3,fill:false,pointRadius:3,spanGaps:false},{label:"하수",data:[-3405],borderColor:"#f59e0b",backgroundColor:"#f59e0b22",tension:0.3,fill:false,pointRadius:3,spanGaps:false},{label:"초보",data:[-7546],borderColor:"#ef4444",backgroundColor:"#ef444422",tension:0.3,fill:false,pointRadius:3,spanGaps:false}]},options:D});
+
+/* Phase 3 차트 */
+(function(){
+  /* 3-1. DDA 효과 — 연속실패수별 클리어율 */
+  var ddaEl=document.getElementById('cDDA');
+  if(ddaEl){
+    new Chart(ddaEl,{type:'line',data:{labels:["0", "1", "2", "3+"],datasets:[{label:'클리어율(%)',data:[95.3, 83.3, 0.0, 0.0],borderColor:'#6366f1',backgroundColor:'#6366f122',tension:0.3,fill:true,pointRadius:5,borderWidth:2}]},
+      options:{responsive:true,animation:false,plugins:{legend:{display:false},datalabels:{display:false}},scales:{x:{title:{display:true,text:'연속실패수',color:'#94a3b8'},ticks:{color:'#64748b'},grid:{color:'#1e293b'}},y:{title:{display:true,text:'클리어율(%)',color:'#94a3b8'},min:0,max:100,ticks:{color:'#64748b'},grid:{color:'#334155'}}}}});
+  }
+  /* 3-2. 실패 원인 도넛 */
+  var ftColors={"stuck":"#ef4444","deck_empty":"#f59e0b","unknown":"#94a3b8"};
+  var ftDefault="#64748b";
+  (function(){
+    var el=document.getElementById('cFailType_hardcore');
+    if(el){
+      var raw={"unknown": 4};
+      var labs=Object.keys(raw),vals=Object.values(raw);
+      var cols=labs.map(function(l){return ftColors[l]||ftDefault});
+      new Chart(el,{type:'doughnut',data:{labels:labs,datasets:[{data:vals,backgroundColor:cols,borderWidth:0}]},
+        options:{responsive:true,animation:false,plugins:{legend:{position:'right',labels:{color:'#94a3b8',font:{size:11}}},datalabels:{display:true,anchor:'center',align:'center',color:'#fff',font:{size:11,weight:700},formatter:function(v,ctx){var sum=ctx.dataset.data.reduce(function(a,b){return a+b},0);return sum?Math.round(v/sum*100)+'%':''}}}}});
+    }
+  })();
+  (function(){
+    var el=document.getElementById('cFailType_average');
+    if(el){
+      var raw={"unknown": 1};
+      var labs=Object.keys(raw),vals=Object.values(raw);
+      var cols=labs.map(function(l){return ftColors[l]||ftDefault});
+      new Chart(el,{type:'doughnut',data:{labels:labs,datasets:[{data:vals,backgroundColor:cols,borderWidth:0}]},
+        options:{responsive:true,animation:false,plugins:{legend:{position:'right',labels:{color:'#94a3b8',font:{size:11}}},datalabels:{display:true,anchor:'center',align:'center',color:'#fff',font:{size:11,weight:700},formatter:function(v,ctx){var sum=ctx.dataset.data.reduce(function(a,b){return a+b},0);return sum?Math.round(v/sum*100)+'%':''}}}}});
+    }
+  })();
+  (function(){
+    var el=document.getElementById('cFailType_casual');
+    if(el){
+      var raw={"unknown": 1};
+      var labs=Object.keys(raw),vals=Object.values(raw);
+      var cols=labs.map(function(l){return ftColors[l]||ftDefault});
+      new Chart(el,{type:'doughnut',data:{labels:labs,datasets:[{data:vals,backgroundColor:cols,borderWidth:0}]},
+        options:{responsive:true,animation:false,plugins:{legend:{position:'right',labels:{color:'#94a3b8',font:{size:11}}},datalabels:{display:true,anchor:'center',align:'center',color:'#fff',font:{size:11,weight:700},formatter:function(v,ctx){var sum=ctx.dataset.data.reduce(function(a,b){return a+b},0);return sum?Math.round(v/sum*100)+'%':''}}}}});
+    }
+  })();
+  (function(){
+    var el=document.getElementById('cFailType_struggling');
+    if(el){
+      var raw={"unknown": 7};
+      var labs=Object.keys(raw),vals=Object.values(raw);
+      var cols=labs.map(function(l){return ftColors[l]||ftDefault});
+      new Chart(el,{type:'doughnut',data:{labels:labs,datasets:[{data:vals,backgroundColor:cols,borderWidth:0}]},
+        options:{responsive:true,animation:false,plugins:{legend:{position:'right',labels:{color:'#94a3b8',font:{size:11}}},datalabels:{display:true,anchor:'center',align:'center',color:'#fff',font:{size:11,weight:700},formatter:function(v,ctx){var sum=ctx.dataset.data.reduce(function(a,b){return a+b},0);return sum?Math.round(v/sum*100)+'%':''}}}}});
+    }
+  })();
+  /* 3-3. 배팅 배수별 scatter */
+  var bsEl=document.getElementById('cBetScatter');
+  if(bsEl){
+    new Chart(bsEl,{type:'scatter',data:{datasets:[{label:"고수",data:[{x:1.0,y:-291.8},{x:2.0,y:-1592.4},{x:4.0,y:-162.2}],backgroundColor:"#3b82f6",borderColor:"#3b82f6",pointRadius:7,pointHoverRadius:10},{label:"중수",data:[{x:1.0,y:-1410.2},{x:2.0,y:-987.3},{x:4.0,y:-852.2}],backgroundColor:"#10b981",borderColor:"#10b981",pointRadius:7,pointHoverRadius:10},{label:"하수",data:[{x:1.0,y:-3209.8},{x:2.0,y:-3464.9},{x:4.0,y:-3554.6}],backgroundColor:"#f59e0b",borderColor:"#f59e0b",pointRadius:7,pointHoverRadius:10},{label:"초보",data:[{x:1.0,y:-6367.1},{x:2.0,y:-9219.7},{x:4.0,y:-7658.4}],backgroundColor:"#ef4444",borderColor:"#ef4444",pointRadius:7,pointHoverRadius:10}]},
+      options:{responsive:true,animation:false,plugins:{legend:{labels:{color:'#94a3b8',font:{size:11}}},datalabels:{display:false}},scales:{x:{title:{display:true,text:'배팅 배수',color:'#94a3b8'},ticks:{color:'#64748b'},grid:{color:'#1e293b'}},y:{title:{display:true,text:'평균 골드 손익',color:'#94a3b8'},ticks:{color:'#64748b'},grid:{color:'#334155'}}}}});
+  }
+  /* 3-4. 해머 추이 */
+  var hmEl=document.getElementById('cHammer');
+  if(hmEl){
+    new Chart(hmEl,{type:'line',data:{labels:["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40"],datasets:[{label:"고수",data:[0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 44, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],borderColor:"#3b82f6",backgroundColor:"#3b82f622",tension:0.3,fill:false,pointRadius:1,borderWidth:2},{label:"중수",data:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],borderColor:"#10b981",backgroundColor:"#10b98122",tension:0.3,fill:false,pointRadius:1,borderWidth:2},{label:"하수",data:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],borderColor:"#f59e0b",backgroundColor:"#f59e0b22",tension:0.3,fill:false,pointRadius:1,borderWidth:2},{label:"초보",data:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],borderColor:"#ef4444",backgroundColor:"#ef444422",tension:0.3,fill:false,pointRadius:1,borderWidth:2}]},
+      options:{responsive:true,animation:false,plugins:{legend:{labels:{color:'#94a3b8',font:{size:11}}},datalabels:{display:false}},scales:{x:{title:{display:true,text:'판 번호',color:'#94a3b8'},ticks:{color:'#64748b',maxTicksLimit:20},grid:{color:'#1e293b'}},y:{title:{display:true,text:'해머 변화량',color:'#94a3b8'},ticks:{color:'#64748b'},grid:{color:'#334155'}}}}});
+  }
+  /* 3-6. 입장 방식 도넛 */
+  var enEl=document.getElementById('cEntry');
+  if(enEl){
+    new Chart(enEl,{type:'doughnut',data:{labels:["gold"],datasets:[{data:[160],backgroundColor:["#3b82f6"],borderWidth:0}]},
+      options:{responsive:true,animation:false,plugins:{legend:{position:'right',labels:{color:'#94a3b8',font:{size:11}}},datalabels:{display:true,anchor:'center',align:'center',color:'#fff',font:{size:11,weight:700},formatter:function(v,ctx){var sum=ctx.dataset.data.reduce(function(a,b){return a+b},0);return sum?Math.round(v/sum*100)+'%':''}}}}});
+  }
+})();
+
+/* 4-5: 판 번호별 골드 손익 */
+(function(){
+  var el=document.getElementById('cPosGold');
+  if(el){
+    new Chart(el,{type:'line',data:{labels:["1번째 판", "2번째 판", "3번째 판", "4번째 판", "5번째 판", "6번째 판", "7번째 판", "8번째 판", "9번째 판", "10번째 판", "11번째 판", "12번째 판", "13번째 판", "14번째 판", "15번째 판", "16번째 판", "17번째 판", "18번째 판", "19번째 판", "20번째 판", "21번째 판", "22번째 판", "23번째 판", "24번째 판", "25번째 판", "26번째 판", "27번째 판", "28번째 판", "29번째 판", "30번째 판"],datasets:[{
+      label:'평균 골드 손익',data:[-1538.4, -1398.0, -2613.5, -5122.8, -1315.9, -672.0, -3088.5, 216.2, -810.8, -2258.6, -2233.0, 1783.5, -3681.5, -13599.0, -2715.0, -1741.5, -1996.0, -4200.0, -6577.2, -7408.0, -2941.5, -6136.2, -5242.0, -4741.5, -7233.2, -4397.5, -2348.0, -3043.8, -5584.5, -5336.5],
+      borderColor:'#f59e0b',backgroundColor:'rgba(245,158,11,.08)',
+      fill:true,tension:0.3,pointRadius:3,borderWidth:2
+    }]},options:{responsive:true,animation:false,
+      plugins:{legend:{labels:{color:'#94a3b8',boxWidth:10}},datalabels:{display:false}},
+      scales:{x:{ticks:{color:'#64748b',maxTicksLimit:20},grid:{color:'#1e293b'}},
+        y:{ticks:{color:'#64748b'},grid:{color:'#334155'}}}}});
+  }
+})();
 
 /* 로그 & API 차트 */
 (function(){
@@ -1615,13 +1865,86 @@ function showTab(id){
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById('tab-'+id).classList.add('active');
   document.querySelector('[data-tab="'+id+'"]').classList.add('active');
-  requestAnimationFrame(()=>Object.values(Chart.instances).forEach(c=>{c.resize();c.update('none');}));
+  /* 6-2: 활성 탭 내 차트만 resize (lazy loading 최적화) */
+  requestAnimationFrame(function(){
+    var panel=document.getElementById('tab-'+id);
+    if(panel){
+      panel.querySelectorAll('canvas').forEach(function(c){
+        var chart=Chart.getChart(c);
+        if(chart){chart.resize();chart.update('none');}
+      });
+    }
+  });
 }
 document.querySelectorAll('details.sec-collapsible').forEach(d=>{
   d.addEventListener('toggle',()=>{
-    if(d.open) requestAnimationFrame(()=>Object.values(Chart.instances).forEach(c=>{c.resize();c.update('none');}));
+    if(d.open){
+      requestAnimationFrame(function(){
+        d.querySelectorAll('canvas').forEach(function(c){
+          var chart=Chart.getChart(c);
+          if(chart){chart.resize();chart.update('none');}
+        });
+      });
+    }
   });
 });
+
+/* 6-1: 날짜 범위 필터 */
+var _dfOrigData={};
+var _dfChartIds=['cDayEff','cDayTurns','cDayDiff'];
+var _dfAllLabels=["20260423"];
+function applyDateFilter(days){
+  localStorage.setItem('scj_date_filter',days);
+  var info=document.getElementById('dateFilterInfo');
+  if(days==='all'){
+    _dfChartIds.forEach(function(cid){
+      var ch=Chart.getChart(cid);
+      if(!ch) return;
+      if(_dfOrigData[cid]){
+        ch.data.labels=_dfOrigData[cid].labels.slice();
+        ch.data.datasets.forEach(function(ds,i){ds.data=_dfOrigData[cid].data[i].slice();});
+        ch.update('none');
+      }
+    });
+    if(info) info.textContent='';
+    return;
+  }
+  var n=parseInt(days,10);
+  var cutoff=new Date();cutoff.setDate(cutoff.getDate()-n);
+  var cutStr=cutoff.toISOString().slice(0,10).replace(/-/g,'');
+  _dfChartIds.forEach(function(cid){
+    var ch=Chart.getChart(cid);
+    if(!ch) return;
+    /* 최초 호출 시 원본 캐싱 */
+    if(!_dfOrigData[cid]){
+      _dfOrigData[cid]={
+        labels:ch.data.labels.slice(),
+        data:ch.data.datasets.map(function(ds){return ds.data.slice();})
+      };
+    }
+    var orig=_dfOrigData[cid];
+    var idxs=[];
+    orig.labels.forEach(function(lbl,i){
+      var d=lbl.replace(/-/g,'').replace(/\//g,'');
+      if(d>=cutStr) idxs.push(i);
+    });
+    ch.data.labels=idxs.map(function(i){return orig.labels[i];});
+    ch.data.datasets.forEach(function(ds,di){
+      ds.data=idxs.map(function(i){return orig.data[di][i];});
+    });
+    ch.update('none');
+  });
+  if(info) info.textContent=n+'일 ('+_dfChartIds.length+'개 차트 필터 적용)';
+}
+/* 페이지 로드 시 localStorage 복원 */
+(function(){
+  var saved=localStorage.getItem('scj_date_filter');
+  if(saved&&saved!=='all'){
+    var sel=document.getElementById('dateRangeFilter');
+    if(sel){sel.value=saved;}
+    setTimeout(function(){applyDateFilter(saved);},500);
+  }
+})();
 
 var _vfOrigData=null;
 var _vfOrigCards=null;
@@ -1779,6 +2102,6 @@ new Chart('strugglingEcon',{type:'bar',data:{labels:['와일드 비용','스트�
 (function(){var ctx=document.getElementById('strugglingPosTime');if(!ctx)return;new Chart(ctx,{type:'line',data:{labels:["1번째 판", "2번째 판", "3번째 판", "4번째 판", "5번째 판", "6번째 판", "7번째 판", "8번째 판", "9번째 판", "10번째 판", "11번째 판", "12번째 판", "13번째 판", "14번째 판", "15번째 판", "16번째 판", "17번째 판", "18번째 판", "19번째 판", "20번째 판", "21번째 판", "22번째 판", "23번째 판", "24번째 판", "25번째 판", "26번째 판", "27번째 판", "28번째 판", "29번째 판", "30번째 판"],datasets:[{label:"평균시간(초)",data:[32.2, 40.7, 38.5, 50.0, 29.8, 24.6, 31.5, 22.5, 33.1, 32.2, 47.1, 45.7, 30.0, 117.5, 35.9, 37.9, 27.6, 45.9, 50.1, 62.1, 54.4, 65.8, 53.2, 71.2, 68.3, 47.9, 41.0, 51.1, 51.3, 57.6],borderColor:'#ef4444',backgroundColor:'#ef444422',fill:true,tension:0.3,pointRadius:3,borderWidth:2}]},options:{responsive:true,animation:false,plugins:{legend:{labels:{color:'#94a3b8',boxWidth:10}}},scales:{x:{ticks:{color:'#64748b',maxTicksLimit:20},grid:{color:'#1e293b'}},y:{min:0,ticks:{color:'#64748b'},grid:{color:'#334155'}}}}});})();
 </script>
 
-<div class="tab-panel" id="tab-perf"><div style="padding:8px 0;"><div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;"><span style="font-size:20px;">🟢</span><span style="color:#10b981;font-weight:700;font-size:15px;">정상</span><span style="color:#64748b;font-size:11px;">(8회 테스트 기준)</span></div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:10px;"><div style="background:#1e293b;border:1px solid #334155;border-radius:8px;padding:10px 14px;"><div style="color:#64748b;font-size:10px;margin-bottom:4px;">시작 메모리</div><div style="color:#94a3b8;font-size:18px;font-weight:700;">52.0 MB</div><div style="color:#475569;font-size:9px;margin-top:2px;">첫 레벨 시작 시</div></div><div style="background:#1e293b;border:1px solid #334155;border-radius:8px;padding:10px 14px;"><div style="color:#64748b;font-size:10px;margin-bottom:4px;">종료 메모리</div><div style="color:#94a3b8;font-size:18px;font-weight:700;">56.5 MB</div><div style="color:#475569;font-size:9px;margin-top:2px;">마지막 레벨 종료 시</div></div><div style="background:#1e293b;border:1px solid #334155;border-radius:8px;padding:10px 14px;"><div style="color:#64748b;font-size:10px;margin-bottom:4px;">총 증가량</div><div style="color:#10b981;font-size:18px;font-weight:700;">↓ 2.3 MB</div><div style="color:#475569;font-size:9px;margin-top:2px;">전체 플레이 중 메모리 변화</div></div></div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px;"><div style="background:#1e293b;border:1px solid #334155;border-radius:8px;padding:10px 14px;"><div style="color:#64748b;font-size:10px;margin-bottom:4px;">레벨당 평균 증가</div><div style="color:#10b981;font-size:18px;font-weight:700;">+0.31 MB</div><div style="color:#475569;font-size:9px;margin-top:2px;">레벨 1판 기준 평균 증감</div></div><div style="background:#1e293b;border:1px solid #334155;border-radius:8px;padding:10px 14px;"><div style="color:#64748b;font-size:10px;margin-bottom:4px;">피크 메모리</div><div style="color:#a78bfa;font-size:18px;font-weight:700;">68.9 MB</div><div style="color:#475569;font-size:9px;margin-top:2px;">가장 높았던 힙 사용량</div></div><div style="background:#1e293b;border:1px solid #334155;border-radius:8px;padding:10px 14px;"><div style="color:#64748b;font-size:10px;margin-bottom:4px;">CPU 부하</div><div style="color:#10b981;font-size:18px;font-weight:700;">0.151 초</div><div style="color:#475569;font-size:9px;margin-top:2px;">레벨당 평균 CPU 작업 시간</div></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;"><div style="background:#1e293b;border:1px solid #334155;border-radius:8px;padding:12px 14px;"><div style="color:#94a3b8;font-size:11px;font-weight:600;margin-bottom:8px;">누수 진단</div><div style="color:#64748b;font-size:9px;margin-bottom:4px;">전반부 평균 → 후반부 평균</div><div style="font-size:11px;margin-bottom:6px;"><span style="color:#94a3b8;">57.1 MB</span><span style="color:#475569;"> → </span><span style="color:#10b981;font-weight:700;">56.7 MB</span><span style="color:#10b981;font-size:10px;"> (-0.7%)</span></div><div style="background:#0f172a;border-radius:4px;height:6px;overflow:hidden;"><div style="width:0.7%;height:100%;background:#10b981;border-radius:4px;"></div></div></div><div style="background:#1e293b;border:1px solid #334155;border-radius:8px;padding:12px 14px;"><div style="color:#94a3b8;font-size:11px;font-weight:600;margin-bottom:8px;">메모리 급증 Top 3</div><table style="width:100%;border-collapse:collapse;"><thead><tr><th style="text-align:left;color:#64748b;font-size:9px;font-weight:500;padding:2px 8px;">레벨</th><th style="text-align:left;color:#64748b;font-size:9px;font-weight:500;padding:2px 8px;">힙 증가</th><th style="text-align:left;color:#64748b;font-size:9px;font-weight:500;padding:2px 8px;">종료 힙</th></tr></thead><tbody><tr><td style="padding:4px 8px;color:#94a3b8;font-size:10px;">Lv 7</td><td style="padding:4px 8px;color:#fb923c;font-size:10px;font-weight:700;">+0.80 MB</td><td style="padding:4px 8px;color:#a78bfa;font-size:10px;">55.0 MB</td></tr><tr><td style="padding:4px 8px;color:#94a3b8;font-size:10px;">Lv 1</td><td style="padding:4px 8px;color:#fb923c;font-size:10px;font-weight:700;">+0.60 MB</td><td style="padding:4px 8px;color:#a78bfa;font-size:10px;">52.6 MB</td></tr><tr><td style="padding:4px 8px;color:#94a3b8;font-size:10px;">Lv 10</td><td style="padding:4px 8px;color:#fb923c;font-size:10px;font-weight:700;">+0.50 MB</td><td style="padding:4px 8px;color:#a78bfa;font-size:10px;">56.5 MB</td></tr></tbody></table></div></div><div style="background:#1e293b;border:1px solid #334155;border-radius:8px;padding:12px 14px;margin-bottom:14px;"><div style="color:#94a3b8;font-size:11px;font-weight:600;margin-bottom:8px;">DOM / 리스너</div><div style="display:flex;gap:24px;flex-wrap:wrap;"><div><div style="color:#64748b;font-size:9px;margin-bottom:2px;">DOM 노드 변화</div><span style="color:#22d3ee;font-size:13px;font-weight:700;">3,291</span><span style="color:#475569;font-size:11px;"> → </span><span style="color:#22d3ee;font-size:13px;font-weight:700;">4,539</span><span style="color:#ef4444;font-size:11px;"> (+1,248)</span></div><div><div style="color:#64748b;font-size:9px;margin-bottom:2px;">평균 이벤트 리스너</div><span style="color:#ef4444;font-size:13px;font-weight:700;">1095개</span></div></div></div><div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:8px;"><div style="flex:1;min-width:320px;background:#0c1222;border:1px solid #1e293b;border-radius:8px;padding:12px;"><div style="color:#94a3b8;font-size:11px;font-weight:600;margin-bottom:4px;">레벨별 메모리 사용량 변화</div><div style="color:#475569;font-size:9px;margin-bottom:8px;">레벨이 진행될수록 메모리가 계속 올라가면 누수 의심</div><canvas id="chartHeapTab_SCJ" height="160"></canvas></div><div style="flex:1;min-width:320px;background:#0c1222;border:1px solid #1e293b;border-radius:8px;padding:12px;"><div style="color:#94a3b8;font-size:11px;font-weight:600;margin-bottom:4px;">레벨별 화면 요소(DOM) 수 변화</div><div style="color:#475569;font-size:9px;margin-bottom:8px;">화면 요소가 계속 증가하면 리소스 정리가 안 되는 것</div><canvas id="chartDomTab_SCJ" height="160"></canvas></div><div style="flex:1;min-width:320px;background:#0c1222;border:1px solid #1e293b;border-radius:8px;padding:12px;"><div style="color:#94a3b8;font-size:11px;font-weight:600;margin-bottom:4px;">레벨별 CPU 부하 (task_duration)</div><div style="color:#475569;font-size:9px;margin-bottom:8px;">값이 높을수록 해당 레벨에서 JS 연산이 많이 발생</div><canvas id="chartCpuTab_SCJ" height="160"></canvas></div></div><script>(function(){const levels=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10];const heapStart=[52.0, 53.3, 53.7, 66.6, 59.0, 60.7, 54.2, 55.4, 55.0, 56.0];const heapEnd=[52.6, 53.4, 53.6, 66.7, 59.2, 61.1, 55.0, 55.8, 55.1, 56.5];const heapDelta=[0.6, 0.1, -0.1, 0.1, 0.2, 0.4, 0.8, 0.4, 0.1, 0.5];const domStart=[3291, 3291, 3291, 4478, 4478, 4594, 4478, 4481, 4453, 4539];const domEnd=[3291, 3291, 3292, 4478, 4479, 4594, 4520, 4481, 4453, 4539];const taskDur=[0.11, 0.03, 0.098, 0.119, 0.208, 0.222, 0.319, 0.238, 0.026, 0.136];new Chart(document.getElementById("chartHeapTab_SCJ"),{type:"line",data:{labels:levels,datasets:[{label:"시작 시 메모리",data:heapStart,borderColor:"#a78bfa",backgroundColor:"rgba(167,139,250,0.1)",borderWidth:1.5,pointRadius:1,fill:false,tension:0.3},{label:"종료 시 메모리",data:heapEnd,borderColor:"#a78bfa",backgroundColor:"rgba(167,139,250,0.15)",borderWidth:1.5,pointRadius:1,fill:"-1",tension:0.3},{label:"레벨당 증감",data:heapDelta,borderColor:"#fb923c",backgroundColor:"rgba(251,146,60,0.1)",borderWidth:1.5,pointRadius:1,fill:false,tension:0.3,yAxisID:"y1"}]},options:{responsive:true,interaction:{mode:"index",intersect:false},plugins:{legend:{labels:{color:"#94a3b8",font:{size:10}}}},scales:{x:{ticks:{color:"#475569",font:{size:9}},grid:{color:"#1e293b"},title:{display:true,text:"Level",color:"#64748b",font:{size:10}}},y:{ticks:{color:"#a78bfa",font:{size:9}},grid:{color:"#1e293b"},title:{display:true,text:"메모리 (MB)",color:"#a78bfa",font:{size:10}}},y1:{position:"right",ticks:{color:"#fb923c",font:{size:9}},grid:{drawOnChartArea:false},title:{display:true,text:"증감 (MB)",color:"#fb923c",font:{size:10}}}}}});new Chart(document.getElementById("chartDomTab_SCJ"),{type:"line",data:{labels:levels,datasets:[{label:"시작 시 요소 수",data:domStart,borderColor:"#22d3ee",backgroundColor:"rgba(34,211,238,0.1)",borderWidth:1.5,pointRadius:1,fill:false,tension:0.3},{label:"종료 시 요소 수",data:domEnd,borderColor:"#22d3ee",backgroundColor:"rgba(34,211,238,0.15)",borderWidth:1.5,pointRadius:1,fill:"-1",tension:0.3}]},options:{responsive:true,interaction:{mode:"index",intersect:false},plugins:{legend:{labels:{color:"#94a3b8",font:{size:10}}}},scales:{x:{ticks:{color:"#475569",font:{size:9}},grid:{color:"#1e293b"},title:{display:true,text:"Level",color:"#64748b",font:{size:10}}},y:{ticks:{color:"#22d3ee",font:{size:9}},grid:{color:"#1e293b"},title:{display:true,text:"화면 요소 수",color:"#22d3ee",font:{size:10}}}}}});new Chart(document.getElementById("chartCpuTab_SCJ"),{type:"line",data:{labels:levels,datasets:[{label:"CPU 부하 (초)",data:taskDur,borderColor:"#10b981",backgroundColor:"rgba(16,185,129,0.1)",borderWidth:1.5,pointRadius:1,fill:true,tension:0.3}]},options:{responsive:true,interaction:{mode:"index",intersect:false},plugins:{legend:{labels:{color:"#94a3b8",font:{size:10}}}},scales:{x:{ticks:{color:"#475569",font:{size:9}},grid:{color:"#1e293b"},title:{display:true,text:"Level",color:"#64748b",font:{size:10}}},y:{ticks:{color:"#10b981",font:{size:9}},grid:{color:"#1e293b"},title:{display:true,text:"초 (seconds)",color:"#10b981",font:{size:10}}}}}});})();</script><div style="color:#94a3b8;font-size:12px;font-weight:600;margin:18px 0 8px;">&#128337; 경과시간 기준 분석</div><div style="display:flex;gap:16px;flex-wrap:wrap;"><div style="flex:1;min-width:400px;background:#0c1222;border:1px solid #1e293b;border-radius:8px;padding:12px;"><div style="color:#94a3b8;font-size:11px;font-weight:600;margin-bottom:4px;">경과시간별 메모리 변화</div><div style="color:#475569;font-size:9px;margin-bottom:8px;">플레이 경과 시간(분)에 따른 힙 메모리 추이. 시간 비례 증가 시 누수 의심.</div><canvas id="chartElapsedHeapTab_SCJ" height="160"></canvas></div><div style="flex:1;min-width:400px;background:#0c1222;border:1px solid #1e293b;border-radius:8px;padding:12px;"><div style="color:#94a3b8;font-size:11px;font-weight:600;margin-bottom:4px;">경과시간별 CPU 부하</div><div style="color:#475569;font-size:9px;margin-bottom:8px;">플레이 경과 시간(분)에 따른 CPU 작업량 변화. 시간이 갈수록 높아지면 최적화 필요.</div><canvas id="chartElapsedCpuTab_SCJ" height="160"></canvas></div></div><script>(function(){const elapsed=["0.2", "0.2", "0.5", "0.8", "1.3", "1.7", "2.1", "2.5", "2.6", "3.0"];const heapEnd=[52.6, 53.4, 53.6, 66.7, 59.2, 61.1, 55.0, 55.8, 55.1, 56.5];const taskDur=[0.11, 0.03, 0.098, 0.119, 0.208, 0.222, 0.319, 0.238, 0.026, 0.136];new Chart(document.getElementById("chartElapsedHeapTab_SCJ"),{type:"line",data:{labels:elapsed,datasets:[{label:"힙 메모리 (MB)",data:heapEnd,borderColor:"#a78bfa",backgroundColor:"rgba(167,139,250,0.15)",borderWidth:2,pointRadius:2,fill:true,tension:0.3}]},options:{responsive:true,interaction:{mode:"index",intersect:false},plugins:{legend:{labels:{color:"#94a3b8",font:{size:10}}}},scales:{x:{ticks:{color:"#475569",font:{size:9}},grid:{color:"#1e293b"},title:{display:true,text:"경과시간 (분)",color:"#64748b",font:{size:10}}},y:{ticks:{color:"#a78bfa",font:{size:9}},grid:{color:"#1e293b"},title:{display:true,text:"메모리 (MB)",color:"#a78bfa",font:{size:10}}}}}});new Chart(document.getElementById("chartElapsedCpuTab_SCJ"),{type:"line",data:{labels:elapsed,datasets:[{label:"CPU 부하 (초)",data:taskDur,borderColor:"#10b981",backgroundColor:"rgba(16,185,129,0.15)",borderWidth:2,pointRadius:2,fill:true,tension:0.3}]},options:{responsive:true,interaction:{mode:"index",intersect:false},plugins:{legend:{labels:{color:"#94a3b8",font:{size:10}}}},scales:{x:{ticks:{color:"#475569",font:{size:9}},grid:{color:"#1e293b"},title:{display:true,text:"경과시간 (분)",color:"#64748b",font:{size:10}}},y:{ticks:{color:"#10b981",font:{size:9}},grid:{color:"#1e293b"},title:{display:true,text:"초 (seconds)",color:"#10b981",font:{size:10}}}}}});})();</script></div></div>
+<div class="tab-panel" id="tab-perf"><div style="padding:8px 0;"><div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;"><span style="font-size:20px;">🟢</span><span style="color:#10b981;font-weight:700;font-size:15px;">정상</span><span style="color:#64748b;font-size:11px;">(8회 테스트 기준)</span></div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:10px;"><div style="background:#1e293b;border:1px solid #334155;border-radius:8px;padding:10px 14px;"><div style="color:#64748b;font-size:10px;margin-bottom:4px;">시작 메모리</div><div style="color:#94a3b8;font-size:18px;font-weight:700;">52.0 MB</div><div style="color:#94a3b8;font-size:9px;margin-top:2px;">첫 레벨 시작 시</div></div><div style="background:#1e293b;border:1px solid #334155;border-radius:8px;padding:10px 14px;"><div style="color:#64748b;font-size:10px;margin-bottom:4px;">종료 메모리</div><div style="color:#94a3b8;font-size:18px;font-weight:700;">56.5 MB</div><div style="color:#94a3b8;font-size:9px;margin-top:2px;">마지막 레벨 종료 시</div></div><div style="background:#1e293b;border:1px solid #334155;border-radius:8px;padding:10px 14px;"><div style="color:#64748b;font-size:10px;margin-bottom:4px;">총 증가량</div><div style="color:#10b981;font-size:18px;font-weight:700;">↓ 2.3 MB</div><div style="color:#94a3b8;font-size:9px;margin-top:2px;">전체 플레이 중 메모리 변화</div></div></div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px;"><div style="background:#1e293b;border:1px solid #334155;border-radius:8px;padding:10px 14px;"><div style="color:#64748b;font-size:10px;margin-bottom:4px;">레벨당 평균 증가</div><div style="color:#10b981;font-size:18px;font-weight:700;">+0.31 MB</div><div style="color:#94a3b8;font-size:9px;margin-top:2px;">레벨 1판 기준 평균 증감</div></div><div style="background:#1e293b;border:1px solid #334155;border-radius:8px;padding:10px 14px;"><div style="color:#64748b;font-size:10px;margin-bottom:4px;">피크 메모리</div><div style="color:#a78bfa;font-size:18px;font-weight:700;">68.9 MB</div><div style="color:#94a3b8;font-size:9px;margin-top:2px;">가장 높았던 힙 사용량</div></div><div style="background:#1e293b;border:1px solid #334155;border-radius:8px;padding:10px 14px;"><div style="color:#64748b;font-size:10px;margin-bottom:4px;">CPU 부하</div><div style="color:#10b981;font-size:18px;font-weight:700;">0.151 초</div><div style="color:#94a3b8;font-size:9px;margin-top:2px;">레벨당 평균 CPU 작업 시간</div></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;"><div style="background:#1e293b;border:1px solid #334155;border-radius:8px;padding:12px 14px;"><div style="color:#94a3b8;font-size:11px;font-weight:600;margin-bottom:8px;">누수 진단</div><div style="color:#64748b;font-size:9px;margin-bottom:4px;">전반부 평균 → 후반부 평균</div><div style="font-size:11px;margin-bottom:6px;"><span style="color:#94a3b8;">57.1 MB</span><span style="color:#94a3b8;"> → </span><span style="color:#10b981;font-weight:700;">56.7 MB</span><span style="color:#10b981;font-size:10px;"> (-0.7%)</span></div><div style="background:#0f172a;border-radius:4px;height:6px;overflow:hidden;"><div style="width:0.7%;height:100%;background:#10b981;border-radius:4px;"></div></div></div><div style="background:#1e293b;border:1px solid #334155;border-radius:8px;padding:12px 14px;"><div style="color:#94a3b8;font-size:11px;font-weight:600;margin-bottom:8px;">메모리 급증 Top 3</div><table style="width:100%;border-collapse:collapse;"><thead><tr><th style="text-align:left;color:#64748b;font-size:9px;font-weight:500;padding:2px 8px;">레벨</th><th style="text-align:left;color:#64748b;font-size:9px;font-weight:500;padding:2px 8px;">힙 증가</th><th style="text-align:left;color:#64748b;font-size:9px;font-weight:500;padding:2px 8px;">종료 힙</th></tr></thead><tbody><tr><td style="padding:4px 8px;color:#94a3b8;font-size:10px;">Lv 7</td><td style="padding:4px 8px;color:#fb923c;font-size:10px;font-weight:700;">+0.80 MB</td><td style="padding:4px 8px;color:#a78bfa;font-size:10px;">55.0 MB</td></tr><tr><td style="padding:4px 8px;color:#94a3b8;font-size:10px;">Lv 1</td><td style="padding:4px 8px;color:#fb923c;font-size:10px;font-weight:700;">+0.60 MB</td><td style="padding:4px 8px;color:#a78bfa;font-size:10px;">52.6 MB</td></tr><tr><td style="padding:4px 8px;color:#94a3b8;font-size:10px;">Lv 10</td><td style="padding:4px 8px;color:#fb923c;font-size:10px;font-weight:700;">+0.50 MB</td><td style="padding:4px 8px;color:#a78bfa;font-size:10px;">56.5 MB</td></tr></tbody></table></div></div><div style="background:#1e293b;border:1px solid #334155;border-radius:8px;padding:12px 14px;margin-bottom:14px;"><div style="color:#94a3b8;font-size:11px;font-weight:600;margin-bottom:8px;">DOM / 리스너</div><div style="display:flex;gap:24px;flex-wrap:wrap;"><div><div style="color:#64748b;font-size:9px;margin-bottom:2px;">DOM 노드 변화</div><span style="color:#22d3ee;font-size:13px;font-weight:700;">3,291</span><span style="color:#94a3b8;font-size:11px;"> → </span><span style="color:#22d3ee;font-size:13px;font-weight:700;">4,539</span><span style="color:#ef4444;font-size:11px;"> (+1,248)</span></div><div><div style="color:#64748b;font-size:9px;margin-bottom:2px;">평균 이벤트 리스너</div><span style="color:#ef4444;font-size:13px;font-weight:700;">1095개</span></div></div></div><div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:8px;"><div style="flex:1;min-width:320px;background:#0c1222;border:1px solid #1e293b;border-radius:8px;padding:12px;"><div style="color:#94a3b8;font-size:11px;font-weight:600;margin-bottom:4px;">레벨별 메모리 사용량 변화</div><div style="color:#94a3b8;font-size:9px;margin-bottom:8px;">레벨이 진행될수록 메모리가 계속 올라가면 누수 의심</div><canvas id="chartHeapTab_SCJ" height="160"></canvas></div><div style="flex:1;min-width:320px;background:#0c1222;border:1px solid #1e293b;border-radius:8px;padding:12px;"><div style="color:#94a3b8;font-size:11px;font-weight:600;margin-bottom:4px;">레벨별 화면 요소(DOM) 수 변화</div><div style="color:#94a3b8;font-size:9px;margin-bottom:8px;">화면 요소가 계속 증가하면 리소스 정리가 안 되는 것</div><canvas id="chartDomTab_SCJ" height="160"></canvas></div><div style="flex:1;min-width:320px;background:#0c1222;border:1px solid #1e293b;border-radius:8px;padding:12px;"><div style="color:#94a3b8;font-size:11px;font-weight:600;margin-bottom:4px;">레벨별 CPU 부하 (task_duration)</div><div style="color:#94a3b8;font-size:9px;margin-bottom:8px;">값이 높을수록 해당 레벨에서 JS 연산이 많이 발생</div><canvas id="chartCpuTab_SCJ" height="160"></canvas></div></div><script>(function(){const levels=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10];const heapStart=[52.0, 53.3, 53.7, 66.6, 59.0, 60.7, 54.2, 55.4, 55.0, 56.0];const heapEnd=[52.6, 53.4, 53.6, 66.7, 59.2, 61.1, 55.0, 55.8, 55.1, 56.5];const heapDelta=[0.6, 0.1, -0.1, 0.1, 0.2, 0.4, 0.8, 0.4, 0.1, 0.5];const domStart=[3291, 3291, 3291, 4478, 4478, 4594, 4478, 4481, 4453, 4539];const domEnd=[3291, 3291, 3292, 4478, 4479, 4594, 4520, 4481, 4453, 4539];const taskDur=[0.11, 0.03, 0.098, 0.119, 0.208, 0.222, 0.319, 0.238, 0.026, 0.136];new Chart(document.getElementById("chartHeapTab_SCJ"),{type:"line",data:{labels:levels,datasets:[{label:"시작 시 메모리",data:heapStart,borderColor:"#a78bfa",backgroundColor:"rgba(167,139,250,0.1)",borderWidth:1.5,pointRadius:1,fill:false,tension:0.3},{label:"종료 시 메모리",data:heapEnd,borderColor:"#a78bfa",backgroundColor:"rgba(167,139,250,0.15)",borderWidth:1.5,pointRadius:1,fill:"-1",tension:0.3},{label:"레벨당 증감",data:heapDelta,borderColor:"#fb923c",backgroundColor:"rgba(251,146,60,0.1)",borderWidth:1.5,pointRadius:1,fill:false,tension:0.3,yAxisID:"y1"}]},options:{responsive:true,interaction:{mode:"index",intersect:false},plugins:{legend:{labels:{color:"#94a3b8",font:{size:10}}}},scales:{x:{ticks:{color:"#94a3b8",font:{size:9}},grid:{color:"#1e293b"},title:{display:true,text:"Level",color:"#64748b",font:{size:10}}},y:{ticks:{color:"#a78bfa",font:{size:9}},grid:{color:"#1e293b"},title:{display:true,text:"메모리 (MB)",color:"#a78bfa",font:{size:10}}},y1:{position:"right",ticks:{color:"#fb923c",font:{size:9}},grid:{drawOnChartArea:false},title:{display:true,text:"증감 (MB)",color:"#fb923c",font:{size:10}}}}}});new Chart(document.getElementById("chartDomTab_SCJ"),{type:"line",data:{labels:levels,datasets:[{label:"시작 시 요소 수",data:domStart,borderColor:"#22d3ee",backgroundColor:"rgba(34,211,238,0.1)",borderWidth:1.5,pointRadius:1,fill:false,tension:0.3},{label:"종료 시 요소 수",data:domEnd,borderColor:"#22d3ee",backgroundColor:"rgba(34,211,238,0.15)",borderWidth:1.5,pointRadius:1,fill:"-1",tension:0.3}]},options:{responsive:true,interaction:{mode:"index",intersect:false},plugins:{legend:{labels:{color:"#94a3b8",font:{size:10}}}},scales:{x:{ticks:{color:"#94a3b8",font:{size:9}},grid:{color:"#1e293b"},title:{display:true,text:"Level",color:"#64748b",font:{size:10}}},y:{ticks:{color:"#22d3ee",font:{size:9}},grid:{color:"#1e293b"},title:{display:true,text:"화면 요소 수",color:"#22d3ee",font:{size:10}}}}}});new Chart(document.getElementById("chartCpuTab_SCJ"),{type:"line",data:{labels:levels,datasets:[{label:"CPU 부하 (초)",data:taskDur,borderColor:"#10b981",backgroundColor:"rgba(16,185,129,0.1)",borderWidth:1.5,pointRadius:1,fill:true,tension:0.3}]},options:{responsive:true,interaction:{mode:"index",intersect:false},plugins:{legend:{labels:{color:"#94a3b8",font:{size:10}}}},scales:{x:{ticks:{color:"#94a3b8",font:{size:9}},grid:{color:"#1e293b"},title:{display:true,text:"Level",color:"#64748b",font:{size:10}}},y:{ticks:{color:"#10b981",font:{size:9}},grid:{color:"#1e293b"},title:{display:true,text:"초 (seconds)",color:"#10b981",font:{size:10}}}}}});})();</script><div style="color:#94a3b8;font-size:12px;font-weight:600;margin:18px 0 8px;">&#128337; 경과시간 기준 분석</div><div style="display:flex;gap:16px;flex-wrap:wrap;"><div style="flex:1;min-width:400px;background:#0c1222;border:1px solid #1e293b;border-radius:8px;padding:12px;"><div style="color:#94a3b8;font-size:11px;font-weight:600;margin-bottom:4px;">경과시간별 메모리 변화</div><div style="color:#94a3b8;font-size:9px;margin-bottom:8px;">플레이 경과 시간(분)에 따른 힙 메모리 추이. 시간 비례 증가 시 누수 의심.</div><canvas id="chartElapsedHeapTab_SCJ" height="160"></canvas></div><div style="flex:1;min-width:400px;background:#0c1222;border:1px solid #1e293b;border-radius:8px;padding:12px;"><div style="color:#94a3b8;font-size:11px;font-weight:600;margin-bottom:4px;">경과시간별 CPU 부하</div><div style="color:#94a3b8;font-size:9px;margin-bottom:8px;">플레이 경과 시간(분)에 따른 CPU 작업량 변화. 시간이 갈수록 높아지면 최적화 필요.</div><canvas id="chartElapsedCpuTab_SCJ" height="160"></canvas></div></div><script>(function(){const elapsed=["0.2", "0.2", "0.5", "0.8", "1.3", "1.7", "2.1", "2.5", "2.6", "3.0"];const heapEnd=[52.6, 53.4, 53.6, 66.7, 59.2, 61.1, 55.0, 55.8, 55.1, 56.5];const taskDur=[0.11, 0.03, 0.098, 0.119, 0.208, 0.222, 0.319, 0.238, 0.026, 0.136];new Chart(document.getElementById("chartElapsedHeapTab_SCJ"),{type:"line",data:{labels:elapsed,datasets:[{label:"힙 메모리 (MB)",data:heapEnd,borderColor:"#a78bfa",backgroundColor:"rgba(167,139,250,0.15)",borderWidth:2,pointRadius:2,fill:true,tension:0.3}]},options:{responsive:true,interaction:{mode:"index",intersect:false},plugins:{legend:{labels:{color:"#94a3b8",font:{size:10}}}},scales:{x:{ticks:{color:"#94a3b8",font:{size:9}},grid:{color:"#1e293b"},title:{display:true,text:"경과시간 (분)",color:"#64748b",font:{size:10}}},y:{ticks:{color:"#a78bfa",font:{size:9}},grid:{color:"#1e293b"},title:{display:true,text:"메모리 (MB)",color:"#a78bfa",font:{size:10}}}}}});new Chart(document.getElementById("chartElapsedCpuTab_SCJ"),{type:"line",data:{labels:elapsed,datasets:[{label:"CPU 부하 (초)",data:taskDur,borderColor:"#10b981",backgroundColor:"rgba(16,185,129,0.15)",borderWidth:2,pointRadius:2,fill:true,tension:0.3}]},options:{responsive:true,interaction:{mode:"index",intersect:false},plugins:{legend:{labels:{color:"#94a3b8",font:{size:10}}}},scales:{x:{ticks:{color:"#94a3b8",font:{size:9}},grid:{color:"#1e293b"},title:{display:true,text:"경과시간 (분)",color:"#64748b",font:{size:10}}},y:{ticks:{color:"#10b981",font:{size:9}},grid:{color:"#1e293b"},title:{display:true,text:"초 (seconds)",color:"#10b981",font:{size:10}}}}}});})();</script></div></div>
 </body>
 </html>

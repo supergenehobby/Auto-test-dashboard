@@ -205,9 +205,9 @@ details[open] .rr-summary::before{transform:rotate(90deg)}
 </head>
 <body>
 <h1>SCJ 프리플레이 대시보드</h1>
-<div class="meta">기간: 전체 기간 &nbsp;·&nbsp; 생성: 2026-04-24 16:23:44 &nbsp;·&nbsp; <b>0런 0판</b> <span id="versionFilterBadge" style="display:none;background:#7c3aed;color:#e9d5ff;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600;margin-left:6px"></span></div>
+<div class="meta">기간: 전체 기간 &nbsp;·&nbsp; 생성: 2026-04-24 16:29:44 &nbsp;·&nbsp; <b>1런 1판</b> <span id="versionFilterBadge" style="display:none;background:#7c3aed;color:#e9d5ff;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600;margin-left:6px"></span></div>
 
-
+<div class="morning-panel"><div class="mp-title">📊 2026-04-24 요약<span class="mp-legend">클리어율 &middot; 골드손익(전일대비) &middot; 문제스테이지</span></div><div class="mp-cards"><div class="mp-card" style="border-left:3px solid #3b82f6" onclick="showTab('hardcore')" title="고수 탭으로 이동"><div class="mp-label" style="color:#3b82f6">고수</div><div class="mp-sigs"><span class="mp-sig mp-green">🟢 100%</span><span class="mp-sig mp-green">🟢 +2274/판</span><span class="mp-sig mp-green">🟢 이상없음</span></div></div></div></div>
 <div style="font-size:11px;font-weight:600;color:var(--text2,#64748b);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;">카테고리</div>
 <div class="tabs">
   <button class="tab-btn active" data-tab="overall" onclick="showTab('overall')">종합</button>
@@ -221,6 +221,7 @@ details[open] .rr-summary::before{transform:rotate(90deg)}
   <button class="tab-btn" data-tab="nru-bvt"   onclick="showTab('nru-bvt')"   style="color:#22d3ee">NRU BVT</button>
   <button class="tab-btn" data-tab="version-cmp" onclick="showTab('version-cmp')" style="color:#8b5cf6">버전 비교</button>
   <button class="tab-btn" data-tab="security" onclick="showTab('security')" style="color:#f97316">보안</button>
+  <button class="tab-btn" data-tab="perf" onclick="showTab('perf')" style="color:#22d3ee">성능</button>
 </div>
 
 <div id="tab-overall" class="tab-panel active">
@@ -238,7 +239,7 @@ details[open] .rr-summary::before{transform:rotate(90deg)}
 </div>
 
 <!-- 요약 카드 -->
-<div class="cards"><div class="card dim" style="border-left:4px solid #3b82f6"><div class="ct" style="color:#3b82f6">고수</div><div class="cv">—</div><div class="cs">데이터 없음</div></div><div class="card dim" style="border-left:4px solid #10b981"><div class="ct" style="color:#10b981">중수</div><div class="cv">—</div><div class="cs">데이터 없음</div></div><div class="card dim" style="border-left:4px solid #f59e0b"><div class="ct" style="color:#f59e0b">하수</div><div class="cv">—</div><div class="cs">데이터 없음</div></div><div class="card dim" style="border-left:4px solid #ef4444"><div class="ct" style="color:#ef4444">초보</div><div class="cv">—</div><div class="cs">데이터 없음</div></div></div>
+<div class="cards"><div class="card" style="border-left:4px solid #3b82f6"><div class="ct" style="color:#3b82f6">고수 <span class="pk">hardcore</span></div><div class="cv">208%</div><div class="cs">1판 · 1런 · 골드 회수율</div><div class="cs">손익 +2274/판 · 잔액변화 -10,000,000/런</div><div class="cs">평균턴 32.0 · 판당 18.6초 · 해머 -31.0/런</div></div><div class="card dim" style="border-left:4px solid #10b981"><div class="ct" style="color:#10b981">중수</div><div class="cv">—</div><div class="cs">데이터 없음</div></div><div class="card dim" style="border-left:4px solid #f59e0b"><div class="ct" style="color:#f59e0b">하수</div><div class="cv">—</div><div class="cs">데이터 없음</div></div><div class="card dim" style="border-left:4px solid #ef4444"><div class="ct" style="color:#ef4444">초보</div><div class="cv">—</div><div class="cs">데이터 없음</div></div></div>
 
 <!-- 4-1: 페르소나 레이더 차트 -->
 <details class="sec-collapsible" open>
@@ -259,8 +260,8 @@ details[open] .rr-summary::before{transform:rotate(90deg)}
 </div>
 
 <div class="g2" style="margin-top:14px">
-  <div class="box"><div class="sec-title">기믹 타입별 출현 횟수</div><div class="sec-desc">전체 0회 감지. 모든 페르소나 합산. gimmick_match + gimmick 이벤트 기준.</div><div class="nd">기믹 이벤트 미감지</div></div>
-  <div class="box"><div class="sec-title">기믹 타입별 비율</div><div class="sec-desc">전체 기믹 중 각 타입이 차지하는 비율.</div><div class="nd">기믹 이벤트 미감지</div></div>
+  <div class="box"><div class="sec-title">기믹 타입별 출현 횟수</div><div class="sec-desc">전체 7회 감지. 모든 페르소나 합산. gimmick_match + gimmick 이벤트 기준.</div><canvas id="cGimmickType" height="150"></canvas></div>
+  <div class="box"><div class="sec-title">기믹 타입별 비율</div><div class="sec-desc">전체 기믹 중 각 타입이 차지하는 비율.</div><canvas id="cGimmickPie" height="150"></canvas></div>
 </div>
 
 <details class="sec-collapsible">
@@ -299,12 +300,12 @@ details[open] .rr-summary::before{transform:rotate(90deg)}
     <div class="sec-title">밸런스 검증</div>
     <div class="sec-desc">게임 내부 골드 계산(입장료·아이템·보상)이 예상 값과 일치하는지 판별 결과.</div>
     <div class="val-summary">
-      <div class="val-rate" style="color:#ef4444">0%</div>
-      <div class="val-sub">통과 0 / 실패 0 (전체 0)</div>
+      <div class="val-rate" style="color:#10b981">100%</div>
+      <div class="val-sub">통과 3 / 실패 0 (전체 3)</div>
     </div>
     <table>
       <tr><th>모드</th><th>통과</th><th>실패</th><th>통과율</th></tr>
-      <tr><td><span class="pbadge" style="background:#3b82f622;color:#3b82f6;border:1px solid #3b82f644">고수</span></td><td>—</td><td>—</td><td>—</td></tr><tr><td><span class="pbadge" style="background:#10b98122;color:#10b981;border:1px solid #10b98144">중수</span></td><td>—</td><td>—</td><td>—</td></tr><tr><td><span class="pbadge" style="background:#f59e0b22;color:#f59e0b;border:1px solid #f59e0b44">하수</span></td><td>—</td><td>—</td><td>—</td></tr><tr><td><span class="pbadge" style="background:#ef444422;color:#ef4444;border:1px solid #ef444444">초보</span></td><td>—</td><td>—</td><td>—</td></tr>
+      <tr><td><span class="pbadge" style="background:#3b82f622;color:#3b82f6;border:1px solid #3b82f644">고수</span></td><td>3</td><td class="cr-ok">0</td><td class="cr-ok">100%</td></tr><tr><td><span class="pbadge" style="background:#10b98122;color:#10b981;border:1px solid #10b98144">중수</span></td><td>—</td><td>—</td><td>—</td></tr><tr><td><span class="pbadge" style="background:#f59e0b22;color:#f59e0b;border:1px solid #f59e0b44">하수</span></td><td>—</td><td>—</td><td>—</td></tr><tr><td><span class="pbadge" style="background:#ef444422;color:#ef4444;border:1px solid #ef444444">초보</span></td><td>—</td><td>—</td><td>—</td></tr>
     </table>
   </div>
 </div>
@@ -328,8 +329,8 @@ details[open] .rr-summary::before{transform:rotate(90deg)}
   </div>
   <div class="card" style="border-left:4px solid #94a3b8">
     <div class="ct" style="color:#94a3b8">비발동 시 클리어율</div>
-    <div class="cv" style="color:#94a3b8">0.0%</div>
-    <div class="cs">DDA 미적용 클리어율 (0판)</div>
+    <div class="cv" style="color:#94a3b8">100.0%</div>
+    <div class="cs">DDA 미적용 클리어율 (1판)</div>
   </div>
 </div>
 <div class="g2" style="margin-top:14px">
@@ -358,7 +359,7 @@ details[open] .rr-summary::before{transform:rotate(90deg)}
 <details class="sec-collapsible">
 <summary class="sec-summary">해머 경제 추적</summary>
 <div class="sec-collapsible-body">
-<div class="cards" style="grid-template-columns:repeat(4,1fr)"><div class="card" style="border-left:4px solid #3b82f6"><div class="ct" style="color:#3b82f6">고수</div><div class="cv" style="color:#3b82f6">+0.0</div><div class="cs">런당 평균 해머 변화</div></div><div class="card" style="border-left:4px solid #10b981"><div class="ct" style="color:#10b981">중수</div><div class="cv" style="color:#10b981">+0.0</div><div class="cs">런당 평균 해머 변화</div></div><div class="card" style="border-left:4px solid #f59e0b"><div class="ct" style="color:#f59e0b">하수</div><div class="cv" style="color:#f59e0b">+0.0</div><div class="cs">런당 평균 해머 변화</div></div><div class="card" style="border-left:4px solid #ef4444"><div class="ct" style="color:#ef4444">초보</div><div class="cv" style="color:#ef4444">+0.0</div><div class="cs">런당 평균 해머 변화</div></div></div>
+<div class="cards" style="grid-template-columns:repeat(4,1fr)"><div class="card" style="border-left:4px solid #3b82f6"><div class="ct" style="color:#3b82f6">고수</div><div class="cv" style="color:#3b82f6">-31.0</div><div class="cs">런당 평균 해머 변화</div></div><div class="card" style="border-left:4px solid #10b981"><div class="ct" style="color:#10b981">중수</div><div class="cv" style="color:#10b981">+0.0</div><div class="cs">런당 평균 해머 변화</div></div><div class="card" style="border-left:4px solid #f59e0b"><div class="ct" style="color:#f59e0b">하수</div><div class="cv" style="color:#f59e0b">+0.0</div><div class="cs">런당 평균 해머 변화</div></div><div class="card" style="border-left:4px solid #ef4444"><div class="ct" style="color:#ef4444">초보</div><div class="cv" style="color:#ef4444">+0.0</div><div class="cs">런당 평균 해머 변화</div></div></div>
 <div class="box" style="margin-top:14px"><div class="sec-title">판별 해머 변화 추이</div><div class="sec-desc">각 판에서의 해머 변화량(delta). 페르소나별 라인.</div><canvas id="cHammer" height="160"></canvas></div>
 </div>
 </details>
@@ -376,9 +377,9 @@ details[open] .rr-summary::before{transform:rotate(90deg)}
 <summary class="sec-summary">입장 방식 분포</summary>
 <div class="sec-collapsible-body">
 <div class="g2">
-  <div class="box"><div class="sec-title">입장 방식별 비율</div><div class="sec-desc">전체 0판의 입장 방식 분포. 골드/무료/광고 등.</div><div class="nd">입장 방식 데이터 없음</div></div>
+  <div class="box"><div class="sec-title">입장 방식별 비율</div><div class="sec-desc">전체 1판의 입장 방식 분포. 골드/무료/광고 등.</div><canvas id="cEntry" height="180"></canvas></div>
   <div class="box"><div class="sec-title">입장 방식별 상세</div><div class="sec-desc">입장 방식 | 횟수 | 비율</div>
-    <table><tr><th>입장 방식</th><th>횟수</th><th>비율</th></tr></table></div>
+    <table><tr><th>입장 방식</th><th>횟수</th><th>비율</th></tr><tr><td>free</td><td>1</td><td>100.0%</td></tr></table></div>
 </div>
 </div>
 </details>
@@ -390,7 +391,12 @@ details[open] .rr-summary::before{transform:rotate(90deg)}
     <div class="sec-desc">테스트 중 감지된 주요 이벤트. 기믹 발생·보상 오류·반복 로그·골드 이상 등을 포함.</div>
     <table>
       <tr><th>시각</th><th>모드</th><th>유형</th><th>내용</th></tr>
-      <tr><td colspan="4" class="nd">이슈 없음</td></tr>
+      <tr data-cat="골드" data-version="unknown" class="iss-row" onclick="issToggle('idr_0')"><td class="mono">20260424</td><td><span class="pbadge" style="background:#3b82f622;color:#3b82f6;border:1px solid #3b82f644">고수</span></td><td><span class="cat-badge" style="color:#fbbf24">골드</span></td><td class="desc">[검증] 레벨 합산(+2,274) ≠ 전체 변화(-10,000,000), 편차 10,002,274 <span class="iss-xhint">▶</span></td></tr><tr id="idr_0" class="iss-detail-row" style="display:none"><td colspan="4" class="iss-detail-cell"><div class="iss-det-wrap"><div class="iss-det-meta"><span class="mono" style="font-size:.65rem;margin-right:8px">20260424</span><span style="color:#3b82f6;font-size:.68rem;margin-right:8px">고수</span><span style="color:#fbbf24;font-size:.68rem">골드</span></div><div class="iss-det-body">[검증] 레벨 합산(+2,274) ≠ 전체 변화(-10,000,000), 편차 10,002,274</div></div></td></tr><tr data-cat="기믹" data-version="unknown" class="iss-row" onclick="issToggle('idr_1')"><td class="mono">16:27:50</td><td><span class="pbadge" style="background:#3b82f622;color:#3b82f6;border:1px solid #3b82f644">고수</span></td><td><span class="cat-badge" style="color:#a78bfa">기믹</span></td><td class="desc">Lv2(CC_0002) 기믹 5회 — 키&amp;자물쇠 1회 <span class="iss-xhint">▶</span></td></tr><tr id="idr_1" class="iss-detail-row" style="display:none"><td colspan="4" class="iss-detail-cell"><div class="iss-det-wrap"><div class="iss-det-meta"><span class="mono" style="font-size:.65rem;margin-right:8px">20260424</span><span style="color:#3b82f6;font-size:.68rem;margin-right:8px">고수</span><span style="color:#a78bfa;font-size:.68rem">기믹</span></div><div class="iss-det-body">Lv2(CC_0002) 기믹 5회 — 키&amp;자물쇠 1회</div><div class="iss-det-cause" style="margin-top:8px;padding:8px 12px;background:#0f1a2e;border-left:3px solid #a78bfa;border-radius:4px;font-size:11px;color:#94a3b8;white-space:pre-wrap;">기믹 처리 5회
+종류별: 키&amp;자물쇠 1회
+발생 이벤트: [&#x27;gimmick:키&amp;자물쇠&#x27;]
+턴: 32 | 매치: 21 | 드로우: 9
+
+💡 해결 방안: 기믹 카드는 매칭 시 추가 턴이 소모됨. 얼음/체인 등 장애물이 많은 스테이지는 엑스트라 덱 준비 권장.</div></div></td></tr>
     </table>
   </div>
   <div class="box">
@@ -412,7 +418,7 @@ details[open] .rr-summary::before{transform:rotate(90deg)}
         <th class="stg-th" data-col="8" data-type="str">UI 난이도</th>
         <th class="stg-th" data-col="9" data-type="str">모드</th>
       </tr>
-      <tr><td colspan="10" class="nd">데이터 없음</td></tr>
+      <tr data-versions=""><td>1</td><td class="mono">CC_0002</td><td class="cr-ok">+2274</td><td class="cr-ok">1</td><td class="cr-mid">32.0</td><td class="cr-ok">18.6</td><td class="cr-ok">630</td><td style="color:#10b981">노말</td><td style="color:#10b981">노말</td><td><span class="pbadge" style="background:#3b82f622;color:#3b82f6;border:1px solid #3b82f644">고수</span></td></tr>
     </table>
   </div>
 </div>
@@ -426,7 +432,7 @@ details[open] .rr-summary::before{transform:rotate(90deg)}
   <div class="sec-desc">스테이지별 평균 골드 손익을 히트맵 스타일로 표시합니다. 배경색이 붉을수록 손실, 녹색일수록 수익입니다.</div>
   <table>
     <tr><th>스테이지</th><th style="text-align:right">평균손익</th><th style="text-align:center">횟수</th><th style="text-align:center">평균턴</th></tr>
-    <tr><td colspan="4" style="padding-top:12px;font-weight:700;color:#ef4444;font-size:.72rem">손실 TOP10</td></tr><tr><td colspan="4" style="padding-top:12px;font-weight:700;color:#10b981;font-size:.72rem">수익 TOP10</td></tr>
+    <tr><td colspan="4" style="padding-top:12px;font-weight:700;color:#ef4444;font-size:.72rem">손실 TOP10</td></tr><tr><td class="mono">CC_0002</td><td style="background:rgba(16,185,129,.35);color:#4ade80;font-weight:700;text-align:right">+2274</td><td style="text-align:center">1</td><td style="text-align:center">32.0</td></tr><tr><td colspan="4" style="padding-top:12px;font-weight:700;color:#10b981;font-size:.72rem">수익 TOP10</td></tr><tr><td class="mono">CC_0002</td><td style="background:rgba(16,185,129,.35);color:#4ade80;font-weight:700;text-align:right">+2274</td><td style="text-align:center">1</td><td style="text-align:center">32.0</td></tr>
   </table>
 </div>
 </div>
@@ -444,15 +450,94 @@ details[open] .rr-summary::before{transform:rotate(90deg)}
 </div>
 </details>
 
+
+<div class="box" style="margin-top:14px;">
+<div style="color:var(--text-secondary,#94a3b8);font-size:12px;font-weight:600;margin:14px 0 10px;">&#9201; 시간 분석</div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:10px;"><div style="background:#1e293b;border:1px solid #334155;border-radius:8px;padding:10px 14px;"><div style="color:#64748b;font-size:10px;margin-bottom:4px;">총 플레이 시간</div><div style="color:#e2e8f0;font-size:18px;font-weight:700;">0m</div><div style="color:#94a3b8;font-size:9px;margin-top:2px;">1판 누적</div></div><div style="background:#1e293b;border:1px solid #334155;border-radius:8px;padding:10px 14px;"><div style="color:#64748b;font-size:10px;margin-bottom:4px;">판당 평균 시간</div><div style="color:#10b981;font-size:18px;font-weight:700;">18.6초</div><div style="color:#94a3b8;font-size:9px;margin-top:2px;">중앙값 18.6초</div></div><div style="background:#1e293b;border:1px solid #334155;border-radius:8px;padding:10px 14px;"><div style="color:#64748b;font-size:10px;margin-bottom:4px;">최장 소요 레벨</div><div style="color:#94a3b8;font-size:18px;font-weight:700;">18.6초</div><div style="color:#94a3b8;font-size:9px;margin-top:2px;">Level 28</div></div></div><div style="background:#1e293b;border:1px solid #334155;border-radius:8px;padding:12px 14px;margin-bottom:10px;"><div style="color:#94a3b8;font-size:11px;font-weight:600;margin-bottom:8px;">시간 분포</div><div style="display:flex;height:20px;border-radius:6px;overflow:hidden;margin-bottom:6px;"><div style="width:100.0%;background:#10b981;min-width:2px;" title="< 30초: 1판 (100.0%)"></div></div><div style="display:flex;gap:12px;flex-wrap:wrap;"><div style="display:flex;align-items:center;gap:4px;"><div style="width:8px;height:8px;border-radius:2px;background:#10b981;"></div><span style="color:#94a3b8;font-size:9px;">< 30초 1판 (100.0%)</span></div><div style="display:flex;align-items:center;gap:4px;"><div style="width:8px;height:8px;border-radius:2px;background:#22d3ee;"></div><span style="color:#94a3b8;font-size:9px;">30~60초 0판 (0.0%)</span></div><div style="display:flex;align-items:center;gap:4px;"><div style="width:8px;height:8px;border-radius:2px;background:#f59e0b;"></div><span style="color:#94a3b8;font-size:9px;">1~2분 0판 (0.0%)</span></div><div style="display:flex;align-items:center;gap:4px;"><div style="width:8px;height:8px;border-radius:2px;background:#fb923c;"></div><span style="color:#94a3b8;font-size:9px;">2~5분 0판 (0.0%)</span></div><div style="display:flex;align-items:center;gap:4px;"><div style="width:8px;height:8px;border-radius:2px;background:#ef4444;"></div><span style="color:#94a3b8;font-size:9px;">5분+ 0판 (0.0%)</span></div></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;"><div style="background:#1e293b;border:1px solid #334155;border-radius:8px;padding:12px 14px;"><div style="color:#94a3b8;font-size:11px;font-weight:600;margin-bottom:8px;">페르소나별 평균 시간</div><div style="display:flex;justify-content:space-between;padding:3px 0;"><span style="color:#94a3b8;font-size:10px;">고수</span><span style="color:#10b981;font-size:10px;font-weight:700;">18.6초</span></div></div><div style="background:#1e293b;border:1px solid #334155;border-radius:8px;padding:12px 14px;"><div style="color:#94a3b8;font-size:11px;font-weight:600;margin-bottom:8px;">난이도별 평균 시간</div><div style="display:flex;justify-content:space-between;padding:3px 0;"><span style="color:#94a3b8;font-size:10px;">노말</span><span style="color:#10b981;font-size:10px;font-weight:700;">18.6초</span></div></div></div>
+</div>
 </div><!-- end tab-overall -->
 
-<div id="tab-hardcore" class="tab-panel"><div class="box"><div class="nd">데이터 없음</div></div></div>
+
+<div id="tab-hardcore" class="tab-panel">
+  <div style="border-left:3px solid #3b82f6;padding:6px 12px;margin-bottom:12px;font-size:11px;color:var(--text2);background:var(--bg2);border-radius:0 6px 6px 0">
+    <b style="color:#3b82f6">고수</b> &mdash; 최적 카드 선택(depth↓) · 실수율 0% · stuck 1회→즉시 아이템 · ExtraDeck 90% · Undo 70%
+  </div>
+  <div class="cards" style="margin-bottom:14px">
+    <div class="card" style="border-left:4px solid #3b82f6"><div class="ct" style="color:#3b82f6">골드 회수율</div><div class="cv" id="vf-hardcore-eff">208%</div><div class="cs">1판 · 1런</div></div>
+    <div class="card" style="border-left:4px solid #3b82f6"><div class="ct" style="color:#3b82f6">골드 손익/판</div><div class="cv" id="vf-hardcore-gold">+2,274</div><div class="cs">잔액변화 -10,000,000/런</div></div>
+    <div class="card" style="border-left:4px solid #3b82f6"><div class="ct" style="color:#3b82f6">평균 턴수</div><div class="cv" id="vf-hardcore-turns">32.0</div><div class="cs">판당 18.6초</div></div>
+    <div class="card" style="border-left:4px solid #3b82f6"><div class="ct" style="color:#3b82f6">평균 맵스코어</div><div class="cv">630</div><div class="cs">base 530 + 기믹 +100 · 1판</div></div>
+    <div class="card" style="border-left:4px solid #3b82f6"><div class="ct" style="color:#3b82f6">해머 변화/런</div><div class="cv">-31.0</div><div class="cs">검증 3통과/0실패</div></div>
+    <div class="card" style="border-left:4px solid #3b82f6"><div class="ct" style="color:#3b82f6">와일드매칭/판</div><div class="cv">1.00</div><div class="cs">와일드구매/판 0.00</div></div>
+    <div class="card" style="border-left:4px solid #3b82f6"><div class="ct" style="color:#3b82f6">최적 배팅</div><div class="cv">x1</div><div class="cs">배수별 최고손익 +2,274/판</div></div>
+    <div class="card" style="border-left:4px solid #3b82f6"><div class="ct" style="color:#3b82f6">난이도 분포</div><div class="cv">1<span style="font-size:.9rem;color:var(--text2)"> / 0 / 0</span></div><div class="cs">보통 / 어려움 / 매우어려움</div></div>
+    <div class="card" style="border-left:4px solid #3b82f6"><div class="ct" style="color:#3b82f6">총 소요시간</div><div class="cv">0분 18초</div><div class="cs">1판 기준</div></div>
+  </div>
+  <div class="g2">
+    <div class="box"><div class="sec-title">런별 골드 회수율</div><canvas id="hardcoreRC" height="140"></canvas></div>
+    <div class="box"><div class="sec-title">런별 골드 손익/판</div><canvas id="hardcoreRG" height="140"></canvas></div>
+  </div>
+  <div class="g2">
+    <div class="box"><div class="sec-title">게임플레이 지표 (매치/턴·드로우/턴·와일드/판)</div><div class="sec-desc">와일드매칭: 보드 와일드 카드 매칭 · 와일드구매: 재화로 구매한 와일드</div><canvas id="hardcoreGP" height="150"></canvas></div>
+    <div class="box"><div class="sec-title">배팅 배수별 골드 손익/판</div><canvas id="hardcoreBT" height="150"></canvas></div>
+  </div>
+  <div class="g2">
+    <div class="box"><div class="sec-title">스테이지 난이도 분포</div><div class="sec-desc">이 모드에서 플레이한 스테이지의 난이도 등급별 개수.</div><canvas id="hardcoreSD" height="150"></canvas></div>
+    <div class="box"><div class="sec-title">이슈 / 특이사항</div>
+      <table><tr><th>시각</th><th>유형</th><th>내용</th></tr><tr><td class="mono">20260424</td><td><span class="cat-badge" style="color:#fbbf24">골드</span></td><td class="desc" title="[검증] 레벨 합산(+2,274) ≠ 전체 변화(-10,000,000), 편차 10,002,274">[검증] 레벨 합산(+2,274) ≠ 전체 변화(-10,000,000), 편차 10,002,274</td></tr><tr><td class="mono">16:27:50</td><td><span class="cat-badge" style="color:#a78bfa">기믹</span></td><td class="desc" title="Lv2(CC_0002) 기믹 5회 — 키&amp;자물쇠 1회">Lv2(CC_0002) 기믹 5회 — 키&amp;자물쇠 1회</td></tr></table>
+    </div>
+  </div>
+  <div class="g2" style="margin-top:14px">
+    <div class="box">
+      <div class="sec-title">골드 잔액 추이 — 최근 런 (1판)</div>
+      <div class="sec-desc">레벨 진행에 따른 골드 잔액 변화.</div>
+      <canvas id="hardcoreGoldSeq" height="110"></canvas>
+    </div>
+    <div class="box">
+      <div class="sec-title">턴 수 / 난이도 / 맵스코어 — 최근 런</div>
+      <div class="sec-desc"><span style="color:#4ade80">● 클리어</span> &nbsp;<span style="color:#f87171">● 실패</span> &nbsp;· <span style="color:#f87171">빨간점선 = 맵 난이도</span> &nbsp;· <span style="color:#fbbf24">노란점선 = UI 난이도</span> &nbsp;· <span style="color:#a78bfa">보라선 = 맵스코어</span><br><span style="color:#64748b;font-size:10px">※ 맵 난이도(CDN 공식 tier)와 UI 표시 난이도가 다를 수 있습니다.</span></div>
+      <canvas id="hardcoreTurnDiff" height="110"></canvas>
+    </div>
+  </div>
+  <div class="g2" style="margin-top:14px">
+    <div class="box"><div class="sec-title">콤보 분포</div><div class="sec-desc">레벨당 콤보 횟수 분포. 높은 콤보는 별 보상과 골드 보너스에 직결.</div><canvas id="hardcoreCombo" height="120"></canvas></div>
+    <div class="box"><div class="sec-title">별 보상 분포</div><div class="sec-desc">레벨당 획득한 별 보상 등급별 빈도.</div><canvas id="hardcoreStar" height="120"></canvas></div>
+  </div>
+  <div class="g2" style="margin-top:14px">
+    <div class="box"><div class="sec-title">와일드/스트릭 경제</div><div class="sec-desc">와일드 카드 평균 비용(음수) vs 스트릭 보너스 평균 골드(양수) — 판당 기준.</div><canvas id="hardcoreEcon" height="120"></canvas></div>
+    <div class="box"><div class="sec-title">기믹 타입 분포</div><div class="sec-desc">이벤트 로그에서 감지된 기믹 타입별 발생 횟수.</div><canvas id="hardcoreGT" height="120"></canvas></div>
+  </div>
+  <div class="box" style="margin-top:14px">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+      <div class="sec-title" style="margin:0">스테이지 목록 (런 진행 순)</div>
+      <button onclick="resetStgSort('hardcoreStg')" style="background:#1e3a5f;color:#94a3b8;border:1px solid #2d4a6f;border-radius:4px;padding:2px 8px;font-size:10px;cursor:pointer;">원복 ↺</button>
+    </div>
+    <table id="hardcoreStg"><tr>
+      <th class="stg-th" data-col="0" data-type="num">#</th>
+      <th class="stg-th" data-col="1" data-type="str">스테이지</th>
+      <th class="stg-th" data-col="2" data-type="num">손익/판</th>
+      <th class="stg-th" data-col="3" data-type="num">횟수</th>
+      <th class="stg-th" data-col="4" data-type="num">평균턴</th>
+      <th class="stg-th" data-col="5" data-type="num">시간(초)</th>
+      <th class="stg-th" data-col="6" data-type="num">맵스코어</th>
+      <th class="stg-th" data-col="7" data-type="str">난이도</th>
+      <th class="stg-th" data-col="8" data-type="str">UI 난이도</th>
+    </tr><tr style="cursor:pointer" onclick="var d=document.getElementById('stg_hardcore_1');d.style.display=d.style.display==='none'?'table-row':'none'"><td>1</td><td class="mono">CC_0002</td><td class="cr-ok">+2274</td><td class="cr-ok">1</td><td class="cr-mid">32.0</td><td class="cr-ok">18.6</td><td class="cr-ok">630</td><td style="color:#10b981">노말</td><td style="color:#10b981">노말</td></tr><tr id="stg_hardcore_1" style="display:none;background:rgba(56,189,248,.04)"><td></td><td colspan="8" style="padding:8px 12px;font-size:11px;color:#94a3b8"><b>맵스코어 상세</b> (1회 플레이)<br>base(OBB): 530 · 기믹가중치: +100 · 합계: 630<br>평균카드수: 22 · 평균깊이: 2.0 · 기믹: st2:5, st6:2</td></tr></table>
+  </div>
+  <div class="g2" style="margin-top:14px">
+    <div class="box"><div class="sec-title">판 번호별 클리어율</div><div class="sec-desc">세션 내 몇 번째 판인지에 따른 클리어율 변화. 피로도 패턴 확인.</div><canvas id="hardcorePosCR" height="160"></canvas></div>
+    <div class="box"><div class="sec-title">판 번호별 평균 소요시간</div><div class="sec-desc">세션 내 판 순서별 평균 소요시간(초). 첫 판과 마지막 판의 소요시간 차이 확인.</div><canvas id="hardcorePosTime" height="160"></canvas></div>
+  </div>
+</div>
 <div id="tab-average" class="tab-panel"><div class="box"><div class="nd">데이터 없음</div></div></div>
 <div id="tab-casual" class="tab-panel"><div class="box"><div class="nd">데이터 없음</div></div></div>
 <div id="tab-struggling" class="tab-panel"><div class="box"><div class="nd">데이터 없음</div></div></div>
 
 <div id="tab-recent" class="tab-panel">
-<div class="box"><div class="nd">런 데이터 없음</div></div>
+<div class="rr-section"><div class="rr-mode-hd" style="border-left:3px solid #3b82f6;padding-left:12px;margin-bottom:14px"><span class="pbadge" style="background:#3b82f622;color:#3b82f6;border:1px solid #3b82f644">고수</span><span class="rr-mode-sub"> — 최근 1런 (클릭하여 펼치기)</span></div>
+<details class="rr-detail" data-version="unknown"><summary class="rr-summary"><span class="rr-date">2026-04-24 16:29</span><span class="rr-tag">1판</span><span class="rr-tag cr-low">골드 -10,000,000</span><span class="rr-tag">2분 20초</span></summary><div class="rr-tbl-wrap"><table class="rr-tbl"><thead><tr><th style="width:24px"></th><th>레벨</th><th>스테이지</th><th>결과</th><th>난이도</th><th>맵스코어</th><th>턴</th><th>입장료</th><th>아이템</th><th>보상</th><th>손익</th><th>골드잔액</th><th>보드와일드</th><th>와일드구매</th><th>골든티켓</th><th>엑스트라덱</th></tr></thead><tbody>
+<tr class="rr-lvl-row" onclick="rrToggle('rrx_hardcore_0_0')" style="cursor:pointer"><td class="rr-expand-btn" id="btn_rrx_hardcore_0_0">＋</td><td>Level 28</td><td class="mono">CC_0002</td><td class="cr-ok">✔</td><td>노말</td><td class="mono cr-ok" title="base 530 + 기믹 +100">630<span style="color:#a78bfa;font-size:9px;margin-left:2px">(+100)</span></td><td>32</td><td class="mono">2,100</td><td class="mono">0</td><td class="mono">4,374</td><td class="mono cr-ok">+2,274</td><td class="mono">10,002,274</td><td>1</td><td>—</td><td>—</td><td>—</td></tr><tr class="rr-lvl-detail" id="rrx_hardcore_0_0" style="display:none"><td></td><td colspan="15"><div class="rr-detail-grid"><div class="rr-dg-item"><span class="rr-dk">입장방식</span><span>free</span></div><div class="rr-dg-item"><span class="rr-dk">베팅배수</span><span>1x</span></div><div class="rr-dg-item"><span class="rr-dk">소요시간</span><span>18초</span></div><div class="rr-dg-item"><span class="rr-dk">매치수</span><span>21</span></div><div class="rr-dg-item"><span class="rr-dk">드로우수</span><span>9</span></div><div class="rr-dg-item"><span class="rr-dk">필드카드</span><span>22 (앞면 4)</span></div><div class="rr-dg-item"><span class="rr-dk">보너스골드</span><span>0</span></div><div class="rr-dg-item"><span class="rr-dk">플러스카드</span><span>—</span></div><div class="rr-dg-item"><span class="rr-dk">실수 드로우</span><span>—</span></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">클리어보상</span><span>해머 x1, 스타 x1, 콤보 1</span></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">검증결과</span><div class="rr-val-wrap"><span class="rr-val-item cr-ok">난이도 티어: 2 (Normal)</span><span class="rr-val-item cr-ok">해머 보상: 0</span><span class="rr-val-item cr-ok">플러스카드 기믹 해금: 레벨 28</span></div></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">아이템 사용</span><div class="rr-ev-wrap"><span style="color:var(--text2)">없음</span></div></div><div class="rr-dg-item rr-dg-wide"><span class="rr-dk">기믹 매칭</span><div class="rr-ev-wrap"><span class="rr-ev-tag rr-ev-gimmick">키&amp;자물쇠 ×5</span><span class="rr-ev-tag rr-ev-gimmick">얼음 ×2</span></div></div><div class="rr-dg-item rr-dg-full"><span class="rr-dk">기타 이벤트</span><div class="rr-ev-wrap"><span style="color:var(--text2)">없음</span></div></div></div></td></tr>
+</tbody></table></div></details>
+</div>
 <script>function rrToggle(id){var r=document.getElementById(id);var b=document.getElementById("btn_"+id);if(!r)return;var show=r.style.display==="none";r.style.display=show?"table-row":"none";if(b)b.textContent=show?"－":"＋";}</script>
 </div>
 
@@ -470,12 +555,12 @@ details[open] .rr-summary::before{transform:rotate(90deg)}
     <div class="sec-title">검증 실패</div>
     <div class="sec-desc">게임 내부 골드 계산(입장료·아이템·보상)이 예상 값과 불일치한 건수.</div>
     <div class="val-summary">
-      <div class="val-rate" style="color:#ef4444">0%</div>
-      <div class="val-sub">통과 0 / 실패 0</div>
+      <div class="val-rate" style="color:#10b981">100%</div>
+      <div class="val-sub">통과 3 / 실패 0</div>
     </div>
     <table>
       <tr><th>모드</th><th>통과</th><th>실패</th><th>통과율</th></tr>
-      <tr><td><span class="pbadge" style="background:#3b82f622;color:#3b82f6;border:1px solid #3b82f644">고수</span></td><td>—</td><td>—</td><td>—</td></tr><tr><td><span class="pbadge" style="background:#10b98122;color:#10b981;border:1px solid #10b98144">중수</span></td><td>—</td><td>—</td><td>—</td></tr><tr><td><span class="pbadge" style="background:#f59e0b22;color:#f59e0b;border:1px solid #f59e0b44">하수</span></td><td>—</td><td>—</td><td>—</td></tr><tr><td><span class="pbadge" style="background:#ef444422;color:#ef4444;border:1px solid #ef444444">초보</span></td><td>—</td><td>—</td><td>—</td></tr>
+      <tr><td><span class="pbadge" style="background:#3b82f622;color:#3b82f6;border:1px solid #3b82f644">고수</span></td><td>3</td><td class="cr-ok">0</td><td class="cr-ok">100%</td></tr><tr><td><span class="pbadge" style="background:#10b98122;color:#10b981;border:1px solid #10b98144">중수</span></td><td>—</td><td>—</td><td>—</td></tr><tr><td><span class="pbadge" style="background:#f59e0b22;color:#f59e0b;border:1px solid #f59e0b44">하수</span></td><td>—</td><td>—</td><td>—</td></tr><tr><td><span class="pbadge" style="background:#ef444422;color:#ef4444;border:1px solid #ef444444">초보</span></td><td>—</td><td>—</td><td>—</td></tr>
     </table>
   </div>
 </div>
@@ -495,7 +580,12 @@ details[open] .rr-summary::before{transform:rotate(90deg)}
   <div class="sec-desc" style="margin-bottom:10px">테스트 중 감지된 이벤트. <span style="color:#ef4444">버그</span>·<span style="color:#fbbf24">골드이상</span>·<span style="color:#94a3b8">반복로그</span>는 검토 필요. <span style="color:#a78bfa">기믹</span>·<span style="color:#34d399">보상</span>은 정상 게임플레이.</div>
   <table id="iss-tbl">
     <tr><th>시각</th><th>모드</th><th>유형</th><th>내용</th></tr>
-    <tr><td colspan="4" class="nd">이슈 없음</td></tr>
+    <tr data-cat="골드" data-version="unknown" class="iss-row" onclick="issToggle('idr_0')"><td class="mono">20260424</td><td><span class="pbadge" style="background:#3b82f622;color:#3b82f6;border:1px solid #3b82f644">고수</span></td><td><span class="cat-badge" style="color:#fbbf24">골드</span></td><td class="desc">[검증] 레벨 합산(+2,274) ≠ 전체 변화(-10,000,000), 편차 10,002,274 <span class="iss-xhint">▶</span></td></tr><tr id="idr_0" class="iss-detail-row" style="display:none"><td colspan="4" class="iss-detail-cell"><div class="iss-det-wrap"><div class="iss-det-meta"><span class="mono" style="font-size:.65rem;margin-right:8px">20260424</span><span style="color:#3b82f6;font-size:.68rem;margin-right:8px">고수</span><span style="color:#fbbf24;font-size:.68rem">골드</span></div><div class="iss-det-body">[검증] 레벨 합산(+2,274) ≠ 전체 변화(-10,000,000), 편차 10,002,274</div></div></td></tr><tr data-cat="기믹" data-version="unknown" class="iss-row" onclick="issToggle('idr_1')"><td class="mono">16:27:50</td><td><span class="pbadge" style="background:#3b82f622;color:#3b82f6;border:1px solid #3b82f644">고수</span></td><td><span class="cat-badge" style="color:#a78bfa">기믹</span></td><td class="desc">Lv2(CC_0002) 기믹 5회 — 키&amp;자물쇠 1회 <span class="iss-xhint">▶</span></td></tr><tr id="idr_1" class="iss-detail-row" style="display:none"><td colspan="4" class="iss-detail-cell"><div class="iss-det-wrap"><div class="iss-det-meta"><span class="mono" style="font-size:.65rem;margin-right:8px">20260424</span><span style="color:#3b82f6;font-size:.68rem;margin-right:8px">고수</span><span style="color:#a78bfa;font-size:.68rem">기믹</span></div><div class="iss-det-body">Lv2(CC_0002) 기믹 5회 — 키&amp;자물쇠 1회</div><div class="iss-det-cause" style="margin-top:8px;padding:8px 12px;background:#0f1a2e;border-left:3px solid #a78bfa;border-radius:4px;font-size:11px;color:#94a3b8;white-space:pre-wrap;">기믹 처리 5회
+종류별: 키&amp;자물쇠 1회
+발생 이벤트: [&#x27;gimmick:키&amp;자물쇠&#x27;]
+턴: 32 | 매치: 21 | 드로우: 9
+
+💡 해결 방안: 기믹 카드는 매칭 시 추가 턴이 소모됨. 얼음/체인 등 장애물이 많은 스테이지는 엑스트라 덱 준비 권장.</div></div></td></tr>
   </table>
   <div id="iss-empty" style="display:none;text-align:center;padding:20px;color:#3d6080;font-family:'IBM Plex Mono',monospace;font-size:.7rem;letter-spacing:.05em">해당 카테고리 이벤트 없음</div>
 </div>
@@ -719,10 +809,10 @@ function iFilter(btn,cat){
 
 <div id="tab-security" class="tab-panel">
 <div class="cards" style="grid-template-columns:repeat(5,1fr)">
-  <div class="card" style="border-left:4px solid #ef4444">
-    <div class="ct" style="color:#ef4444">검증 통과율</div>
-    <div class="cv" style="color:#ef4444">0%</div>
-    <div class="cs">통과 0 / 실패 0</div>
+  <div class="card" style="border-left:4px solid #10b981">
+    <div class="ct" style="color:#10b981">검증 통과율</div>
+    <div class="cv" style="color:#10b981">100%</div>
+    <div class="cs">통과 3 / 실패 0</div>
   </div>
   <div class="card" style="border-left:4px solid #10b981">
     <div class="ct" style="color:#10b981">API 에러율</div>
@@ -736,7 +826,7 @@ function iFilter(btn,cat){
   </div>
   <div class="card" style="border-left:4px solid #10b981">
     <div class="ct" style="color:#10b981">이슈 건수</div>
-    <div class="cv" style="color:#10b981">0</div>
+    <div class="cv" style="color:#10b981">2</div>
     <div class="cs">전체 감지된 이슈</div>
   </div>
   <div class="card" style="border-left:4px solid #10b981">
@@ -752,7 +842,7 @@ function iFilter(btn,cat){
   <div style="max-height:340px;overflow-y:auto">
     <table>
       <tr><th>날짜</th><th>페르소나</th><th>설명</th></tr>
-      <tr><td colspan="3" class="nd">검증 실패 없음</td></tr>
+      <tr><td class="mono" style="font-size:11px">20260424</td><td><span class="pbadge" style="background:#3b82f622;color:#3b82f6;border:1px solid #3b82f644">고수</span></td><td style="font-size:11px;color:#cbd5e1;max-width:400px;word-break:break-all" title="[검증] 레벨 합산(+2,274) ≠ 전체 변화(-10,000,000), 편차 10,002,274">[검증] 레벨 합산(+2,274) ≠ 전체 변화(-10,000,000), 편차 10,002,274</td></tr>
     </table>
   </div>
 </div>
@@ -786,7 +876,7 @@ function iFilter(btn,cat){
 <div class="box">
   <div class="sec-title" style="color:#f97316">페르소나별 검증 현황</div>
   <div class="sec-desc">각 페르소나의 검증 통과/실패 현황과 주요 실패 유형.</div>
-  <div class="cards"><div class="card dim" style="border-left:4px solid #3b82f6"><div class="ct" style="color:#3b82f6">고수</div><div class="cv">--</div><div class="cs">검증 데이터 없음</div></div><div class="card dim" style="border-left:4px solid #10b981"><div class="ct" style="color:#10b981">중수</div><div class="cv">--</div><div class="cs">검증 데이터 없음</div></div><div class="card dim" style="border-left:4px solid #f59e0b"><div class="ct" style="color:#f59e0b">하수</div><div class="cv">--</div><div class="cs">검증 데이터 없음</div></div><div class="card dim" style="border-left:4px solid #ef4444"><div class="ct" style="color:#ef4444">초보</div><div class="cv">--</div><div class="cs">검증 데이터 없음</div></div></div>
+  <div class="cards"><div class="card" style="border-left:4px solid #3b82f6"><div class="ct" style="color:#3b82f6">고수 <span class="pk">hardcore</span></div><div class="cv" style="color:#10b981">100%</div><div class="cs">통과 3 / 실패 0 (3건)</div><div class="cs" style="font-size:10px;margin-top:2px">실패유형: 없음</div></div><div class="card dim" style="border-left:4px solid #10b981"><div class="ct" style="color:#10b981">중수</div><div class="cv">--</div><div class="cs">검증 데이터 없음</div></div><div class="card dim" style="border-left:4px solid #f59e0b"><div class="ct" style="color:#f59e0b">하수</div><div class="cv">--</div><div class="cs">검증 데이터 없음</div></div><div class="card dim" style="border-left:4px solid #ef4444"><div class="ct" style="color:#ef4444">초보</div><div class="cv">--</div><div class="cs">검증 데이터 없음</div></div></div>
 </div>
 </div>
 
@@ -809,7 +899,7 @@ const withDL = {...D,plugins:{...D.plugins,datalabels:_dlBar}};
 (function(){
   var el=document.getElementById('cRadar');
   if(el){
-    new Chart(el,{type:'radar',data:{labels:["클리어율", "회수율", "평균턴(역수)", "기믹/판", "와일드/판", "콤보/판"],datasets:[{label:"고수",data:[0.0, 0.0, 100.0, 0.0, 0.0, 0.0],borderColor:"#3b82f6",backgroundColor:"#3b82f61a",fill:true,pointRadius:3,borderWidth:2,tension:0},{label:"중수",data:[0.0, 0.0, 100.0, 0.0, 0.0, 0.0],borderColor:"#10b981",backgroundColor:"#10b9811a",fill:true,pointRadius:3,borderWidth:2,tension:0},{label:"하수",data:[0.0, 0.0, 100.0, 0.0, 0.0, 0.0],borderColor:"#f59e0b",backgroundColor:"#f59e0b1a",fill:true,pointRadius:3,borderWidth:2,tension:0},{label:"초보",data:[0.0, 0.0, 100.0, 0.0, 0.0, 0.0],borderColor:"#ef4444",backgroundColor:"#ef44441a",fill:true,pointRadius:3,borderWidth:2,tension:0}]},
+    new Chart(el,{type:'radar',data:{labels:["클리어율", "회수율", "평균턴(역수)", "기믹/판", "와일드/판", "콤보/판"],datasets:[{label:"고수",data:[100.0, 100.0, 3.1, 100.0, 100.0, 100.0],borderColor:"#3b82f6",backgroundColor:"#3b82f61a",fill:true,pointRadius:3,borderWidth:2,tension:0},{label:"중수",data:[0.0, 0.0, 100.0, 0.0, 0.0, 0.0],borderColor:"#10b981",backgroundColor:"#10b9811a",fill:true,pointRadius:3,borderWidth:2,tension:0},{label:"하수",data:[0.0, 0.0, 100.0, 0.0, 0.0, 0.0],borderColor:"#f59e0b",backgroundColor:"#f59e0b1a",fill:true,pointRadius:3,borderWidth:2,tension:0},{label:"초보",data:[0.0, 0.0, 100.0, 0.0, 0.0, 0.0],borderColor:"#ef4444",backgroundColor:"#ef44441a",fill:true,pointRadius:3,borderWidth:2,tension:0}]},
       options:{responsive:true,animation:false,
         plugins:{legend:{labels:{color:'#94a3b8',font:{size:11}}},datalabels:{display:false}},
         scales:{r:{min:0,max:100,ticks:{stepSize:25,color:'#475569',backdropColor:'transparent',font:{size:9}},
@@ -819,39 +909,39 @@ const withDL = {...D,plugins:{...D.plugins,datalabels:_dlBar}};
   }
 })();
 
-new Chart('cEff',  {type:'bar', data:{labels:["고수", "중수", "하수", "초보"],datasets:[{label:"골드 회수율",data:[0.0, 0.0, 0.0, 0.0],backgroundColor:"#6366f1",borderRadius:5}]},   options:noLegend});
-new Chart('cGold', {type:'bar', data:{labels:["고수", "중수", "하수", "초보"],datasets:[{label:"골드손익",data:[0, 0, 0, 0],backgroundColor:"#f59e0b",borderRadius:5}]},   options:noLegend});
-new Chart('cTurns',{type:'bar', data:{labels:["고수", "중수", "하수", "초보"],datasets:[{label:"평균턴",data:[0.0, 0.0, 0.0, 0.0],backgroundColor:"#3b82f6",borderRadius:5}]},  options:noLegend});
-new Chart('cGimmick',{type:'bar',data:{labels:["고수", "중수", "하수", "초보"],datasets:[{label:"기믹",data:[0.0, 0.0, 0.0, 0.0],backgroundColor:"#ef4444",borderRadius:5},{label:"플러스카드",data:[0.0, 0.0, 0.0, 0.0],backgroundColor:"#a78bfa",borderRadius:5}]},options:withDL});
+new Chart('cEff',  {type:'bar', data:{labels:["고수", "중수", "하수", "초보"],datasets:[{label:"골드 회수율",data:[208.3, 0.0, 0.0, 0.0],backgroundColor:"#6366f1",borderRadius:5}]},   options:noLegend});
+new Chart('cGold', {type:'bar', data:{labels:["고수", "중수", "하수", "초보"],datasets:[{label:"골드손익",data:[2274, 0, 0, 0],backgroundColor:"#f59e0b",borderRadius:5}]},   options:noLegend});
+new Chart('cTurns',{type:'bar', data:{labels:["고수", "중수", "하수", "초보"],datasets:[{label:"평균턴",data:[32.0, 0.0, 0.0, 0.0],backgroundColor:"#3b82f6",borderRadius:5}]},  options:noLegend});
+new Chart('cGimmick',{type:'bar',data:{labels:["고수", "중수", "하수", "초보"],datasets:[{label:"기믹",data:[5.0, 0.0, 0.0, 0.0],backgroundColor:"#ef4444",borderRadius:5},{label:"플러스카드",data:[0.0, 0.0, 0.0, 0.0],backgroundColor:"#a78bfa",borderRadius:5}]},options:withDL});
 if(document.getElementById('cGimmickType')){
-  new Chart('cGimmickType',{type:'bar',data:{labels:[],datasets:[{label:'출현 횟수',data:[],backgroundColor:[],borderWidth:0,borderRadius:4}]},options:noLegend});
-  new Chart('cGimmickPie',{type:'doughnut',data:{labels:[],datasets:[{data:[],backgroundColor:[],borderWidth:0}]},options:{responsive:true,plugins:{legend:{position:'right',labels:{color:'#94a3b8',font:{size:11}}},datalabels:{display:true,anchor:'center',align:'center',color:'#fff',font:{size:11,weight:700},formatter:function(v,ctx){var sum=ctx.dataset.data.reduce(function(a,b){return a+b},0);return sum?Math.round(v/sum*100)+'%':''}}}}});
+  new Chart('cGimmickType',{type:'bar',data:{labels:["키&자물쇠", "얼음"],datasets:[{label:'출현 횟수',data:[5, 2],backgroundColor:["#a78bfa", "#38bdf8"],borderWidth:0,borderRadius:4}]},options:noLegend});
+  new Chart('cGimmickPie',{type:'doughnut',data:{labels:["키&자물쇠", "얼음"],datasets:[{data:[5, 2],backgroundColor:["#a78bfa", "#38bdf8"],borderWidth:0}]},options:{responsive:true,plugins:{legend:{position:'right',labels:{color:'#94a3b8',font:{size:11}}},datalabels:{display:true,anchor:'center',align:'center',color:'#fff',font:{size:11,weight:700},formatter:function(v,ctx){var sum=ctx.dataset.data.reduce(function(a,b){return a+b},0);return sum?Math.round(v/sum*100)+'%':''}}}}});
 }
 
-new Chart('cRunEff', {type:'line',data:{labels:[],datasets:[]},  options:D});
-new Chart('cRunGold',{type:'line',data:{labels:[],datasets:[]},options:D});
+new Chart('cRunEff', {type:'line',data:{labels:["런1"],datasets:[{label:"고수",data:[208.3],borderColor:"#3b82f6",backgroundColor:"#3b82f622",tension:0.3,fill:false,pointRadius:3,spanGaps:false}]},  options:D});
+new Chart('cRunGold',{type:'line',data:{labels:["런1"],datasets:[{label:"고수",data:[2274],borderColor:"#3b82f6",backgroundColor:"#3b82f622",tension:0.3,fill:false,pointRadius:3,spanGaps:false}]},options:D});
 
-new Chart('cDayEff',  {type:'line',data:{labels:[],datasets:[]},  options:D});
+new Chart('cDayEff',  {type:'line',data:{labels:["20260424"],datasets:[{label:"고수",data:[208.3],borderColor:"#3b82f6",backgroundColor:"#3b82f622",tension:0.3,fill:false,pointRadius:3,spanGaps:false}]},  options:D});
 
-new Chart('cDayTurns',{type:'line',data:{labels:[],datasets:[]},options:D});
-new Chart('cDayDiff', {type:'line',data:{labels:[],datasets:[]}, options:{...D,scales:{...D.scales,y:{...D.scales.y,min:1,max:4,ticks:{stepSize:1,color:'#64748b',font:{size:10},callback:function(v){return v===2?'노말':v===3?'하드':v===4?'슈퍼 하드':v}}}}}});
+new Chart('cDayTurns',{type:'line',data:{labels:["20260424"],datasets:[{label:"고수",data:[32.0],borderColor:"#3b82f6",backgroundColor:"#3b82f622",tension:0.3,fill:false,pointRadius:3,spanGaps:false}]},options:D});
+new Chart('cDayDiff', {type:'line',data:{labels:["20260424"],datasets:[{label:"고수",data:[2.0],borderColor:"#3b82f6",backgroundColor:"#3b82f622",tension:0.3,fill:false,pointRadius:3,spanGaps:false}]}, options:{...D,scales:{...D.scales,y:{...D.scales.y,min:1,max:4,ticks:{stepSize:1,color:'#64748b',font:{size:10},callback:function(v){return v===2?'노말':v===3?'하드':v===4?'슈퍼 하드':v}}}}}});
 
-new Chart('cGP',{type:'bar', data:{labels:["매치/턴", "드로우/턴", "와일드매칭/판", "와일드구매/판"],datasets:[{label:"고수",data:[0.00, 0.00, 0.00, 0.00],backgroundColor:"#3b82f6",borderRadius:5},{label:"중수",data:[0.00, 0.00, 0.00, 0.00],backgroundColor:"#10b981",borderRadius:5},{label:"하수",data:[0.00, 0.00, 0.00, 0.00],backgroundColor:"#f59e0b",borderRadius:5},{label:"초보",data:[0.00, 0.00, 0.00, 0.00],backgroundColor:"#ef4444",borderRadius:5}]}, options:withDL});
-new Chart('cBet',{type:'line',data:{labels:[],datasets:[{label:"고수",data:[],borderColor:"#3b82f6",backgroundColor:"#3b82f622",tension:0.3,fill:false,pointRadius:3,spanGaps:false},{label:"중수",data:[],borderColor:"#10b981",backgroundColor:"#10b98122",tension:0.3,fill:false,pointRadius:3,spanGaps:false},{label:"하수",data:[],borderColor:"#f59e0b",backgroundColor:"#f59e0b22",tension:0.3,fill:false,pointRadius:3,spanGaps:false},{label:"초보",data:[],borderColor:"#ef4444",backgroundColor:"#ef444422",tension:0.3,fill:false,pointRadius:3,spanGaps:false}]},options:D});
+new Chart('cGP',{type:'bar', data:{labels:["매치/턴", "드로우/턴", "와일드매칭/판", "와일드구매/판"],datasets:[{label:"고수",data:[0.66, 0.28, 1.00, 0.00],backgroundColor:"#3b82f6",borderRadius:5},{label:"중수",data:[0.00, 0.00, 0.00, 0.00],backgroundColor:"#10b981",borderRadius:5},{label:"하수",data:[0.00, 0.00, 0.00, 0.00],backgroundColor:"#f59e0b",borderRadius:5},{label:"초보",data:[0.00, 0.00, 0.00, 0.00],backgroundColor:"#ef4444",borderRadius:5}]}, options:withDL});
+new Chart('cBet',{type:'line',data:{labels:["x1"],datasets:[{label:"고수",data:[2274],borderColor:"#3b82f6",backgroundColor:"#3b82f622",tension:0.3,fill:false,pointRadius:3,spanGaps:false},{label:"중수",data:[null],borderColor:"#10b981",backgroundColor:"#10b98122",tension:0.3,fill:false,pointRadius:3,spanGaps:false},{label:"하수",data:[null],borderColor:"#f59e0b",backgroundColor:"#f59e0b22",tension:0.3,fill:false,pointRadius:3,spanGaps:false},{label:"초보",data:[null],borderColor:"#ef4444",backgroundColor:"#ef444422",tension:0.3,fill:false,pointRadius:3,spanGaps:false}]},options:D});
 
 new Chart('cWild',{type:'bar',data:{labels:["고수", "중수", "하수", "초보"],datasets:[{label:"와일드비용",data:[0.0, 0.0, 0.0, 0.0],backgroundColor:"#f87171",borderRadius:5}]},options:{...D,plugins:{...D.plugins}}});
-new Chart('cStreak',{type:'bar',data:{labels:["고수", "중수", "하수", "초보"],datasets:[{label:"스트릭보너스",data:[0.0, 0.0, 0.0, 0.0],backgroundColor:"#34d399",borderRadius:5}]},options:withDL});
+new Chart('cStreak',{type:'bar',data:{labels:["고수", "중수", "하수", "초보"],datasets:[{label:"스트릭보너스",data:[58.0, 0.0, 0.0, 0.0],backgroundColor:"#34d399",borderRadius:5}]},options:withDL});
 new Chart('cMiss',{type:'bar',data:{labels:["고수", "중수", "하수", "초보"],datasets:[{label:"미스드로우",data:[0.00, 0.00, 0.00, 0.00],backgroundColor:"#f59e0b",borderRadius:5}]},options:withDL});
-new Chart('cCombo',{type:'bar',data:{labels:["고수", "중수", "하수", "초보"],datasets:[{label:"콤보",data:[0.00, 0.00, 0.00, 0.00],backgroundColor:"#818cf8",borderRadius:5}]},options:withDL});
+new Chart('cCombo',{type:'bar',data:{labels:["고수", "중수", "하수", "초보"],datasets:[{label:"콤보",data:[1.00, 0.00, 0.00, 0.00],backgroundColor:"#818cf8",borderRadius:5}]},options:withDL});
 
-new Chart('cTrend',{type:'line',data:{labels:[],datasets:[]},options:D});
+new Chart('cTrend',{type:'line',data:{labels:["20260424"],datasets:[{label:"고수",data:[2274],borderColor:"#3b82f6",backgroundColor:"#3b82f622",tension:0.3,fill:false,pointRadius:3,spanGaps:false}]},options:D});
 
 /* Phase 3 차트 */
 (function(){
   /* 3-1. DDA 효과 — 연속실패수별 클리어율 */
   var ddaEl=document.getElementById('cDDA');
   if(ddaEl){
-    new Chart(ddaEl,{type:'line',data:{labels:["0", "1", "2", "3+"],datasets:[{label:'클리어율(%)',data:[0.0, 0.0, 0.0, 0.0],borderColor:'#6366f1',backgroundColor:'#6366f122',tension:0.3,fill:true,pointRadius:5,borderWidth:2}]},
+    new Chart(ddaEl,{type:'line',data:{labels:["0", "1", "2", "3+"],datasets:[{label:'클리어율(%)',data:[100.0, 0.0, 0.0, 0.0],borderColor:'#6366f1',backgroundColor:'#6366f122',tension:0.3,fill:true,pointRadius:5,borderWidth:2}]},
       options:{responsive:true,animation:false,plugins:{legend:{display:false},datalabels:{display:false}},scales:{x:{title:{display:true,text:'연속실패수',color:'#94a3b8'},ticks:{color:'#64748b'},grid:{color:'#1e293b'}},y:{title:{display:true,text:'클리어율(%)',color:'#94a3b8'},min:0,max:100,ticks:{color:'#64748b'},grid:{color:'#334155'}}}}});
   }
   /* 3-2. 실패 원인 도넛 */
@@ -860,19 +950,19 @@ new Chart('cTrend',{type:'line',data:{labels:[],datasets:[]},options:D});
   /* 3-3. 배팅 배수별 scatter */
   var bsEl=document.getElementById('cBetScatter');
   if(bsEl){
-    new Chart(bsEl,{type:'scatter',data:{datasets:[]},
+    new Chart(bsEl,{type:'scatter',data:{datasets:[{label:"고수",data:[{x:1.0,y:2274.0}],backgroundColor:"#3b82f6",borderColor:"#3b82f6",pointRadius:7,pointHoverRadius:10}]},
       options:{responsive:true,animation:false,plugins:{legend:{labels:{color:'#94a3b8',font:{size:11}}},datalabels:{display:false}},scales:{x:{title:{display:true,text:'배팅 배수',color:'#94a3b8'},ticks:{color:'#64748b'},grid:{color:'#1e293b'}},y:{title:{display:true,text:'평균 골드 손익',color:'#94a3b8'},ticks:{color:'#64748b'},grid:{color:'#334155'}}}}});
   }
   /* 3-4. 해머 추이 */
   var hmEl=document.getElementById('cHammer');
   if(hmEl){
-    new Chart(hmEl,{type:'line',data:{labels:[],datasets:[]},
+    new Chart(hmEl,{type:'line',data:{labels:["1"],datasets:[{label:"고수",data:[31],borderColor:"#3b82f6",backgroundColor:"#3b82f622",tension:0.3,fill:false,pointRadius:1,borderWidth:2}]},
       options:{responsive:true,animation:false,plugins:{legend:{labels:{color:'#94a3b8',font:{size:11}}},datalabels:{display:false}},scales:{x:{title:{display:true,text:'판 번호',color:'#94a3b8'},ticks:{color:'#64748b',maxTicksLimit:20},grid:{color:'#1e293b'}},y:{title:{display:true,text:'해머 변화량',color:'#94a3b8'},ticks:{color:'#64748b'},grid:{color:'#334155'}}}}});
   }
   /* 3-6. 입장 방식 도넛 */
   var enEl=document.getElementById('cEntry');
   if(enEl){
-    new Chart(enEl,{type:'doughnut',data:{labels:[],datasets:[{data:[],backgroundColor:[],borderWidth:0}]},
+    new Chart(enEl,{type:'doughnut',data:{labels:["free"],datasets:[{data:[1],backgroundColor:["#3b82f6"],borderWidth:0}]},
       options:{responsive:true,animation:false,plugins:{legend:{position:'right',labels:{color:'#94a3b8',font:{size:11}}},datalabels:{display:true,anchor:'center',align:'center',color:'#fff',font:{size:11,weight:700},formatter:function(v,ctx){var sum=ctx.dataset.data.reduce(function(a,b){return a+b},0);return sum?Math.round(v/sum*100)+'%':''}}}}});
   }
 })();
@@ -881,8 +971,8 @@ new Chart('cTrend',{type:'line',data:{labels:[],datasets:[]},options:D});
 (function(){
   var el=document.getElementById('cPosGold');
   if(el){
-    new Chart(el,{type:'line',data:{labels:[],datasets:[{
-      label:'평균 골드 손익',data:[],
+    new Chart(el,{type:'line',data:{labels:["1번째 판"],datasets:[{
+      label:'평균 골드 손익',data:[2274.0],
       borderColor:'#f59e0b',backgroundColor:'rgba(245,158,11,.08)',
       fill:true,tension:0.3,pointRadius:3,borderWidth:2
     }]},options:{responsive:true,animation:false,
@@ -914,10 +1004,10 @@ new Chart('cTrend',{type:'line',data:{labels:[],datasets:[]},options:D});
   }
   var ltEl=document.getElementById('cLogTrend');
   if(ltEl){
-    new Chart(ltEl,{type:'line',data:{labels:[],datasets:[
-      {label:'API 호출',data:[],borderColor:'#3b82f6',backgroundColor:'rgba(59,130,246,.06)',fill:true,tension:0.3,pointRadius:2,borderWidth:2},
-      {label:'콘솔 로그',data:[],borderColor:'#64748b',backgroundColor:'rgba(100,116,139,.06)',fill:true,tension:0.3,pointRadius:2,borderWidth:2},
-      {label:'에러',data:[],borderColor:'#ef4444',backgroundColor:'rgba(239,68,68,.06)',fill:true,tension:0.3,pointRadius:2,borderWidth:2}
+    new Chart(ltEl,{type:'line',data:{labels:["20260424"],datasets:[
+      {label:'API 호출',data:["0"],borderColor:'#3b82f6',backgroundColor:'rgba(59,130,246,.06)',fill:true,tension:0.3,pointRadius:2,borderWidth:2},
+      {label:'콘솔 로그',data:["0"],borderColor:'#64748b',backgroundColor:'rgba(100,116,139,.06)',fill:true,tension:0.3,pointRadius:2,borderWidth:2},
+      {label:'에러',data:["0"],borderColor:'#ef4444',backgroundColor:'rgba(239,68,68,.06)',fill:true,tension:0.3,pointRadius:2,borderWidth:2}
     ]},options:D});
   }
 })();
@@ -954,7 +1044,7 @@ document.querySelectorAll('details.sec-collapsible').forEach(d=>{
 /* 6-1: 날짜 범위 필터 */
 var _dfOrigData={};
 var _dfChartIds=['cDayEff','cDayTurns','cDayDiff'];
-var _dfAllLabels=[];
+var _dfAllLabels=["20260424"];
 function applyDateFilter(days){
   localStorage.setItem('scj_date_filter',days);
   var info=document.getElementById('dateFilterInfo');
@@ -1091,6 +1181,25 @@ function filterByVersion(ver){
 }
 
 
+new Chart('hardcoreRC',{type:'line',data:{labels:["런1"],datasets:[{label:"골드 회수율",data:[208.3],borderColor:"#3b82f6",backgroundColor:"#3b82f622",tension:0.3,fill:false,pointRadius:3,spanGaps:false}]},options:noLegend});
+new Chart('hardcoreRG',{type:'line',data:{labels:["런1"],datasets:[{label:"손익/판",data:[2274],borderColor:"#3b82f6",backgroundColor:"#3b82f622",tension:0.3,fill:false,pointRadius:3,spanGaps:false}]},options:noLegend});
+new Chart('hardcoreGP',{type:'bar', data:{labels:["매치/턴","드로우/턴","와일드매칭/판","와일드구매/판"],datasets:[{label:"고수",data:[0.66, 0.28, 1.00, 0.00],backgroundColor:"#3b82f6",borderRadius:5}]},options:noLegend});
+new Chart('hardcoreBT',{type:'line',data:{labels:["x1"],datasets:[{label:"손익/판",data:[2274],borderColor:"#3b82f6",backgroundColor:"#3b82f622",tension:0.3,fill:false,pointRadius:3,spanGaps:false}]},options:noLegend});
+new Chart('hardcoreSD',{type:'bar', data:{labels:["노말","하드","슈퍼 하드"],datasets:[{label:"스테이지수",data:[1, 0, 0],backgroundColor:"#3b82f6",borderRadius:5}]},options:noLegend});
+(function(){
+  var L=["1"],G=[10002274],T=[32],D=[2],C=["#4ade80"],MS=[630],UI=[2];
+  var dg='rgba(56,189,248,.06)',tk='#64748b';
+  new Chart('hardcoreGoldSeq',{type:'line',data:{labels:L,datasets:[{label:'골드',data:G,borderColor:'#facc15',backgroundColor:'rgba(250,204,21,0.06)',fill:true,tension:0.3,pointRadius:1,borderWidth:2}]},options:{responsive:true,animation:false,plugins:{legend:{labels:{color:'#e2e8f0',boxWidth:10}}},scales:{x:{ticks:{color:tk,maxTicksLimit:20},grid:{color:dg}},y:{ticks:{color:tk},grid:{color:dg}}}}});
+  new Chart('hardcoreTurnDiff',{type:'line',data:{labels:L,datasets:[{label:'턴 수',data:T,borderColor:'#60a5fa',backgroundColor:C,fill:false,tension:0.3,pointRadius:4,borderWidth:2,pointBorderColor:C,yAxisID:'y'},{label:'맵 난이도',data:D,borderColor:'#f87171',backgroundColor:'transparent',fill:false,tension:0,pointRadius:0,borderWidth:1.5,borderDash:[4,4],yAxisID:'y1'},{label:'UI 난이도',data:UI,borderColor:'#fbbf24',backgroundColor:'transparent',fill:false,tension:0,pointRadius:2,borderWidth:1.5,borderDash:[6,2],yAxisID:'y1'},{label:'맵스코어',data:MS,borderColor:'#a78bfa',backgroundColor:'transparent',fill:false,tension:0.3,pointRadius:2,borderWidth:1.5,yAxisID:'y2'}]},options:{responsive:true,animation:false,plugins:{legend:{labels:{color:'#e2e8f0',boxWidth:10}}},scales:{x:{ticks:{color:tk,maxTicksLimit:20},grid:{color:dg}},y:{ticks:{color:tk},grid:{color:dg},title:{display:true,text:'턴',color:tk}},y1:{position:'right',min:0,max:5,ticks:{color:tk,stepSize:1},grid:{display:false},title:{display:true,text:'난이도',color:tk}},y2:{position:'right',ticks:{color:'#a78bfa',display:false},grid:{display:false}}}}});
+})();
+new Chart('hardcoreCombo',{type:'bar',data:{labels:["1"],datasets:[{label:'레벨수',data:[1],backgroundColor:'#3b82f688',borderColor:'#3b82f6',borderWidth:1,borderRadius:3}]},options:{responsive:true,animation:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#64748b'},grid:{color:'rgba(56,189,248,.06)'}},y:{ticks:{color:'#64748b'},grid:{color:'rgba(56,189,248,.06)'}}}}});
+new Chart('hardcoreStar',{type:'bar',data:{labels:["x1"],datasets:[{label:'레벨수',data:[1],backgroundColor:'#3b82f688',borderColor:'#3b82f6',borderWidth:1,borderRadius:3}]},options:{responsive:true,animation:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#64748b'},grid:{color:'rgba(56,189,248,.06)'}},y:{ticks:{color:'#64748b'},grid:{color:'rgba(56,189,248,.06)'}}}}});
+new Chart('hardcoreGT',{type:'bar',data:{labels:["키&자물쇠", "얼음"],datasets:[{label:'발생',data:[5, 2],backgroundColor:'#a78bfa88',borderColor:'#a78bfa',borderWidth:1,borderRadius:3}]},options:{responsive:true,animation:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#64748b'},grid:{color:'rgba(56,189,248,.06)'}},y:{ticks:{color:'#64748b'},grid:{color:'rgba(56,189,248,.06)'}}}}});
+new Chart('hardcoreEcon',{type:'bar',data:{labels:['와일드 비용','스트릭 보너스'],datasets:[{label:'골드',data:[0.0, 58.0],backgroundColor:['#3b82f644','#3b82f6'],borderColor:'#3b82f6',borderWidth:1,borderRadius:3}]},options:{responsive:true,animation:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#64748b'},grid:{color:'rgba(56,189,248,.06)'}},y:{ticks:{color:'#64748b'},grid:{color:'rgba(56,189,248,.06)'}}}}});
+(function(){var ctx=document.getElementById('hardcorePosCR');if(!ctx)return;new Chart(ctx,{type:'line',data:{labels:["1번째 판"],datasets:[{label:"클리어율(%)",data:[100.0],borderColor:'#3b82f6',backgroundColor:'#3b82f622',fill:true,tension:0.3,pointRadius:3,borderWidth:2}]},options:{responsive:true,animation:false,plugins:{legend:{labels:{color:'#94a3b8',boxWidth:10}}},scales:{x:{ticks:{color:'#64748b',maxTicksLimit:20},grid:{color:'#1e293b'}},y:{min:0,max:100,ticks:{color:'#64748b'},grid:{color:'#334155'}}}}});})();
+(function(){var ctx=document.getElementById('hardcorePosTime');if(!ctx)return;new Chart(ctx,{type:'line',data:{labels:["1번째 판"],datasets:[{label:"평균시간(초)",data:[18.6],borderColor:'#3b82f6',backgroundColor:'#3b82f622',fill:true,tension:0.3,pointRadius:3,borderWidth:2}]},options:{responsive:true,animation:false,plugins:{legend:{labels:{color:'#94a3b8',boxWidth:10}}},scales:{x:{ticks:{color:'#64748b',maxTicksLimit:20},grid:{color:'#1e293b'}},y:{min:0,ticks:{color:'#64748b'},grid:{color:'#334155'}}}}});})();
 </script>
+
+<div class="tab-panel" id="tab-perf"><div style="padding:8px 0;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;"><span style="font-size:16px;">🟢</span><span style="color:#10b981;font-weight:700;font-size:13px;">정상</span><span style="color:#475569;font-size:10px;">(1회)</span></div><div style="display:flex;flex-wrap:wrap;gap:16px;padding:10px 14px;background:#1e293b;border:1px solid #334155;border-radius:8px;margin-bottom:10px;"><span style="color:#64748b;font-size:10px;">메모리</span> <span style="color:#94a3b8;font-weight:700;font-size:13px;">84.6→61.0 MB</span><span style="color:#334155;">|</span><span style="color:#64748b;font-size:10px;">증가</span> <span style="color:#10b981;font-weight:700;font-size:13px;">↓23.6 MB</span><span style="color:#334155;">|</span><span style="color:#64748b;font-size:10px;">레벨당</span> <span style="color:#10b981;font-weight:700;font-size:13px;">-23.60 MB</span><span style="color:#334155;">|</span><span style="color:#64748b;font-size:10px;">피크</span> <span style="color:#a78bfa;font-weight:700;font-size:13px;">61.0 MB</span><span style="color:#334155;">|</span><span style="color:#64748b;font-size:10px;">CPU</span> <span style="color:#10b981;font-weight:700;font-size:13px;">0.423초</span><span style="color:#334155;">|</span><span style="color:#64748b;font-size:10px;">DOM</span> <span style="color:#10b981;font-weight:700;font-size:13px;">2,776→2,733 (-43)</span><span style="color:#334155;">|</span><span style="color:#64748b;font-size:10px;">누수</span> <span style="color:#10b981;font-weight:700;font-size:13px;">양호</span></div><details style="margin-bottom:10px;"><summary style="cursor:pointer;color:#94a3b8;font-size:11px;font-weight:600;padding:4px 0;">상세 진단 펼치기</summary><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px;"><div style="background:#1e293b;border:1px solid #334155;border-radius:8px;padding:10px 12px;"><div style="color:#94a3b8;font-size:10px;font-weight:600;margin-bottom:6px;">누수 진단</div><div style="font-size:11px;margin-bottom:4px;"><span style="color:#94a3b8;">61.0</span><span style="color:#64748b;"> → </span><span style="color:#10b981;font-weight:700;">0.0 MB</span><span style="color:#10b981;font-size:10px;"> (-100.0%)</span></div><div style="background:#0f172a;border-radius:4px;height:5px;overflow:hidden;"><div style="width:100.0%;height:100%;background:#10b981;border-radius:4px;"></div></div></div><div style="background:#1e293b;border:1px solid #334155;border-radius:8px;padding:10px 12px;"><div style="color:#94a3b8;font-size:10px;font-weight:600;margin-bottom:6px;">메모리 급증 Top 3</div><table style="width:100%;border-collapse:collapse;"><thead><tr><th style="text-align:left;color:#64748b;font-size:9px;padding:2px 8px;">레벨</th><th style="text-align:left;color:#64748b;font-size:9px;padding:2px 8px;">힙 증가</th><th style="text-align:left;color:#64748b;font-size:9px;padding:2px 8px;">종료 힙</th></tr></thead><tbody><tr><td style="padding:3px 8px;color:#94a3b8;font-size:10px;">Lv 1</td><td style="padding:3px 8px;color:#fb923c;font-size:10px;font-weight:700;">-23.60 MB</td><td style="padding:3px 8px;color:#a78bfa;font-size:10px;">61.0 MB</td></tr></tbody></table></div></div><div style="display:flex;gap:16px;margin-top:8px;padding:8px 12px;background:#1e293b;border:1px solid #334155;border-radius:8px;"><span style="color:#64748b;font-size:10px;">평균 이벤트 리스너</span><span style="color:#ef4444;font-size:12px;font-weight:700;">960개</span></div></details><div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:8px;"><div style="flex:1;min-width:320px;background:#0c1222;border:1px solid #1e293b;border-radius:8px;padding:12px;"><div style="color:#94a3b8;font-size:11px;font-weight:600;margin-bottom:4px;">레벨별 메모리 사용량 변화</div><div style="color:#94a3b8;font-size:9px;margin-bottom:8px;">레벨이 진행될수록 메모리가 계속 올라가면 누수 의심</div><canvas id="chartHeapTab_SCJ" height="160"></canvas></div><div style="flex:1;min-width:320px;background:#0c1222;border:1px solid #1e293b;border-radius:8px;padding:12px;"><div style="color:#94a3b8;font-size:11px;font-weight:600;margin-bottom:4px;">레벨별 화면 요소(DOM) 수 변화</div><div style="color:#94a3b8;font-size:9px;margin-bottom:8px;">화면 요소가 계속 증가하면 리소스 정리가 안 되는 것</div><canvas id="chartDomTab_SCJ" height="160"></canvas></div><div style="flex:1;min-width:320px;background:#0c1222;border:1px solid #1e293b;border-radius:8px;padding:12px;"><div style="color:#94a3b8;font-size:11px;font-weight:600;margin-bottom:4px;">레벨별 CPU 부하 (task_duration)</div><div style="color:#94a3b8;font-size:9px;margin-bottom:8px;">값이 높을수록 해당 레벨에서 JS 연산이 많이 발생</div><canvas id="chartCpuTab_SCJ" height="160"></canvas></div></div><script>(function(){const levels=[1];const heapStart=[84.6];const heapEnd=[61.0];const heapDelta=[-23.6];const domStart=[2776];const domEnd=[2733];const taskDur=[0.423];new Chart(document.getElementById("chartHeapTab_SCJ"),{type:"line",data:{labels:levels,datasets:[{label:"시작 시 메모리",data:heapStart,borderColor:"#a78bfa",backgroundColor:"rgba(167,139,250,0.1)",borderWidth:1.5,pointRadius:1,fill:false,tension:0.3},{label:"종료 시 메모리",data:heapEnd,borderColor:"#a78bfa",backgroundColor:"rgba(167,139,250,0.15)",borderWidth:1.5,pointRadius:1,fill:"-1",tension:0.3},{label:"레벨당 증감",data:heapDelta,borderColor:"#fb923c",backgroundColor:"rgba(251,146,60,0.1)",borderWidth:1.5,pointRadius:1,fill:false,tension:0.3,yAxisID:"y1"}]},options:{responsive:true,interaction:{mode:"index",intersect:false},plugins:{legend:{labels:{color:"#94a3b8",font:{size:10}}}},scales:{x:{ticks:{color:"#94a3b8",font:{size:9}},grid:{color:"#1e293b"},title:{display:true,text:"Level",color:"#64748b",font:{size:10}}},y:{ticks:{color:"#a78bfa",font:{size:9}},grid:{color:"#1e293b"},title:{display:true,text:"메모리 (MB)",color:"#a78bfa",font:{size:10}}},y1:{position:"right",ticks:{color:"#fb923c",font:{size:9}},grid:{drawOnChartArea:false},title:{display:true,text:"증감 (MB)",color:"#fb923c",font:{size:10}}}}}});new Chart(document.getElementById("chartDomTab_SCJ"),{type:"line",data:{labels:levels,datasets:[{label:"시작 시 요소 수",data:domStart,borderColor:"#22d3ee",backgroundColor:"rgba(34,211,238,0.1)",borderWidth:1.5,pointRadius:1,fill:false,tension:0.3},{label:"종료 시 요소 수",data:domEnd,borderColor:"#22d3ee",backgroundColor:"rgba(34,211,238,0.15)",borderWidth:1.5,pointRadius:1,fill:"-1",tension:0.3}]},options:{responsive:true,interaction:{mode:"index",intersect:false},plugins:{legend:{labels:{color:"#94a3b8",font:{size:10}}}},scales:{x:{ticks:{color:"#94a3b8",font:{size:9}},grid:{color:"#1e293b"},title:{display:true,text:"Level",color:"#64748b",font:{size:10}}},y:{ticks:{color:"#22d3ee",font:{size:9}},grid:{color:"#1e293b"},title:{display:true,text:"화면 요소 수",color:"#22d3ee",font:{size:10}}}}}});new Chart(document.getElementById("chartCpuTab_SCJ"),{type:"line",data:{labels:levels,datasets:[{label:"CPU 부하 (초)",data:taskDur,borderColor:"#10b981",backgroundColor:"rgba(16,185,129,0.1)",borderWidth:1.5,pointRadius:1,fill:true,tension:0.3}]},options:{responsive:true,interaction:{mode:"index",intersect:false},plugins:{legend:{labels:{color:"#94a3b8",font:{size:10}}}},scales:{x:{ticks:{color:"#94a3b8",font:{size:9}},grid:{color:"#1e293b"},title:{display:true,text:"Level",color:"#64748b",font:{size:10}}},y:{ticks:{color:"#10b981",font:{size:9}},grid:{color:"#1e293b"},title:{display:true,text:"초 (seconds)",color:"#10b981",font:{size:10}}}}}});})();</script><div style="color:#94a3b8;font-size:12px;font-weight:600;margin:18px 0 8px;">&#128337; 경과시간 기준 분석</div><div style="display:flex;gap:16px;flex-wrap:wrap;"><div style="flex:1;min-width:400px;background:#0c1222;border:1px solid #1e293b;border-radius:8px;padding:12px;"><div style="color:#94a3b8;font-size:11px;font-weight:600;margin-bottom:4px;">경과시간별 메모리 변화</div><div style="color:#94a3b8;font-size:9px;margin-bottom:8px;">플레이 경과 시간(분)에 따른 힙 메모리 추이. 시간 비례 증가 시 누수 의심.</div><canvas id="chartElapsedHeapTab_SCJ" height="160"></canvas></div><div style="flex:1;min-width:400px;background:#0c1222;border:1px solid #1e293b;border-radius:8px;padding:12px;"><div style="color:#94a3b8;font-size:11px;font-weight:600;margin-bottom:4px;">경과시간별 CPU 부하</div><div style="color:#94a3b8;font-size:9px;margin-bottom:8px;">플레이 경과 시간(분)에 따른 CPU 작업량 변화. 시간이 갈수록 높아지면 최적화 필요.</div><canvas id="chartElapsedCpuTab_SCJ" height="160"></canvas></div></div><script>(function(){const elapsed=["0.3"];const heapEnd=[61.0];const taskDur=[0.423];new Chart(document.getElementById("chartElapsedHeapTab_SCJ"),{type:"line",data:{labels:elapsed,datasets:[{label:"힙 메모리 (MB)",data:heapEnd,borderColor:"#a78bfa",backgroundColor:"rgba(167,139,250,0.15)",borderWidth:2,pointRadius:2,fill:true,tension:0.3}]},options:{responsive:true,interaction:{mode:"index",intersect:false},plugins:{legend:{labels:{color:"#94a3b8",font:{size:10}}}},scales:{x:{ticks:{color:"#94a3b8",font:{size:9}},grid:{color:"#1e293b"},title:{display:true,text:"경과시간 (분)",color:"#64748b",font:{size:10}}},y:{ticks:{color:"#a78bfa",font:{size:9}},grid:{color:"#1e293b"},title:{display:true,text:"메모리 (MB)",color:"#a78bfa",font:{size:10}}}}}});new Chart(document.getElementById("chartElapsedCpuTab_SCJ"),{type:"line",data:{labels:elapsed,datasets:[{label:"CPU 부하 (초)",data:taskDur,borderColor:"#10b981",backgroundColor:"rgba(16,185,129,0.15)",borderWidth:2,pointRadius:2,fill:true,tension:0.3}]},options:{responsive:true,interaction:{mode:"index",intersect:false},plugins:{legend:{labels:{color:"#94a3b8",font:{size:10}}}},scales:{x:{ticks:{color:"#94a3b8",font:{size:9}},grid:{color:"#1e293b"},title:{display:true,text:"경과시간 (분)",color:"#64748b",font:{size:10}}},y:{ticks:{color:"#10b981",font:{size:9}},grid:{color:"#1e293b"},title:{display:true,text:"초 (seconds)",color:"#10b981",font:{size:10}}}}}});})();</script></div></div>
 </body>
 </html>

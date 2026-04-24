@@ -205,7 +205,7 @@ details[open] .rr-summary::before{transform:rotate(90deg)}
 </head>
 <body>
 <h1>SCJ 프리플레이 대시보드</h1>
-<div class="meta">기간: 전체 기간 &nbsp;·&nbsp; 생성: 2026-04-24 16:45:32 &nbsp;·&nbsp; <b>3런 21판</b>&nbsp;·&nbsp; 버전 <span style="background:#1e3a5f;color:#64748b;padding:2px 8px;border-radius:10px;font-size:11px;">v236 <b style="color:#94a3b8">2런</b></span>&nbsp;&nbsp;<select id="versionFilter" onchange="filterByVersion(this.value)" style="background:var(--bg-card2,#0d1e35);color:var(--text,#cdd9e8);border:1px solid var(--border);border-radius:6px;padding:4px 8px;font-size:12px;cursor:pointer;vertical-align:middle"><option value="all">전체 버전</option><option value="236">v236 (2런)</option></select> <span id="versionFilterBadge" style="display:none;background:#7c3aed;color:#e9d5ff;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600;margin-left:6px"></span></div>
+<div class="meta">기간: 전체 기간 &nbsp;·&nbsp; 생성: 2026-04-24 16:49:49 &nbsp;·&nbsp; <b>3런 21판</b>&nbsp;·&nbsp; 버전 <span style="background:#1e3a5f;color:#64748b;padding:2px 8px;border-radius:10px;font-size:11px;">v236 <b style="color:#94a3b8">2런</b></span>&nbsp;&nbsp;<select id="versionFilter" onchange="filterByVersion(this.value)" style="background:var(--bg-card2,#0d1e35);color:var(--text,#cdd9e8);border:1px solid var(--border);border-radius:6px;padding:4px 8px;font-size:12px;cursor:pointer;vertical-align:middle"><option value="all">전체 버전</option><option value="236">v236 (2런)</option></select> <span id="versionFilterBadge" style="display:none;background:#7c3aed;color:#e9d5ff;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600;margin-left:6px"></span></div>
 
 <div class="morning-panel"><div class="mp-title">📊 2026-04-24 요약<span class="mp-legend">클리어율 &middot; 골드손익(전일대비) &middot; 문제스테이지</span></div><div class="mp-cards"><div class="mp-card" style="border-left:3px solid #3b82f6" onclick="showTab('hardcore')" title="고수 탭으로 이동"><div class="mp-label" style="color:#3b82f6">고수</div><div class="mp-sigs"><span class="mp-sig mp-green">🟢 100%</span><span class="mp-sig mp-green">🟢 +2274/판</span><span class="mp-sig mp-green">🟢 이상없음</span></div></div><div class="mp-card" style="border-left:3px solid #10b981" onclick="showTab('average')" title="중수 탭으로 이동"><div class="mp-label" style="color:#10b981">중수</div><div class="mp-sigs"><span class="mp-sig mp-green">🟢 100%</span><span class="mp-sig mp-green">🟢 -882/판</span><span class="mp-sig mp-green">🟢 이상없음</span></div></div><div class="mp-card" style="border-left:3px solid #f59e0b" onclick="showTab('casual')" title="하수 탭으로 이동"><div class="mp-label" style="color:#f59e0b">하수</div><div class="mp-sigs"><span class="mp-sig mp-green">🟢 100%</span><span class="mp-sig mp-green">🟢 -2493/판</span><span class="mp-sig mp-green">🟢 이상없음</span></div></div></div></div>
 <div style="font-size:11px;font-weight:600;color:var(--text2,#64748b);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;">카테고리</div>
@@ -1161,78 +1161,7 @@ function iFilter(btn,cat){
 </div>
 </div>
 
-<div id="tab-security" class="tab-panel">
-<div class="cards" style="grid-template-columns:repeat(5,1fr)">
-  <div class="card" style="border-left:4px solid #10b981">
-    <div class="ct" style="color:#10b981">검증 통과율</div>
-    <div class="cv" style="color:#10b981">99%</div>
-    <div class="cs">통과 74 / 실패 1</div>
-  </div>
-  <div class="card" style="border-left:4px solid #10b981">
-    <div class="ct" style="color:#10b981">API 에러율</div>
-    <div class="cv" style="color:#10b981">0.0%</div>
-    <div class="cs">에러 0 / 전체 714</div>
-  </div>
-  <div class="card" style="border-left:4px solid #ef4444">
-    <div class="ct" style="color:#ef4444">콘솔 에러</div>
-    <div class="cv" style="color:#ef4444">200</div>
-    <div class="cs">warn/error 콘솔 로그</div>
-  </div>
-  <div class="card" style="border-left:4px solid #f59e0b">
-    <div class="ct" style="color:#f59e0b">이슈 건수</div>
-    <div class="cv" style="color:#f59e0b">12</div>
-    <div class="cs">전체 감지된 이슈</div>
-  </div>
-  <div class="card" style="border-left:4px solid #10b981">
-    <div class="ct" style="color:#10b981">실패 유형 수</div>
-    <div class="cv" style="color:#10b981">0</div>
-    <div class="cs">고유 failure_type 종류</div>
-  </div>
-</div>
-
-<div class="box" style="margin-bottom:14px">
-  <div class="sec-title" style="color:#f97316">검증 실패 상세</div>
-  <div class="sec-desc">골드 계산 검증(입장료/아이템/보상) 실패 및 버그 감지 항목. 최대 20건 표시.</div>
-  <div style="max-height:340px;overflow-y:auto">
-    <table>
-      <tr><th>날짜</th><th>페르소나</th><th>설명</th></tr>
-      <tr><td class="mono" style="font-size:11px">20260424</td><td><span class="pbadge" style="background:#3b82f622;color:#3b82f6;border:1px solid #3b82f644">고수</span></td><td style="font-size:11px;color:#cbd5e1;max-width:400px;word-break:break-all" title="[검증] 레벨 합산(+2,274) ≠ 전체 변화(-10,000,000), 편차 10,002,274">[검증] 레벨 합산(+2,274) ≠ 전체 변화(-10,000,000), 편차 10,002,274</td></tr>
-    </table>
-  </div>
-</div>
-
-<details style="margin-bottom:14px">
-  <summary style="cursor:pointer;font-size:13px;font-weight:600;color:#f87171;padding:8px 0">API 에러 상세 (0건)</summary>
-  <div class="box" style="margin-top:8px">
-    <div class="sec-desc">HTTP 4xx/5xx 응답을 받은 API 요청. 최대 15건 표시.</div>
-    <div style="max-height:300px;overflow-y:auto">
-      <table>
-        <tr><th>URL</th><th>상태코드</th><th>이벤트</th><th>타임스탬프</th><th>페르소나</th></tr>
-        <tr><td colspan="5" class="nd">API 에러 없음</td></tr>
-      </table>
-    </div>
-  </div>
-</details>
-
-<details style="margin-bottom:14px">
-  <summary style="cursor:pointer;font-size:13px;font-weight:600;color:#fbbf24;padding:8px 0">콘솔 에러 상세 (200건)</summary>
-  <div class="box" style="margin-top:8px">
-    <div class="sec-desc">게임/브라우저 콘솔에 기록된 warn/error 로그. 최대 15건 표시.</div>
-    <div style="max-height:300px;overflow-y:auto">
-      <table>
-        <tr><th>레벨</th><th>메시지</th><th>타임스탬프</th><th>페르소나</th></tr>
-        <tr><td style="font-size:11px;color:#fbbf24;font-weight:600;text-transform:uppercase">warn</td><td style="font-size:11px;color:#94a3b8;max-width:400px;word-break:break-all" title="SceneManager.instance.header:not:exist">SceneManager.instance.header:not:exist</td><td style="font-size:10px;color:#4e6a85">07:29:58</td><td style="font-size:10px;color:#94a3b8">중수</td></tr><tr><td style="font-size:11px;color:#fbbf24;font-weight:600;text-transform:uppercase">warn</td><td style="font-size:11px;color:#94a3b8;max-width:400px;word-break:break-all" title="SceneManager.instance.header:not:exist">SceneManager.instance.header:not:exist</td><td style="font-size:10px;color:#4e6a85">07:29:58</td><td style="font-size:10px;color:#94a3b8">중수</td></tr><tr><td style="font-size:11px;color:#fbbf24;font-weight:600;text-transform:uppercase">warn</td><td style="font-size:11px;color:#94a3b8;max-width:400px;word-break:break-all" title="SceneManager.instance.header:not:exist">SceneManager.instance.header:not:exist</td><td style="font-size:10px;color:#4e6a85">07:29:58</td><td style="font-size:10px;color:#94a3b8">중수</td></tr><tr><td style="font-size:11px;color:#fbbf24;font-weight:600;text-transform:uppercase">warn</td><td style="font-size:11px;color:#94a3b8;max-width:400px;word-break:break-all" title="SceneManager.instance.header:not:exist">SceneManager.instance.header:not:exist</td><td style="font-size:10px;color:#4e6a85">07:29:58</td><td style="font-size:10px;color:#94a3b8">중수</td></tr><tr><td style="font-size:11px;color:#fbbf24;font-weight:600;text-transform:uppercase">warn</td><td style="font-size:11px;color:#94a3b8;max-width:400px;word-break:break-all" title="SceneManager.instance.header:not:exist">SceneManager.instance.header:not:exist</td><td style="font-size:10px;color:#4e6a85">07:29:58</td><td style="font-size:10px;color:#94a3b8">중수</td></tr><tr><td style="font-size:11px;color:#fbbf24;font-weight:600;text-transform:uppercase">warn</td><td style="font-size:11px;color:#94a3b8;max-width:400px;word-break:break-all" title="SceneManager.instance.header:not:exist">SceneManager.instance.header:not:exist</td><td style="font-size:10px;color:#4e6a85">07:29:59</td><td style="font-size:10px;color:#94a3b8">중수</td></tr><tr><td style="font-size:11px;color:#fbbf24;font-weight:600;text-transform:uppercase">warn</td><td style="font-size:11px;color:#94a3b8;max-width:400px;word-break:break-all" title="SceneManager.instance.header:not:exist">SceneManager.instance.header:not:exist</td><td style="font-size:10px;color:#4e6a85">07:30:03</td><td style="font-size:10px;color:#94a3b8">중수</td></tr><tr><td style="font-size:11px;color:#fbbf24;font-weight:600;text-transform:uppercase">warn</td><td style="font-size:11px;color:#94a3b8;max-width:400px;word-break:break-all" title="SceneManager.instance.header:not:exist">SceneManager.instance.header:not:exist</td><td style="font-size:10px;color:#4e6a85">07:30:03</td><td style="font-size:10px;color:#94a3b8">중수</td></tr><tr><td style="font-size:11px;color:#fbbf24;font-weight:600;text-transform:uppercase">warn</td><td style="font-size:11px;color:#94a3b8;max-width:400px;word-break:break-all" title="SceneManager.instance.header:not:exist">SceneManager.instance.header:not:exist</td><td style="font-size:10px;color:#4e6a85">07:30:03</td><td style="font-size:10px;color:#94a3b8">중수</td></tr><tr><td style="font-size:11px;color:#fbbf24;font-weight:600;text-transform:uppercase">warn</td><td style="font-size:11px;color:#94a3b8;max-width:400px;word-break:break-all" title="createContextWith error {&quot;code&quot;:&quot;USER_INPUT&quot;,&quot;message&quot;:&quot;Player closed the context dialog&quot;}">createContextWith error {&quot;code&quot;:&quot;USER_INPUT&quot;,&quot;message&quot;:&quot;Player closed the context dialog&quot;}</td><td style="font-size:10px;color:#4e6a85">07:30:05</td><td style="font-size:10px;color:#94a3b8">중수</td></tr><tr><td style="font-size:11px;color:#fbbf24;font-weight:600;text-transform:uppercase">warn</td><td style="font-size:11px;color:#94a3b8;max-width:400px;word-break:break-all" title="SceneManager.instance.header:not:exist">SceneManager.instance.header:not:exist</td><td style="font-size:10px;color:#4e6a85">07:30:05</td><td style="font-size:10px;color:#94a3b8">중수</td></tr><tr><td style="font-size:11px;color:#fbbf24;font-weight:600;text-transform:uppercase">warn</td><td style="font-size:11px;color:#94a3b8;max-width:400px;word-break:break-all" title="SceneManager.instance.header:not:exist">SceneManager.instance.header:not:exist</td><td style="font-size:10px;color:#4e6a85">07:30:05</td><td style="font-size:10px;color:#94a3b8">중수</td></tr><tr><td style="font-size:11px;color:#fbbf24;font-weight:600;text-transform:uppercase">warn</td><td style="font-size:11px;color:#94a3b8;max-width:400px;word-break:break-all" title="SceneManager.instance.header:not:exist">SceneManager.instance.header:not:exist</td><td style="font-size:10px;color:#4e6a85">07:30:05</td><td style="font-size:10px;color:#94a3b8">중수</td></tr><tr><td style="font-size:11px;color:#fbbf24;font-weight:600;text-transform:uppercase">warn</td><td style="font-size:11px;color:#94a3b8;max-width:400px;word-break:break-all" title="SceneManager.instance.header:not:exist">SceneManager.instance.header:not:exist</td><td style="font-size:10px;color:#4e6a85">07:30:05</td><td style="font-size:10px;color:#94a3b8">중수</td></tr><tr><td style="font-size:11px;color:#fbbf24;font-weight:600;text-transform:uppercase">warn</td><td style="font-size:11px;color:#94a3b8;max-width:400px;word-break:break-all" title="SceneManager.instance.header:not:exist">SceneManager.instance.header:not:exist</td><td style="font-size:10px;color:#4e6a85">07:30:05</td><td style="font-size:10px;color:#94a3b8">중수</td></tr>
-      </table>
-    </div>
-  </div>
-</details>
-
-<div class="box">
-  <div class="sec-title" style="color:#f97316">페르소나별 검증 현황</div>
-  <div class="sec-desc">각 페르소나의 검증 통과/실패 현황과 주요 실패 유형.</div>
-  <div class="cards"><div class="card" style="border-left:4px solid #3b82f6"><div class="ct" style="color:#3b82f6">고수 <span class="pk">hardcore</span></div><div class="cv" style="color:#10b981">100%</div><div class="cs">통과 3 / 실패 0 (3건)</div><div class="cs" style="font-size:10px;margin-top:2px">실패유형: 없음</div></div><div class="card" style="border-left:4px solid #10b981"><div class="ct" style="color:#10b981">중수 <span class="pk">average</span></div><div class="cv" style="color:#10b981">100%</div><div class="cs">통과 34 / 실패 0 (34건)</div><div class="cs" style="font-size:10px;margin-top:2px">실패유형: 없음</div></div><div class="card" style="border-left:4px solid #f59e0b"><div class="ct" style="color:#f59e0b">하수 <span class="pk">casual</span></div><div class="cv" style="color:#10b981">97%</div><div class="cs">통과 37 / 실패 1 (38건)</div><div class="cs" style="font-size:10px;margin-top:2px">실패유형: 없음</div></div><div class="card dim" style="border-left:4px solid #ef4444"><div class="ct" style="color:#ef4444">초보</div><div class="cv">--</div><div class="cs">검증 데이터 없음</div></div></div>
-</div>
-</div>
+<div id="tab-security" class="tab-panel"><div style="text-align:center;padding:60px 0;color:var(--text2)"><div style="font-size:2.5rem;margin-bottom:12px">&#x1f512;</div><div style="font-size:1rem;font-weight:600">보안 스캔 데이터 없음</div><div style="font-size:.8rem;margin-top:6px">프리플레이 실행 시 security_scan 데이터가 자동 수집되면 여기에 표시됩니다.</div></div></div>
 
 <script>
 Chart.register(ChartDataLabels);

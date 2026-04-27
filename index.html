@@ -670,24 +670,27 @@ function renderCatStages(gameId, stages) {
   const byStage = {};
   for (const s of stages) {
     const key = s.stage_number || s.game_level || '?';
-    if (!byStage[key]) byStage[key] = { played: 0, cleared: 0, times: [], level: s.game_level };
+    if (!byStage[key]) byStage[key] = { played: 0, cleared: 0, times: [], level: s.game_level, mapScores: [] };
     byStage[key].played++;
     if (s.result === 'clear') byStage[key].cleared++;
     if (s.time_sec) byStage[key].times.push(s.time_sec);
+    const ms = (s.details || {}).map_score;
+    if (ms != null) byStage[key].mapScores.push(ms);
   }
   const rows = Object.entries(byStage)
     .sort(([,a],[,b]) => (a.level||0) - (b.level||0))
     .map(([st, v]) => {
       const cr = v.played ? (v.cleared / v.played * 100).toFixed(1) : 0;
       const avgT = v.times.length ? (v.times.reduce((a,b)=>a+b,0) / v.times.length).toFixed(1) : '-';
+      const avgMS = v.mapScores.length ? Math.round(v.mapScores.reduce((a,b)=>a+b,0) / v.mapScores.length) : '-';
       const badge = cr >= 90 ? 'badge-ok' : cr >= 70 ? 'badge-warn' : 'badge-err';
       return `<tr><td>${st}</td><td>Lv${v.level||'?'}</td><td>${v.played}</td><td>${v.cleared}</td>
-        <td><span class="badge ${badge}">${cr}%</span></td><td>${avgT}초</td></tr>`;
+        <td><span class="badge ${badge}">${cr}%</span></td><td>${avgT}초</td><td>${avgMS}</td></tr>`;
     }).join('');
 
   return `
     <div class="tbl-wrap"><h4>스테이지별 상세 (${Object.keys(byStage).length}개)</h4>
-      <table><thead><tr><th>스테이지</th><th>레벨</th><th>플레이</th><th>클리어</th><th>클리어율</th><th>평균 시간</th></tr></thead>
+      <table><thead><tr><th>스테이지</th><th>레벨</th><th>플레이</th><th>클리어</th><th>클리어율</th><th>평균 시간</th><th>맵 스코어</th></tr></thead>
       <tbody>${rows}</tbody></table></div>
   `;
 }

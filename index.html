@@ -635,7 +635,20 @@ function _aggregatePersonaStages(stages) {
     if (d.turns) { a.turns += d.turns; a.turnN++; }
     a.matches += d.matches || 0;
     a.draws += d.draws || 0;
-    a.gimmicks += d.gimmicks || 0;
+    // 기믹: events에서 기믹 타입 존재 여부 추출 (gimmick: 또는 gimmick_match: 둘 다 인식, Set으로 중복 제거)
+    const evts = d.events || [];
+    const gimmickPresent = new Set();
+    for (const e of evts) {
+      if (typeof e !== 'string') continue;
+      if (e.startsWith('gimmick_match:')) gimmickPresent.add(e.slice(14));
+      else if (e.startsWith('gimmick:')) gimmickPresent.add(e.slice(8));
+    }
+    a.gimmicks += gimmickPresent.size; // 이 판에 배치된 기믹 종류 수
+    for (const name of gimmickPresent) {
+      // 이름 → 코드 역매핑
+      const code = Object.entries(GIMMICK_NAMES).find(([k,v]) => v === name)?.[0] || name;
+      a.gimmickTypes[code] = (a.gimmickTypes[code] || 0) + 1; // 해당 기믹이 배치된 맵 수
+    }
     a.plusCards += d.plus_card_count || 0;
     a.wildMatches += d.wild_card_count || 0;
     a.wildBuys += (d.item_cost && d.wild_card_count) ? d.wild_card_count : 0;
@@ -649,10 +662,6 @@ function _aggregatePersonaStages(stages) {
     if (!a.betting[bm]) a.betting[bm] = { count: 0, goldPnl: 0 };
     a.betting[bm].count++;
     a.betting[bm].goldPnl += d.gold_pnl || 0;
-    const gc = d.gimmick_counts || {};
-    for (const [k, v] of Object.entries(gc)) {
-      a.gimmickTypes[k] = (a.gimmickTypes[k] || 0) + v;
-    }
   }
   return pAgg;
 }
@@ -1090,47 +1099,57 @@ function renderBalanceCharts(gameId, stages, runs) {
    카테고리: 기믹 (SCJ 전용)
    ══════════════════════════════════════════════ */
 function renderCatGimmick(gameId, stages, runs) {
-  const totals = { wild: 0, gimmick: 0, extra: 0, undo: 0, retry: 0 };
-  const byPersona = {};
-  for (const r of runs) {
-    const m = r.metrics || {};
-    totals.wild += m.wild_count || 0;
-    totals.gimmick += m.gimmick_count || 0;
-    totals.extra += m.extra_decks || 0;
-    totals.undo += m.undo_total || 0;
-    totals.retry += m.retry_total || 0;
-    const p = r.persona;
-    if (!byPersona[p]) byPersona[p] = { wild: 0, gimmick: 0, extra: 0, undo: 0, retry: 0, levels: 0 };
-    byPersona[p].wild += m.wild_count || 0;
-    byPersona[p].gimmick += m.gimmick_count || 0;
-    byPersona[p].extra += m.extra_decks || 0;
-    byPersona[p].undo += m.undo_total || 0;
-    byPersona[p].retry += m.retry_total || 0;
-    byPersona[p].levels += r.levels_played || 0;
+  const pAgg = _aggregatePersonaStages(stages);
+  const pKeys = Object.keys(pAgg).sort();
+
+  // 전체 합산
+  let totalGimmickMaps = 0, totalWild = 0, totalExtra = 0, totalPlus = 0;
+  const allGTypes = {};
+  for (const p of pKeys) {
+    const a = pAgg[p];
+    totalGimmickMaps += a.gimmicks; // 기믹 배치된 판 수
+    totalWild += a.wildMatches;
+    totalExtra += a.extraDecks;
+    totalPlus += a.plusCards;
+    for (const [k, v] of Object.entries(a.gimmickTypes)) {
+      allGTypes[k] = (allGTypes[k] || 0) + v;
+    }
   }
-  const pRows = Object.entries(byPersona).sort(([a],[b]) => a.localeCompare(b)).map(([p, d]) =>
-    `<tr><td style="color:${PERSONA_COLORS[p]||'#999'}">${PERSONA_KO[p]||p}</td>
-     <td>${d.wild}</td><td>${d.gimmick}</td><td>${d.extra}</td><td>${d.undo}</td><td>${d.retry}</td><td>${d.levels}</td></tr>`
-  ).join('');
+  const totalPlayed = pKeys.reduce((s, p) => s + pAgg[p].played, 0);
+
+  // 기믹 타입별 요약 텍스트
+  const gtSummary = Object.entries(allGTypes)
+    .sort(([,a],[,b]) => b - a)
+    .map(([k, cnt]) => `${GIMMICK_NAMES[k]||'타입'+k}: ${cnt}맵`)
+    .join(', ') || '없음';
+
+  const pRows = pKeys.map(p => {
+    const a = pAgg[p];
+    const gRate = a.played ? (a.gimmicks / a.played * 100).toFixed(0) : 0;
+    return `<tr><td style="color:${PERSONA_COLORS[p]||'#999'}">${PERSONA_KO[p]||p}</td>
+     <td>${a.gimmicks} (${gRate}%)</td><td>${a.wildMatches}</td><td>${a.plusCards}</td><td>${a.extraDecks}</td><td>${a.played}</td></tr>`;
+  }).join('');
 
   return `
     <div class="metric-row">
-      <div class="metric-box"><div class="label">와일드카드</div><div class="value">${totals.wild}</div></div>
-      <div class="metric-box"><div class="label">기믹</div><div class="value">${totals.gimmick}</div></div>
-      <div class="metric-box"><div class="label">엑스트라덱</div><div class="value">${totals.extra}</div></div>
-      <div class="metric-box"><div class="label">되돌리기</div><div class="value">${totals.undo}</div></div>
-      <div class="metric-box"><div class="label">재시도</div><div class="value">${totals.retry}</div></div>
+      <div class="metric-box"><div class="label">기믹 배치 맵</div><div class="value">${totalGimmickMaps}<span style="font-size:12px;color:var(--text-muted)"> / ${totalPlayed}판</span></div></div>
+      <div class="metric-box"><div class="label">와일드카드 사용</div><div class="value">${totalWild}</div></div>
+      <div class="metric-box"><div class="label">플러스카드</div><div class="value">${totalPlus}</div></div>
+      <div class="metric-box"><div class="label">엑스트라덱</div><div class="value">${totalExtra}</div></div>
+    </div>
+    <div style="font-size:12px;color:var(--text-muted);margin-bottom:12px;padding:6px 10px;background:var(--bg-card);border:1px solid var(--border);border-radius:6px">
+      기믹 분포: ${gtSummary}
     </div>
     <div class="chart-grid">
-      <div class="chart-box"><h4>기믹·플러스카드 /판</h4><canvas id="chart-gimmick-${gameId}"></canvas></div>
-      <div class="chart-box"><h4>기믹 타입별 출현 횟수</h4><canvas id="chart-gtype-${gameId}"></canvas></div>
+      <div class="chart-box"><h4>기믹 배치 종류·플러스카드 /판</h4><canvas id="chart-gimmick-${gameId}"></canvas></div>
+      <div class="chart-box"><h4>기믹 타입별 배치 맵 수</h4><canvas id="chart-gtype-${gameId}"></canvas></div>
     </div>
     <div class="chart-grid">
       <div class="chart-box"><h4>기믹 타입별 비율</h4><canvas id="chart-gpie-${gameId}"></canvas></div>
-      <div class="chart-box" style="display:flex;align-items:center;justify-content:center;color:var(--text-muted);font-size:13px">추가 아이템 분석 영역</div>
+      <div class="chart-box"><h4>기믹 등장률 (페르소나별)</h4><canvas id="chart-grate-${gameId}"></canvas></div>
     </div>
-    <div class="tbl-wrap"><h4>페르소나별 아이템 사용</h4>
-      <table><thead><tr><th>페르소나</th><th>와일드</th><th>기믹</th><th>엑스트라</th><th>되돌리기</th><th>재시도</th><th>총 판수</th></tr></thead>
+    <div class="tbl-wrap"><h4>페르소나별 기믹·아이템</h4>
+      <table><thead><tr><th>페르소나</th><th>기믹 맵 (비율)</th><th>와일드</th><th>플러스카드</th><th>엑스트라덱</th><th>총 판수</th></tr></thead>
       <tbody>${pRows}</tbody></table></div>
   `;
 }
@@ -1152,14 +1171,14 @@ function renderGimmickCharts(gameId, stages) {
     _charts[gKey] = new Chart(gCanvas, {
       type: 'bar',
       data: { labels, datasets: [
-        { label: '기믹/판', data: gimmickPerGame, backgroundColor: '#f59e0b99', borderColor: '#f59e0b', borderWidth: 1.5, borderRadius: 4 },
+        { label: '기믹 배치 종류/판', data: gimmickPerGame, backgroundColor: '#f59e0b99', borderColor: '#f59e0b', borderWidth: 1.5, borderRadius: 4 },
         { label: '플러스카드/판', data: plusPerGame, backgroundColor: '#8b5cf699', borderColor: '#8b5cf6', borderWidth: 1.5, borderRadius: 4 },
       ]},
       options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#94a3b8' } } } },
     });
   }
 
-  // 기믹 타입별 출현 횟수
+  // 기믹 타입별 배치 맵 수
   const allGTypes = {};
   for (const p of pKeys) {
     for (const [k, v] of Object.entries(pAgg[p].gimmickTypes)) {
@@ -1177,7 +1196,7 @@ function renderGimmickCharts(gameId, stages) {
   if (gtCanvas) {
     _charts[gtKey] = new Chart(gtCanvas, {
       type: 'bar',
-      data: { labels: gtLabels, datasets: [{ label: '출현 횟수', data: gtData, backgroundColor: gtColors.slice(0, gtKeys.length), borderRadius: 4 }] },
+      data: { labels: gtLabels, datasets: [{ label: '배치 맵 수', data: gtData, backgroundColor: gtColors.slice(0, gtKeys.length), borderRadius: 4 }] },
       options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } },
     });
   }
@@ -1193,6 +1212,23 @@ function renderGimmickCharts(gameId, stages) {
       options: {
         responsive: true, maintainAspectRatio: false,
         plugins: { legend: { position: 'right', labels: { color: '#94a3b8' } } },
+      },
+    });
+  }
+
+  // 기믹 보유율 (페르소나별)
+  const grKey = `grate-${gameId}`;
+  if (_charts[grKey]) _charts[grKey].destroy();
+  const grCanvas = document.getElementById(`chart-grate-${gameId}`);
+  if (grCanvas) {
+    const grData = pKeys.map(p => pAgg[p].played ? +(pAgg[p].gimmicks / pAgg[p].played * 100).toFixed(1) : 0);
+    _charts[grKey] = new Chart(grCanvas, {
+      type: 'bar',
+      data: { labels, datasets: [{ label: '기믹 등장률 (%)', data: grData, backgroundColor: colors.map(c => c + '99'), borderColor: colors, borderWidth: 1.5, borderRadius: 4 }] },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        scales: { y: { beginAtZero: true, max: 100, ticks: { callback: v => v + '%' } } },
+        plugins: { legend: { display: false } },
       },
     });
   }
@@ -1470,10 +1506,21 @@ function renderCatStages(gameId, stages) {
       const avgBase = md.length ? Math.round(md.reduce((a,d)=>a+d.base,0)/md.length) : '-';
       const avgGimmickScore = md.length ? Math.round(md.reduce((a,d)=>a+d.gimmick,0)/md.length) : 0;
       const avgField = md.length ? Math.round(md.reduce((a,d)=>a+d.field,0)/md.length) : '-';
-      const gimmickNames = {};
-      md.forEach(d => { for (const [k,cnt] of Object.entries(d.gimmicks||{})) { gimmickNames[k] = (gimmickNames[k]||0) + cnt; } });
-      const gimmickStr = Object.keys(gimmickNames).length
-        ? Object.entries(gimmickNames).map(([k,c]) => `${GIMMICK_NAMES[k]||'타입'+k} ${c}회`).join(', ')
+      // 기믹 배치 정보: events에서 기믹 타입 추출 (gimmick: 또는 gimmick_match: 인식, 판당 Set 중복 제거)
+      const gimmickPresence = {};
+      for (const s of stages.filter(s2 => (s2.stage_number || s2.game_level) === st)) {
+        const typeSet = new Set();
+        for (const e of ((s.details || {}).events || [])) {
+          if (typeof e !== 'string') continue;
+          if (e.startsWith('gimmick_match:')) typeSet.add(e.slice(14));
+          else if (e.startsWith('gimmick:')) typeSet.add(e.slice(8));
+        }
+        for (const name of typeSet) {
+          gimmickPresence[name] = (gimmickPresence[name] || 0) + 1;
+        }
+      }
+      const gimmickStr = Object.keys(gimmickPresence).length
+        ? Object.entries(gimmickPresence).map(([name,cnt]) => `${name} (${cnt}판)`).join(', ')
         : '없음';
       return `<tr style="cursor:pointer" onclick="var d=document.getElementById('${rowId}');d.style.display=d.style.display==='none'?'table-row':'none'">
         <td>${st}</td><td>Lv${v.level||'?'}</td><td>${v.played}</td>

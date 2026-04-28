@@ -635,7 +635,7 @@ function _aggregatePersonaStages(stages) {
     if (d.turns) { a.turns += d.turns; a.turnN++; }
     a.matches += d.matches || 0;
     a.draws += d.draws || 0;
-    // 기믹: events에서 기믹 타입 존재 여부 추출 (gimmick: 또는 gimmick_match: 둘 다 인식, Set으로 중복 제거)
+    // 기믹: events에서 기믹 타입 존재 여부 추출 (gimmick:/gimmick_match: 인식 + plus_card_count로 플러스카드 감지, Set 중복 제거)
     const evts = d.events || [];
     const gimmickPresent = new Set();
     for (const e of evts) {
@@ -643,6 +643,7 @@ function _aggregatePersonaStages(stages) {
       if (e.startsWith('gimmick_match:')) gimmickPresent.add(e.slice(14));
       else if (e.startsWith('gimmick:')) gimmickPresent.add(e.slice(8));
     }
+    if (d.plus_card_count > 0) gimmickPresent.add('플러스카드');
     a.gimmicks += gimmickPresent.size; // 이 판에 배치된 기믹 종류 수
     for (const name of gimmickPresent) {
       // 이름 → 코드 역매핑
@@ -762,7 +763,9 @@ function renderSummaryCharts(gameId, stages, runs) {
   }
 }
 
-const GIMMICK_NAMES = { '2': '키&자물쇠', '5': '와일드', '6': '얼음', '9': '러너' };
+const GIMMICK_NAMES = { '2': '키&자물쇠', '5': '와일드', '6': '얼음', '9': '러너', 'plus': '플러스카드' };
+const GIMMICK_WEIGHTS = { '키&자물쇠': +20, '얼음': +30, '러너': +40, '플러스카드': -10 };
+const GIMMICK_MAX = { '키&자물쇠': 4, '얼음': 8, '러너': 8, '플러스카드': 3 };
 
 function renderRadarChart(gameId, stages, runs) {
   const personas = {};
@@ -1117,11 +1120,15 @@ function renderCatGimmick(gameId, stages, runs) {
   }
   const totalPlayed = pKeys.reduce((s, p) => s + pAgg[p].played, 0);
 
-  // 기믹 타입별 요약 텍스트
+  // 기믹 타입별 요약 텍스트 (가중치 포함)
   const gtSummary = Object.entries(allGTypes)
     .sort(([,a],[,b]) => b - a)
-    .map(([k, cnt]) => `${GIMMICK_NAMES[k]||'타입'+k}: ${cnt}맵`)
-    .join(', ') || '없음';
+    .map(([k, cnt]) => {
+      const name = GIMMICK_NAMES[k] || '타입'+k;
+      const w = GIMMICK_WEIGHTS[name];
+      const wStr = w ? ` [${w > 0 ? '+' : ''}${w}]` : '';
+      return `${name}${wStr}: ${cnt}맵`;
+    }).join(', ') || '없음';
 
   const pRows = pKeys.map(p => {
     const a = pAgg[p];
@@ -1148,6 +1155,14 @@ function renderCatGimmick(gameId, stages, runs) {
       <div class="chart-box"><h4>기믹 타입별 비율</h4><canvas id="chart-gpie-${gameId}"></canvas></div>
       <div class="chart-box"><h4>기믹 등장률 (페르소나별)</h4><canvas id="chart-grate-${gameId}"></canvas></div>
     </div>
+    <div class="tbl-wrap"><h4>기믹 가중치 참조 (밸런스시트)</h4>
+      <table><thead><tr><th>기믹</th><th>맵스코어 가중치</th><th>최대 배치</th><th>설명</th></tr></thead>
+      <tbody>
+        <tr><td style="color:#f59e0b">키&자물쇠</td><td style="color:var(--status-err)">+20 /개</td><td>4</td><td>색상별 3종, 키와 자물쇠 쌍 매칭 필요</td></tr>
+        <tr><td style="color:#3b82f6">얼음</td><td style="color:var(--status-err)">+30 /개</td><td>8</td><td>카드 위에 얼음, 매칭 시 해제</td></tr>
+        <tr><td style="color:#ef4444">러너</td><td style="color:var(--status-err)">+40 /개</td><td>8</td><td>이동하는 카드, 위치 예측 필요</td></tr>
+        <tr><td style="color:#10b981">플러스카드</td><td style="color:var(--status-ok)">-10 /개</td><td>3</td><td>맵 난이도 완화, 추가 카드 제공</td></tr>
+      </tbody></table></div>
     <div class="tbl-wrap"><h4>페르소나별 기믹·아이템</h4>
       <table><thead><tr><th>페르소나</th><th>기믹 맵 (비율)</th><th>와일드</th><th>플러스카드</th><th>엑스트라덱</th><th>총 판수</th></tr></thead>
       <tbody>${pRows}</tbody></table></div>
@@ -1506,21 +1521,27 @@ function renderCatStages(gameId, stages) {
       const avgBase = md.length ? Math.round(md.reduce((a,d)=>a+d.base,0)/md.length) : '-';
       const avgGimmickScore = md.length ? Math.round(md.reduce((a,d)=>a+d.gimmick,0)/md.length) : 0;
       const avgField = md.length ? Math.round(md.reduce((a,d)=>a+d.field,0)/md.length) : '-';
-      // 기믹 배치 정보: events에서 기믹 타입 추출 (gimmick: 또는 gimmick_match: 인식, 판당 Set 중복 제거)
+      // 기믹 배치 정보: events + plus_card_count로 타입 추출, 판당 Set 중복 제거
       const gimmickPresence = {};
       for (const s of stages.filter(s2 => (s2.stage_number || s2.game_level) === st)) {
         const typeSet = new Set();
-        for (const e of ((s.details || {}).events || [])) {
+        const dd = (s.details || {});
+        for (const e of (dd.events || [])) {
           if (typeof e !== 'string') continue;
           if (e.startsWith('gimmick_match:')) typeSet.add(e.slice(14));
           else if (e.startsWith('gimmick:')) typeSet.add(e.slice(8));
         }
+        if (dd.plus_card_count > 0) typeSet.add('플러스카드');
         for (const name of typeSet) {
           gimmickPresence[name] = (gimmickPresence[name] || 0) + 1;
         }
       }
       const gimmickStr = Object.keys(gimmickPresence).length
-        ? Object.entries(gimmickPresence).map(([name,cnt]) => `${name} (${cnt}판)`).join(', ')
+        ? Object.entries(gimmickPresence).map(([name,cnt]) => {
+            const w = GIMMICK_WEIGHTS[name];
+            const wStr = w ? ` [${w > 0 ? '+' : ''}${w}점]` : '';
+            return `${name}${wStr} (${cnt}판)`;
+          }).join(', ')
         : '없음';
       return `<tr style="cursor:pointer" onclick="var d=document.getElementById('${rowId}');d.style.display=d.style.display==='none'?'table-row':'none'">
         <td>${st}</td><td>Lv${v.level||'?'}</td><td>${v.played}</td>

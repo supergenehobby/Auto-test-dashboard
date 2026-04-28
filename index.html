@@ -335,7 +335,7 @@ function aggregateOverview(runs) {
     g.dailyMap[d].runs++;
 
     const m = r.metrics || {};
-    g.issueCount += (m.issues || []).length + (m.notable_events || []).length;
+    g.issueCount += (m.issues || []).length;
   }
   return games;
 }
@@ -1307,61 +1307,68 @@ function renderCatTiles(gameId, stages, runs) {
   const totalStages = stages.length;
   if (!totalStages) return '<div style="color:var(--text-muted);padding:20px">타일 데이터 없음 — 프리플레이를 실행하면 표시됩니다</div>';
 
-  let totalScore = 0, totalContinues = 0;
+  let totalScore = 0, totalContinues = 0, totalTiles = 0, totalClicks = 0;
   const slotData = { clearUsed: [], failUsed: [] };
-  const tileKinds = {};
+  const tileKindCounts = {};
 
   for (const s of stages) {
     const d = s.details || {};
     totalScore += d.score || 0;
     totalContinues += d.continues || 0;
+    totalTiles += d.tiles_cleared || 0;
+    totalClicks += d.total_clicks || 0;
     if (d.slots_used != null) {
       (s.result === 'clear' ? slotData.clearUsed : slotData.failUsed).push(d.slots_used);
     }
-    for (const [kind, cnt] of Object.entries(d.tile_kinds || {})) {
-      tileKinds[kind] = (tileKinds[kind] || 0) + cnt;
+    if (d.tile_kinds != null) {
+      const k = String(d.tile_kinds);
+      tileKindCounts[k] = (tileKindCounts[k] || 0) + 1;
     }
   }
 
   const avgScore = totalStages ? Math.round(totalScore / totalStages) : 0;
+  const avgTiles = totalStages ? Math.round(totalTiles / totalStages) : 0;
 
   return `
     <div class="metric-row">
       <div class="metric-box"><div class="label">평균 점수</div><div class="value">${avgScore.toLocaleString()}</div></div>
       <div class="metric-box"><div class="label">이어하기 횟수</div><div class="value">${totalContinues}</div></div>
+      <div class="metric-box"><div class="label">평균 타일 수</div><div class="value">${avgTiles}</div></div>
+      <div class="metric-box"><div class="label">총 클릭</div><div class="value">${totalClicks.toLocaleString()}</div></div>
       <div class="metric-box"><div class="label">총 판수</div><div class="value">${totalStages}</div></div>
     </div>
     <div class="chart-grid">
-      <div class="chart-box"><h4>타일 종류별 분포</h4><canvas id="chart-tilekind-${gameId}"></canvas></div>
+      <div class="chart-box"><h4>타일 종류 수 분포</h4><canvas id="chart-tilekind-${gameId}"></canvas></div>
       <div class="chart-box"><h4>슬롯 사용량 분포</h4><canvas id="chart-slot-${gameId}"></canvas></div>
     </div>
   `;
 }
 
 function renderTileCharts(gameId, stages, runs) {
-  const tileKinds = {};
+  const tileKindCounts = {};
   const slotClear = [], slotFail = [];
   for (const s of stages) {
     const d = s.details || {};
-    for (const [kind, cnt] of Object.entries(d.tile_kinds || {})) {
-      tileKinds[kind] = (tileKinds[kind] || 0) + cnt;
+    if (d.tile_kinds != null) {
+      const k = String(d.tile_kinds);
+      tileKindCounts[k] = (tileKindCounts[k] || 0) + 1;
     }
     if (d.slots_used != null) {
       (s.result === 'clear' ? slotClear : slotFail).push(d.slots_used);
     }
   }
 
-  // 타일 종류별 분포 (도넛)
-  const tkKeys = Object.keys(tileKinds).sort((a, b) => tileKinds[b] - tileKinds[a]);
+  // 타일 종류 수 분포 (막대)
+  const tkKeys = Object.keys(tileKindCounts).sort((a, b) => +a - +b);
   const tkColors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#06b6d4', '#84cc16'];
   const tkKey = `tilekind-${gameId}`;
   if (_charts[tkKey]) _charts[tkKey].destroy();
   const tkCanvas = document.getElementById(`chart-tilekind-${gameId}`);
   if (tkCanvas && tkKeys.length) {
     _charts[tkKey] = new Chart(tkCanvas, {
-      type: 'doughnut',
-      data: { labels: tkKeys, datasets: [{ data: tkKeys.map(k => tileKinds[k]), backgroundColor: tkColors.slice(0, tkKeys.length) }] },
-      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { color: '#94a3b8' } } } },
+      type: 'bar',
+      data: { labels: tkKeys.map(k => k + '종'), datasets: [{ label: '판 수', data: tkKeys.map(k => tileKindCounts[k]), backgroundColor: tkColors.slice(0, tkKeys.length).map(c => c + '99'), borderColor: tkColors.slice(0, tkKeys.length), borderWidth: 1.5, borderRadius: 6 }] },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } },
     });
   }
 
@@ -1526,9 +1533,66 @@ function renderTimeCharts(gameId, stages, runs) {
 }
 
 /* ══════════════════════════════════════════════
-   카테고리: 스테이지
+   카테고리: 스테이지 (CTZ 전용)
+   ══════════════════════════════════════════════ */
+function renderCatStagesCTZ(gameId, stages) {
+  const byStage = {};
+  for (const s of stages) {
+    const key = s.stage_number || s.game_level || '?';
+    if (!byStage[key]) byStage[key] = { played: 0, times: [], level: s.game_level, scores: [], slotsUsed: [], tileKinds: [], continues: 0, difficulty: s.difficulty || 0 };
+    const v = byStage[key];
+    v.played++;
+    if (s.time_sec) v.times.push(s.time_sec);
+    const d = s.details || {};
+    if (d.score != null) v.scores.push(d.score);
+    if (d.slots_used != null) v.slotsUsed.push(d.slots_used);
+    if (d.tile_kinds != null) v.tileKinds.push(d.tile_kinds);
+    v.continues += d.continues || 0;
+    if (s.difficulty) v.difficulty = s.difficulty;
+  }
+  const rows = Object.entries(byStage)
+    .sort(([,a],[,b]) => (a.level||0) - (b.level||0))
+    .map(([st, v]) => {
+      const avgT = v.times.length ? (v.times.reduce((a,b)=>a+b,0) / v.times.length).toFixed(1) : '-';
+      const avgScore = v.scores.length ? Math.round(v.scores.reduce((a,b)=>a+b,0) / v.scores.length).toLocaleString() : '-';
+      const avgSlots = v.slotsUsed.length ? (v.slotsUsed.reduce((a,b)=>a+b,0) / v.slotsUsed.length).toFixed(1) : '-';
+      const avgTK = v.tileKinds.length ? (v.tileKinds.reduce((a,b)=>a+b,0) / v.tileKinds.length).toFixed(0) : '-';
+      const diffTier = v.difficulty || 0;
+      const diffColor = diffTier === 4 ? '#ef4444' : diffTier === 3 ? '#f59e0b' : diffTier === 2 ? '#10b981' : '#64748b';
+      const diffName = DIFF_TIERS[diffTier] || '-';
+      return `<tr>
+        <td>${st}</td><td>Lv${v.level||'?'}</td><td>${v.played}</td>
+        <td>${avgT}초</td><td>${avgScore}</td><td>${avgSlots}</td>
+        <td>${avgTK}</td><td>${v.continues}</td>
+        <td style="color:${diffColor};font-weight:600">${diffName}</td></tr>`;
+    }).join('');
+  const diffOptions = [...new Set(Object.values(byStage).map(v => v.difficulty))].sort();
+  const diffFilterOpts = diffOptions.map(d => `<option value="${d}">${DIFF_TIERS[d] || 'Tier '+d}</option>`).join('');
+  return `
+    <div style="font-size:11px;color:var(--text-muted);margin-bottom:10px;padding:4px 8px;background:var(--bg-card);border:1px solid var(--border);border-radius:6px">
+      색상 규칙 — 난이도: <span style="color:#10b981">노말</span> · <span style="color:#f59e0b">하드</span> · <span style="color:#ef4444">슈퍼하드</span>
+    </div>
+    <div class="tbl-wrap"><h4>스테이지별 상세 (${Object.keys(byStage).length}개)</h4>
+      <table id="stg-table-${gameId}"><thead><tr>
+        <th class="sortable" onclick="sortStageTable('${gameId}',0,'str')">스테이지</th>
+        <th class="sortable" onclick="sortStageTable('${gameId}',1,'num')">레벨</th>
+        <th class="sortable" onclick="sortStageTable('${gameId}',2,'num')">플레이</th>
+        <th class="sortable" onclick="sortStageTable('${gameId}',3,'num')">평균 시간</th>
+        <th class="sortable" onclick="sortStageTable('${gameId}',4,'num')">평균 점수</th>
+        <th class="sortable" onclick="sortStageTable('${gameId}',5,'num')">슬롯 사용</th>
+        <th class="sortable" onclick="sortStageTable('${gameId}',6,'num')">타일 종류</th>
+        <th class="sortable" onclick="sortStageTable('${gameId}',7,'num')">이어하기</th>
+        <th class="sortable" onclick="sortStageTable('${gameId}',8,'str')">난이도</th>
+      </tr></thead>
+      <tbody>${rows}</tbody></table></div>
+  `;
+}
+
+/* ══════════════════════════════════════════════
+   카테고리: 스테이지 (SCJ / 공통)
    ══════════════════════════════════════════════ */
 function renderCatStages(gameId, stages) {
+  if (gameId === 'CTZ') return renderCatStagesCTZ(gameId, stages);
   const byStage = {};
   for (const s of stages) {
     const key = s.stage_number || s.game_level || '?';

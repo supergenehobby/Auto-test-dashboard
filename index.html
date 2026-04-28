@@ -103,6 +103,8 @@ a { color: #60a5fa; text-decoration: none; }
 .tbl-wrap h4 { font-size: calc(14px * var(--fs-scale)); margin-bottom: 12px; color: var(--text-secondary); }
 table { width: 100%; border-collapse: collapse; font-size: calc(12px * var(--fs-scale)); }
 th { text-align: left; padding: 8px; border-bottom: 1px solid var(--border); color: var(--text-muted); font-weight: 600; }
+th.sortable { cursor: pointer; user-select: none; }
+th.sortable:hover { color: var(--text-primary); }
 td { padding: 8px; border-bottom: 1px solid var(--border); color: var(--text-secondary); }
 tr:hover td { background: rgba(59,130,246,.05); }
 
@@ -1428,12 +1430,20 @@ function renderCatStages(gameId, stages) {
   const byStage = {};
   for (const s of stages) {
     const key = s.stage_number || s.game_level || '?';
-    if (!byStage[key]) byStage[key] = { played: 0, times: [], level: s.game_level, mapScores: [], goldPnl: 0, difficulty: s.difficulty || 0 };
+    if (!byStage[key]) byStage[key] = { played: 0, times: [], level: s.game_level, mapScores: [], mapDetails: [], turns: [], goldPnl: 0, difficulty: s.difficulty || 0 };
     byStage[key].played++;
     if (s.time_sec) byStage[key].times.push(s.time_sec);
-    const ms = (s.details || {}).map_score;
-    if (ms != null) byStage[key].mapScores.push(ms);
-    byStage[key].goldPnl += (s.details || {}).gold_pnl || 0;
+    const d = s.details || {};
+    if (d.map_score != null) {
+      byStage[key].mapScores.push(d.map_score);
+      byStage[key].mapDetails.push({
+        score: d.map_score, base: d.map_score_base || 0,
+        gimmick: d.gimmick_score || 0, field: d.field_total || 0,
+        gimmicks: d.gimmick_counts || {},
+      });
+    }
+    if (d.turns != null) byStage[key].turns.push(d.turns);
+    byStage[key].goldPnl += d.gold_pnl || 0;
     if (s.difficulty) byStage[key].difficulty = s.difficulty;
   }
   const rows = Object.entries(byStage)
@@ -1441,20 +1451,91 @@ function renderCatStages(gameId, stages) {
     .map(([st, v]) => {
       const avgT = v.times.length ? (v.times.reduce((a,b)=>a+b,0) / v.times.length).toFixed(1) : '-';
       const avgMS = v.mapScores.length ? Math.round(v.mapScores.reduce((a,b)=>a+b,0) / v.mapScores.length) : '-';
+      const avgTurns = v.turns.length ? (v.turns.reduce((a,b)=>a+b,0) / v.turns.length).toFixed(1) : '-';
       const avgGold = v.played ? Math.round(v.goldPnl / v.played) : 0;
       const goldColor = avgGold >= 0 ? 'var(--status-ok)' : 'var(--status-err)';
+      // 난이도 색상: 튜토리얼=회색, 노말=초록, 하드=노랑, 슈퍼하드=빨강
       const diffTier = v.difficulty || 0;
-      const diffClass = diffTier === 4 ? 'diff-superhard' : diffTier === 3 ? 'diff-hard' : 'diff-normal';
+      const diffColor = diffTier === 4 ? '#ef4444' : diffTier === 3 ? '#f59e0b' : diffTier === 2 ? '#10b981' : '#64748b';
       const diffName = DIFF_TIERS[diffTier] || '-';
-      return `<tr><td>${st}</td><td>Lv${v.level||'?'}</td><td>${v.played}</td>
-        <td>${avgT}초</td><td>${avgMS}</td>
+      // 맵스코어 색상: 1~700 초록, 701~900 주황, 901+ 빨강
+      const msNum = typeof avgMS === 'number' ? avgMS : 0;
+      const msColor = msNum >= 901 ? '#ef4444' : msNum >= 701 ? '#f59e0b' : msNum >= 1 ? '#10b981' : '#64748b';
+      // 턴수 색상: 적을수록 초록(효율), 많을수록 빨강(비효율)
+      const turnsNum = typeof avgTurns === 'string' ? parseFloat(avgTurns) : avgTurns;
+      const turnsColor = turnsNum >= 50 ? '#ef4444' : turnsNum >= 40 ? '#f59e0b' : turnsNum >= 1 ? '#10b981' : '#64748b';
+      // 맵스코어 상세 (펼치기용)
+      const rowId = `ms_${gameId}_${st}`;
+      const md = v.mapDetails;
+      const avgBase = md.length ? Math.round(md.reduce((a,d)=>a+d.base,0)/md.length) : '-';
+      const avgGimmickScore = md.length ? Math.round(md.reduce((a,d)=>a+d.gimmick,0)/md.length) : 0;
+      const avgField = md.length ? Math.round(md.reduce((a,d)=>a+d.field,0)/md.length) : '-';
+      const gimmickNames = {};
+      md.forEach(d => { for (const [k,cnt] of Object.entries(d.gimmicks||{})) { gimmickNames[k] = (gimmickNames[k]||0) + cnt; } });
+      const gimmickStr = Object.keys(gimmickNames).length
+        ? Object.entries(gimmickNames).map(([k,c]) => `${GIMMICK_NAMES[k]||'타입'+k} ${c}회`).join(', ')
+        : '없음';
+      return `<tr style="cursor:pointer" onclick="var d=document.getElementById('${rowId}');d.style.display=d.style.display==='none'?'table-row':'none'">
+        <td>${st}</td><td>Lv${v.level||'?'}</td><td>${v.played}</td>
+        <td>${avgT}초</td>
         <td style="color:${goldColor}">${avgGold.toLocaleString()}</td>
-        <td class="${diffClass}">${diffName}</td></tr>`;
+        <td style="color:${turnsColor};font-weight:600">${avgTurns}</td>
+        <td style="color:${msColor};font-weight:600">${avgMS}</td>
+        <td style="color:${diffColor};font-weight:600">${diffName}</td></tr>
+      <tr id="${rowId}" style="display:none;background:rgba(56,189,248,.04)"><td></td><td colspan="7" style="padding:8px 12px;font-size:11px;color:var(--text-muted)">
+        <b>맵스코어 상세</b> (${md.length}회 플레이)<br>
+        base(OBB): ${avgBase} · 기믹가중치: +${avgGimmickScore} · 합계: ${avgMS}<br>
+        평균카드수: ${avgField} · 기믹: ${gimmickStr}
+      </td></tr>`;
     }).join('');
 
+  // 난이도 필터 옵션
+  const diffOptions = [...new Set(Object.values(byStage).map(v => v.difficulty))].sort();
+  const diffFilterOpts = diffOptions.map(d => `<option value="${d}">${DIFF_TIERS[d] || 'Tier '+d}</option>`).join('');
+
   return `
+    <div style="font-size:11px;color:var(--text-muted);margin-bottom:10px;padding:4px 8px;background:var(--bg-card);border:1px solid var(--border);border-radius:6px">
+      색상 규칙 — 난이도: <span style="color:#10b981">노말</span> · <span style="color:#f59e0b">하드</span> · <span style="color:#ef4444">슈퍼하드</span>
+      &nbsp;|&nbsp; 맵스코어: <span style="color:#10b981">1~700</span> · <span style="color:#f59e0b">701~900</span> · <span style="color:#ef4444">901+</span>
+      &nbsp;|&nbsp; 턴수: <span style="color:#10b981">&lt;40</span> · <span style="color:#f59e0b">40~50</span> · <span style="color:#ef4444">&gt;50</span>
+      &nbsp;|&nbsp; 행 클릭 → 맵스코어 상세 펼침
+    </div>
+    <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;align-items:center;font-size:12px">
+      <span style="color:var(--text-muted)">필터:</span>
+      <select id="stg-diff-${gameId}" onchange="filterStages('${gameId}')" style="padding:4px 8px;border:1px solid var(--border);border-radius:4px;background:var(--bg-card);color:var(--text-secondary);font-size:12px">
+        <option value="">전체 난이도</option>${diffFilterOpts}
+      </select>
+      <select id="stg-gold-${gameId}" onchange="filterStages('${gameId}')" style="padding:4px 8px;border:1px solid var(--border);border-radius:4px;background:var(--bg-card);color:var(--text-secondary);font-size:12px">
+        <option value="">전체 골드</option>
+        <option value="profit">수익 (+)</option>
+        <option value="loss">손실 (-)</option>
+      </select>
+      <select id="stg-ms-${gameId}" onchange="filterStages('${gameId}')" style="padding:4px 8px;border:1px solid var(--border);border-radius:4px;background:var(--bg-card);color:var(--text-secondary);font-size:12px">
+        <option value="">전체 맵스코어</option>
+        <option value="low">&lt;650 (쉬움)</option>
+        <option value="mid">650~800 (보통)</option>
+        <option value="high">&gt;800 (어려움)</option>
+      </select>
+      <select id="stg-turns-${gameId}" onchange="filterStages('${gameId}')" style="padding:4px 8px;border:1px solid var(--border);border-radius:4px;background:var(--bg-card);color:var(--text-secondary);font-size:12px">
+        <option value="">전체 턴수</option>
+        <option value="low">&lt;40 (효율)</option>
+        <option value="mid">40~50</option>
+        <option value="high">&gt;50 (비효율)</option>
+      </select>
+      <button onclick="resetStageFilters('${gameId}')" style="padding:4px 10px;border:1px solid var(--border);border-radius:4px;background:var(--bg-card);color:var(--text-muted);font-size:11px;cursor:pointer">필터 초기화</button>
+      <button onclick="resetStageSort('${gameId}')" style="padding:4px 10px;border:1px solid var(--border);border-radius:4px;background:var(--bg-card);color:var(--text-muted);font-size:11px;cursor:pointer">정렬 원복 ↺</button>
+    </div>
     <div class="tbl-wrap"><h4>스테이지별 상세 (${Object.keys(byStage).length}개)</h4>
-      <table><thead><tr><th>스테이지</th><th>레벨</th><th>플레이</th><th>평균 시간</th><th>맵 스코어</th><th>골드 손익</th><th>난이도</th></tr></thead>
+      <table id="stg-table-${gameId}"><thead><tr>
+        <th class="sortable" onclick="sortStageTable('${gameId}',0,'str')">스테이지</th>
+        <th class="sortable" onclick="sortStageTable('${gameId}',1,'num')">레벨</th>
+        <th class="sortable" onclick="sortStageTable('${gameId}',2,'num')">플레이</th>
+        <th class="sortable" onclick="sortStageTable('${gameId}',3,'num')">평균 시간</th>
+        <th class="sortable" onclick="sortStageTable('${gameId}',4,'num')">골드 손익</th>
+        <th class="sortable" onclick="sortStageTable('${gameId}',5,'num')">평균 턴수</th>
+        <th class="sortable" onclick="sortStageTable('${gameId}',6,'num')">맵 스코어</th>
+        <th class="sortable" onclick="sortStageTable('${gameId}',7,'str')">난이도</th>
+      </tr></thead>
       <tbody>${rows}</tbody></table></div>
   `;
 }
@@ -1902,6 +1983,119 @@ function toggleTheme() {
 function applyTheme(t) {
   document.documentElement.setAttribute('data-theme', t);
   document.getElementById('themeBtn').textContent = t === 'dark' ? '☀' : '☾';
+}
+
+/* ── 스테이지 정렬 ── */
+
+const _stgSortState = {};
+
+function sortStageTable(gameId, colIdx, type) {
+  const table = document.getElementById(`stg-table-${gameId}`);
+  if (!table) return;
+  const tbody = table.querySelector('tbody');
+  // 데이터 행만 (상세행 제외)
+  const dataRows = [...tbody.querySelectorAll('tr')].filter(r => !r.id || !r.id.startsWith('ms_'));
+  const detailRows = [...tbody.querySelectorAll('tr')].filter(r => r.id && r.id.startsWith('ms_'));
+  const key = `${gameId}-${colIdx}`;
+  const asc = _stgSortState[key] = !_stgSortState[key];
+
+  dataRows.sort((a, b) => {
+    const aText = a.querySelectorAll('td')[colIdx]?.textContent.trim() || '';
+    const bText = b.querySelectorAll('td')[colIdx]?.textContent.trim() || '';
+    if (type === 'num') {
+      const aNum = parseFloat(aText.replace(/[^0-9.\-]/g, '')) || 0;
+      const bNum = parseFloat(bText.replace(/[^0-9.\-]/g, '')) || 0;
+      return asc ? aNum - bNum : bNum - aNum;
+    }
+    return asc ? aText.localeCompare(bText) : bText.localeCompare(aText);
+  });
+  // 데이터행 + 상세행 쌍으로 재배치
+  dataRows.forEach(r => {
+    tbody.appendChild(r);
+    const st = r.querySelectorAll('td')[0]?.textContent.trim();
+    const detail = detailRows.find(d => d.id === `ms_${gameId}_${st}`);
+    if (detail) tbody.appendChild(detail);
+  });
+
+  // 헤더 표시 업데이트
+  table.querySelectorAll('th.sortable').forEach((th, i) => {
+    th.textContent = th.textContent.replace(/ [▲▼]/g, '');
+    if (i === colIdx) th.textContent += asc ? ' ▲' : ' ▼';
+  });
+}
+
+function resetStageSort(gameId) {
+  const table = document.getElementById(`stg-table-${gameId}`);
+  if (!table) return;
+  const tbody = table.querySelector('tbody');
+  // data-row가 없으면 원본 순서 기준 = 레벨 번호 오름차순
+  const rows = [...tbody.querySelectorAll('tr')].filter(r => !r.id || !r.id.startsWith('ms_'));
+  const detailRows = [...tbody.querySelectorAll('tr')].filter(r => r.id && r.id.startsWith('ms_'));
+  rows.sort((a, b) => {
+    const aLv = parseInt(a.querySelectorAll('td')[1]?.textContent.replace(/[^0-9]/g, '')) || 0;
+    const bLv = parseInt(b.querySelectorAll('td')[1]?.textContent.replace(/[^0-9]/g, '')) || 0;
+    return aLv - bLv;
+  });
+  // 각 행 뒤에 상세행 배치
+  rows.forEach(r => {
+    tbody.appendChild(r);
+    const cells = r.querySelectorAll('td');
+    const st = cells[0]?.textContent.trim();
+    const detail = detailRows.find(d => d.id === `ms_${gameId}_${st}`);
+    if (detail) tbody.appendChild(detail);
+  });
+  // 헤더 화살표 제거
+  table.querySelectorAll('th.sortable').forEach(th => {
+    th.textContent = th.textContent.replace(/ [▲▼]/g, '');
+  });
+  // 정렬 상태 초기화
+  Object.keys(_stgSortState).forEach(k => { if (k.startsWith(gameId)) delete _stgSortState[k]; });
+}
+
+/* ── 스테이지 필터 ── */
+
+function filterStages(gameId) {
+  const diffVal = document.getElementById(`stg-diff-${gameId}`)?.value || '';
+  const goldVal = document.getElementById(`stg-gold-${gameId}`)?.value || '';
+  const msVal = document.getElementById(`stg-ms-${gameId}`)?.value || '';
+  const turnsVal = document.getElementById(`stg-turns-${gameId}`)?.value || '';
+  const table = document.getElementById(`stg-table-${gameId}`);
+  if (!table) return;
+
+  const rows = table.querySelectorAll('tbody tr');
+  rows.forEach(row => {
+    const cells = row.querySelectorAll('td');
+    if (cells.length < 8) return;
+    const turns = parseFloat(cells[4].textContent) || 0;
+    const ms = parseInt(cells[5].textContent) || 0;
+    const gold = parseInt(cells[6].textContent.replace(/,/g, '')) || 0;
+    const diffText = cells[7].textContent.trim();
+
+    let show = true;
+    // 난이도 필터
+    if (diffVal && DIFF_TIERS[diffVal] !== diffText) show = false;
+    // 골드 필터
+    if (goldVal === 'profit' && gold < 0) show = false;
+    if (goldVal === 'loss' && gold >= 0) show = false;
+    // 맵스코어 필터
+    if (msVal === 'low' && ms >= 650) show = false;
+    if (msVal === 'mid' && (ms < 650 || ms > 800)) show = false;
+    if (msVal === 'high' && ms <= 800) show = false;
+    // 턴수 필터
+    if (turnsVal === 'low' && turns >= 40) show = false;
+    if (turnsVal === 'mid' && (turns < 40 || turns > 50)) show = false;
+    if (turnsVal === 'high' && turns <= 50) show = false;
+
+    row.style.display = show ? '' : 'none';
+  });
+}
+
+function resetStageFilters(gameId) {
+  ['diff', 'gold', 'ms', 'turns'].forEach(f => {
+    const el = document.getElementById(`stg-${f}-${gameId}`);
+    if (el) el.value = '';
+  });
+  filterStages(gameId);
 }
 
 /* ── CSV 다운로드 ── */

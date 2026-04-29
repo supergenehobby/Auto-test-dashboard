@@ -508,6 +508,7 @@ function renderCronHistory(cron) {
       return `<td style="color:${color}">${label}</td>`;
     }).join('');
     return `<tr>
+      <td><input type="checkbox" class="cron-check" value="${c.id}"></td>
       <td>${c.run_date}</td>
       <td>${startTime}</td>
       <td>${endTime}</td>
@@ -519,9 +520,14 @@ function renderCronHistory(cron) {
 
   section.innerHTML = `
     <div class="tbl-wrap">
-      <h4>크론 실행 이력</h4>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+        <h4 style="margin:0">크론 실행 이력</h4>
+        <label style="font-size:11px;color:var(--text-muted);margin-left:auto"><input type="checkbox" id="cron-select-all" onclick="document.querySelectorAll('.cron-check').forEach(c=>c.checked=this.checked)"> 전체 선택</label>
+        <button class="rm-btn rm-btn-danger" onclick="deleteSelectedCron()" style="font-size:11px;padding:3px 10px">선택 삭제</button>
+        <span id="cron-status" style="font-size:11px;color:var(--text-muted)"></span>
+      </div>
       <table>
-        <thead><tr><th>날짜</th><th>시작</th><th>종료</th><th>목표</th>${gameHeaders}<th>소요</th></tr></thead>
+        <thead><tr><th style="width:30px"></th><th>날짜</th><th>시작</th><th>종료</th><th>목표</th>${gameHeaders}<th>소요</th></tr></thead>
         <tbody>${rows}</tbody>
       </table>
     </div>
@@ -2518,6 +2524,31 @@ async function deleteSelectedRuns() {
   const games = aggregateOverview(_allRuns);
   renderOverview(games);
   renderCronHistory(await fetchCronHistory());
+}
+
+/* ── 크론 이력 삭제 ── */
+
+async function deleteSelectedCron() {
+  const checked = [...document.querySelectorAll('.cron-check:checked')].map(cb => cb.value);
+  if (!checked.length) { alert('삭제할 크론 이력을 선택해주세요.'); return; }
+  if (!confirm(`${checked.length}건의 크론 이력을 삭제하시겠습니까?`)) return;
+
+  const statusEl = document.getElementById('cron-status');
+  statusEl.textContent = '삭제 중...';
+  let deleted = 0, failed = 0;
+  for (const cronId of checked) {
+    try {
+      await sb.rpc('delete_cron_history', { target_id: cronId });
+      deleted++;
+    } catch (e) {
+      console.error('크론 삭제 실패:', cronId, e);
+      failed++;
+    }
+  }
+  statusEl.textContent = `삭제 완료: ${deleted}건${failed ? `, 실패 ${failed}건` : ''}`;
+  // 갱신
+  const cron = await fetchCronHistory();
+  renderCronHistory(cron);
 }
 
 /* ── CSV 다운로드 ── */

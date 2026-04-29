@@ -477,8 +477,8 @@ function renderCronHistory(cron) {
     const endTime = c.finished_at ? new Date(c.finished_at).toLocaleTimeString('ko', {hour:'2-digit', minute:'2-digit'}) : '-';
     return `<tr>
       <td>${c.run_date}</td>
-      <td>${c.time_slot === 'morning' ? '아침' : '저녁'}</td>
-      <td>${startTime} ~ ${endTime}</td>
+      <td>${startTime}</td>
+      <td>${endTime}</td>
       <td>${c.levels_target || '-'}</td>
       <td>${games || '-'}</td>
       <td>${c.duration_min || '-'}분</td>
@@ -490,7 +490,7 @@ function renderCronHistory(cron) {
     <div class="tbl-wrap">
       <h4>크론 실행 이력</h4>
       <table>
-        <thead><tr><th>날짜</th><th>시간대</th><th>실행 시간</th><th>목표</th><th>결과</th><th>소요</th><th>배포</th></tr></thead>
+        <thead><tr><th>날짜</th><th>시작</th><th>종료</th><th>목표</th><th>결과</th><th>소요</th><th>배포</th></tr></thead>
         <tbody>${rows}</tbody>
       </table>
     </div>

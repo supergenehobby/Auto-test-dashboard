@@ -1873,39 +1873,47 @@ function renderCatSecurity(gameId, runs) {
     <div class="chart-grid">
       <div class="tbl-wrap">
         <h4>🖥 클라이언트 보안</h4>
-        <div style="margin-bottom:10px">
-          <div style="font-weight:600;font-size:12px;color:var(--text-muted);margin-bottom:4px">XSS 위험 요소</div>
+        <div style="margin-bottom:12px">
+          <div style="font-weight:600;font-size:12px;color:var(--text-muted);margin-bottom:2px">XSS 위험 요소</div>
+          <div style="font-size:10px;color:var(--text-muted);margin-bottom:4px">innerHTML, eval, document.write 등 악성 스크립트 삽입 가능 패턴 검사</div>
           ${renderCheckList(clientChecks.xss, '위험 요소 없음')}
         </div>
-        <div style="margin-bottom:10px">
-          <div style="font-weight:600;font-size:12px;color:var(--text-muted);margin-bottom:4px">스토리지 민감정보</div>
+        <div style="margin-bottom:12px">
+          <div style="font-weight:600;font-size:12px;color:var(--text-muted);margin-bottom:2px">스토리지 민감정보</div>
+          <div style="font-size:10px;color:var(--text-muted);margin-bottom:4px">localStorage/sessionStorage에 토큰, 비밀번호 등 민감 데이터 평문 저장 여부</div>
           ${renderCheckList(clientChecks.storage, '민감정보 없음')}
         </div>
-        <div style="margin-bottom:10px">
-          <div style="font-weight:600;font-size:12px;color:var(--text-muted);margin-bottom:4px">HTTPS 적용 상태</div>
+        <div style="margin-bottom:12px">
+          <div style="font-weight:600;font-size:12px;color:var(--text-muted);margin-bottom:2px">HTTPS 적용 상태</div>
+          <div style="font-size:10px;color:var(--text-muted);margin-bottom:4px">모든 API 통신이 HTTPS로 암호화되어 있는지 확인 (HTTP 혼재 시 탈취 위험)</div>
           ${renderCheckList(clientChecks.https, 'HTTPS 정상')}
         </div>
         <div>
-          <div style="font-weight:600;font-size:12px;color:var(--text-muted);margin-bottom:4px">클라이언트 권한 검증</div>
+          <div style="font-weight:600;font-size:12px;color:var(--text-muted);margin-bottom:2px">클라이언트 권한 검증</div>
+          <div style="font-size:10px;color:var(--text-muted);margin-bottom:4px">보상 금액, 난이도 등 서버가 결정해야 할 값을 클라이언트가 직접 전송하는지 감지</div>
           ${renderCheckList(clientChecks.authority, '권한 남용 미감지')}
         </div>
       </div>
       <div class="tbl-wrap">
         <h4>🌐 서버 보안</h4>
-        <div style="margin-bottom:10px">
-          <div style="font-weight:600;font-size:12px;color:var(--text-muted);margin-bottom:4px">보안 헤더 상태</div>
+        <div style="margin-bottom:12px">
+          <div style="font-weight:600;font-size:12px;color:var(--text-muted);margin-bottom:2px">보안 헤더 상태</div>
+          <div style="font-size:10px;color:var(--text-muted);margin-bottom:4px">X-Frame-Options(클릭재킹), X-Content-Type-Options(MIME 스니핑), HSTS, CSP 필수 헤더 존재 확인</div>
           ${renderCheckList(serverChecks.headers, '필수 헤더 확인 불가 (응답 헤더 미수집)')}
         </div>
-        <div style="margin-bottom:10px">
-          <div style="font-weight:600;font-size:12px;color:var(--text-muted);margin-bottom:4px">서버 정보 노출</div>
+        <div style="margin-bottom:12px">
+          <div style="font-weight:600;font-size:12px;color:var(--text-muted);margin-bottom:2px">서버 정보 노출</div>
+          <div style="font-size:10px;color:var(--text-muted);margin-bottom:4px">Server, X-Powered-By 헤더에 서버 종류/버전이 노출되면 공격자가 취약점을 특정할 수 있음</div>
           ${renderCheckList(serverChecks.infoLeak, '정보 노출 없음')}
         </div>
-        <div style="margin-bottom:10px">
-          <div style="font-weight:600;font-size:12px;color:var(--text-muted);margin-bottom:4px">API 에러 빈도</div>
+        <div style="margin-bottom:12px">
+          <div style="font-weight:600;font-size:12px;color:var(--text-muted);margin-bottom:2px">API 에러 빈도</div>
+          <div style="font-size:10px;color:var(--text-muted);margin-bottom:4px">4xx/5xx 에러 비율이 높으면 비정상 요청 또는 서버 불안정 의심</div>
           ${apiErrors ? `<div style="font-size:12px;color:var(--status-err)">에러 ${apiErrors}건 / 총 ${apiTotal.toLocaleString()}건 (${(apiErrors/apiTotal*100).toFixed(1)}%)</div>` : '<div style="font-size:12px;color:var(--status-ok)">API 에러 없음</div>'}
         </div>
         <div>
-          <div style="font-weight:600;font-size:12px;color:var(--text-muted);margin-bottom:4px">IDOR 패턴 감지</div>
+          <div style="font-weight:600;font-size:12px;color:var(--text-muted);margin-bottom:2px">IDOR 패턴 감지</div>
+          <div style="font-size:10px;color:var(--text-muted);margin-bottom:4px">URL/Body에 순차 정수 ID(user_id=1001)가 있으면 타인 데이터에 접근 가능한 취약점</div>
           ${renderCheckList(serverChecks.idor, 'IDOR 패턴 미감지')}
         </div>
       </div>

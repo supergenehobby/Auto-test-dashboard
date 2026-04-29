@@ -2416,10 +2416,18 @@ function renderRunManager(runs) {
   const minDate = dates.length ? dates.reduce((a, b) => a < b ? a : b) : '';
   const maxDate = dates.length ? dates.reduce((a, b) => a > b ? a : b) : '';
 
+  // 게임 목록 수집
+  const rmGames = [...new Set(runs.map(r => r.game_id).filter(Boolean))].sort();
+  const gameOpts = rmGames.map(g => `<option value="${g}">${g}</option>`).join('');
+
   el.innerHTML = `
     <div class="tbl-wrap">
       <h4>런 데이터 관리</h4>
       <div class="rm-date-filter">
+        <span style="color:var(--text-muted)">게임:</span>
+        <select id="rm-game" onchange="filterRunManager()" style="padding:4px 8px;border:1px solid var(--border);border-radius:4px;background:var(--bg-card);color:var(--text-secondary);font-size:12px">
+          <option value="">전체</option>${gameOpts}
+        </select>
         <span style="color:var(--text-muted)">기간:</span>
         <input type="date" id="rm-from" value="${minDate}" onchange="filterRunManager()">
         <span>~</span>
@@ -2440,20 +2448,23 @@ function renderRunManager(runs) {
 function filterRunManager() {
   const from = document.getElementById('rm-from')?.value || '';
   const to = document.getElementById('rm-to')?.value || '';
+  const gameFilter = document.getElementById('rm-game')?.value || '';
   const listEl = document.getElementById('rm-list');
   if (!listEl) return;
 
   const filtered = _allRuns.filter(r => {
     if (from && r.run_date < from) return false;
     if (to && r.run_date > to) return false;
+    if (gameFilter && r.game_id !== gameFilter) return false;
     return true;
   }).sort((a, b) => {
+    if (a.game_id !== b.game_id) return a.game_id.localeCompare(b.game_id);
     if (a.run_date !== b.run_date) return b.run_date.localeCompare(a.run_date);
-    return (PERSONA_ORDER.indexOf(a.persona) || 99) - (PERSONA_ORDER.indexOf(b.persona) || 99);
+    return (PERSONA_ORDER.indexOf(a.persona)===-1?99:PERSONA_ORDER.indexOf(a.persona)) - (PERSONA_ORDER.indexOf(b.persona)===-1?99:PERSONA_ORDER.indexOf(b.persona));
   });
 
   if (!filtered.length) {
-    listEl.innerHTML = '<div style="color:var(--text-muted);padding:8px;font-size:12px">해당 기간에 데이터 없음</div>';
+    listEl.innerHTML = '<div style="color:var(--text-muted);padding:8px;font-size:12px">해당 조건에 데이터 없음</div>';
     return;
   }
 
@@ -2465,6 +2476,7 @@ function filterRunManager() {
     const goldColor = (m.gold_pnl || 0) >= 0 ? 'var(--status-ok)' : 'var(--status-err)';
     return `<div class="rm-row" data-run-id="${r.id}">
       <input type="checkbox" class="rm-check" value="${r.id}">
+      <span style="font-weight:600;min-width:36px;color:var(--text-muted)">${r.game_id}</span>
       <span style="min-width:80px">${r.run_date}</span>
       <span style="color:${pColor};font-weight:600;min-width:40px">${pName}</span>
       <span style="min-width:50px">${r.levels_played}판</span>

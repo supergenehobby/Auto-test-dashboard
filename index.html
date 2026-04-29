@@ -473,9 +473,12 @@ function renderCronHistory(cron) {
   const rows = cron.map(c => {
     const res = c.results || {};
     const games = Object.entries(res).map(([g, r]) => `${g}:${r.exit_code === 0 ? 'OK' : 'FAIL'}`).join(', ');
+    const startTime = c.started_at ? new Date(c.started_at).toLocaleTimeString('ko', {hour:'2-digit', minute:'2-digit'}) : '-';
+    const endTime = c.finished_at ? new Date(c.finished_at).toLocaleTimeString('ko', {hour:'2-digit', minute:'2-digit'}) : '-';
     return `<tr>
       <td>${c.run_date}</td>
       <td>${c.time_slot === 'morning' ? '아침' : '저녁'}</td>
+      <td>${startTime} ~ ${endTime}</td>
       <td>${c.levels_target || '-'}</td>
       <td>${games || '-'}</td>
       <td>${c.duration_min || '-'}분</td>
@@ -487,7 +490,7 @@ function renderCronHistory(cron) {
     <div class="tbl-wrap">
       <h4>크론 실행 이력</h4>
       <table>
-        <thead><tr><th>날짜</th><th>시간대</th><th>목표</th><th>결과</th><th>소요</th><th>배포</th></tr></thead>
+        <thead><tr><th>날짜</th><th>시간대</th><th>실행 시간</th><th>목표</th><th>결과</th><th>소요</th><th>배포</th></tr></thead>
         <tbody>${rows}</tbody>
       </table>
     </div>
@@ -1675,10 +1678,10 @@ function renderCatStages(gameId, stages) {
             const eff = st2 === '2' ? Math.floor(cnt / 2) : cnt;
             const unit = st2 === '2' ? '쌍' : '개';
             const score = eff * w;
-            return \`\${name} ×\${eff}\${unit} \${score >= 0 ? '+' : ''}\${score}\`;
+            return `${name} ×${eff}${unit} ${score >= 0 ? '+' : ''}${score}`;
           }).join(', ') : '';
-          const gPart = gList ? \` · 기믹: \${gList}\` : '';
-          return \`\${i+1}회: base \${d.base} + 기믹 \${d.gimmick >= 0 ? '+' : ''}\${d.gimmick} = <b>\${d.score}</b> (카드 \${d.field}장\${gPart})\`;
+          const gPart = gList ? ` · 기믹: ${gList}` : '';
+          return `${i+1}회: base ${d.base} + 기믹 ${d.gimmick >= 0 ? '+' : ''}${d.gimmick} = <b>${d.score}</b> (카드 ${d.field}장${gPart})`;
         }).join('<br>')}
       </td></tr>`;
     }).join('');
@@ -1738,79 +1741,151 @@ function renderCatStages(gameId, stages) {
    카테고리: 보안 QA
    ══════════════════════════════════════════════ */
 function renderCatSecurity(gameId, runs) {
+  // ── 데이터 집계 ──
   const allChecks = [];
-  let totalPass = 0, totalFail = 0;
-  for (const r of runs) {
-    const sec = (r.metrics || {}).security;
-    if (!sec) continue;
-    totalPass += sec.pass_count || 0;
-    totalFail += sec.fail_count || 0;
-    for (const c of (sec.checks || [])) {
-      allChecks.push({ ...c, persona: r.persona, date: r.run_date });
-    }
-  }
-  const grade = totalFail === 0 ? 'PASS' : 'FAIL';
-  const gradeBadge = totalFail === 0 ? 'badge-ok' : 'badge-err';
+  let totalPass = 0, totalFail = 0, apiErrors = 0, apiTotal = 0;
+  let critical = 0, warning = 0, info = 0;
+  const clientChecks = { xss: [], storage: [], https: [], authority: [] };
+  const serverChecks = { headers: [], infoLeak: [], idor: [], apiErr: [] };
+  const balanceChecks = { pass: 0, fail: 0, items: [] };
 
-  // 카테고리별 그룹
-  const byCat = {};
-  for (const c of allChecks) {
-    const cat = c.category || 'etc';
-    if (!byCat[cat]) byCat[cat] = { pass: 0, fail: 0, items: [] };
-    if (c.pass) byCat[cat].pass++; else byCat[cat].fail++;
-    if (!c.pass) byCat[cat].items.push(c);
-  }
-
-  const catSections = Object.entries(byCat).map(([cat, v]) => {
-    const failItems = v.items.map(c =>
-      `<div class="check-item check-fail">✗ ${c.name} — 예상: ${c.expected}, 실제: ${c.actual}</div>`
-    ).join('');
-    const catBadge = v.fail === 0 ? 'badge-ok' : 'badge-err';
-    return `<div style="margin-bottom:12px">
-      <div style="font-weight:600;margin-bottom:6px">${cat} <span class="badge ${catBadge}">${v.pass}통과 / ${v.fail}실패</span></div>
-      ${failItems || '<div style="color:var(--text-muted);font-size:12px">모든 검증 통과</div>'}
-    </div>`;
-  }).join('');
-
-  // 입장료 밸런스 검증 (보안 QA 탭으로 이동)
-  let balPass = 0, balFail = 0;
-  const balFailItems = [];
-  // runs 내에서 stage_results를 참조할 수 없으므로 security_scan에서 가져옴
-  for (const r of runs) {
-    const sec = (r.metrics || {}).security_scan;
-    if (!sec) continue;
-    for (const c of (sec.checks || [])) {
-      if (c.name && c.name.includes('입장료')) {
-        if (c.pass) balPass++; else { balFail++; balFailItems.push(`${r.run_date} ${c.name}: 예상 ${c.expected}, 실제 ${c.actual}`); }
-      }
-    }
-  }
-
-  // API 비정상 응답 / 에러 건수
-  let apiErrors = 0, apiTotal = 0;
   for (const r of runs) {
     const m = r.metrics || {};
+    const sec = m.security;
+    if (sec) {
+      totalPass += sec.pass_count || 0;
+      totalFail += sec.fail_count || 0;
+      for (const c of (sec.checks || [])) {
+        allChecks.push({ ...c, persona: r.persona, date: r.run_date });
+        // 카테고리 분류
+        const cat = (c.category || '').toLowerCase();
+        if (cat.includes('balance') || (c.name && c.name.includes('입장료'))) {
+          if (c.pass) balanceChecks.pass++; else { balanceChecks.fail++; balanceChecks.items.push(c); }
+        }
+      }
+    }
+    // web_security 결과 (security_scan에서)
+    const ws = (m.security || {}).web_security || m.web_security || {};
+    for (const wc of (ws.checks || [])) {
+      const sev = wc.severity || 'pass';
+      if (sev === 'critical') critical++;
+      else if (sev === 'warning') warning++;
+      else if (sev === 'info') info++;
+      // 클라이언트/서버 분류
+      const wCat = (wc.category || '').toLowerCase();
+      if (wCat.includes('xss') || wCat.includes('싱크')) clientChecks.xss.push(wc);
+      else if (wCat.includes('스토리지') || wCat.includes('storage')) clientChecks.storage.push(wc);
+      else if (wCat.includes('https')) clientChecks.https.push(wc);
+      else if (wCat.includes('권한') || wCat.includes('authority')) clientChecks.authority.push(wc);
+      else if (wCat.includes('헤더') || wCat.includes('header')) serverChecks.headers.push(wc);
+      else if (wCat.includes('정보') || wCat.includes('info') || wCat.includes('leakage')) serverChecks.infoLeak.push(wc);
+      else if (wCat.includes('idor')) serverChecks.idor.push(wc);
+      else if (wCat.includes('api') || wCat.includes('응답')) serverChecks.apiErr.push(wc);
+    }
+    // API 에러
     const apiS = m.api_summary || {};
     apiTotal += m.api_count || 0;
     apiErrors += apiS.error_count || 0;
-    // 상태코드별 에러 집계
-    const byStatus = apiS.by_status || {};
-    for (const [code, cnt] of Object.entries(byStatus)) {
+    for (const [code, cnt] of Object.entries(apiS.by_status || {})) {
       if (+code >= 400) apiErrors += cnt;
     }
   }
 
+  // 전체 등급 계산
+  const totalAll = totalPass + totalFail + critical + warning + info;
+  let gradeLabel, gradeColor;
+  if (critical > 0) { gradeLabel = 'F'; gradeColor = '#ef4444'; }
+  else if (totalFail > 10 || warning > 5) { gradeLabel = 'D'; gradeColor = '#ef4444'; }
+  else if (totalFail > 3 || warning > 2) { gradeLabel = 'C'; gradeColor = '#f59e0b'; }
+  else if (totalFail > 0 || warning > 0) { gradeLabel = 'B'; gradeColor = '#f59e0b'; }
+  else { gradeLabel = 'A'; gradeColor = '#10b981'; }
+
+  // ── 섹션 렌더 헬퍼 ──
+  const renderCheckList = (checks, emptyMsg) => {
+    if (!checks.length) return `<div style="color:var(--status-ok);font-size:12px;padding:4px 0">${emptyMsg}</div>`;
+    return checks.map(c => {
+      const sevColor = c.severity === 'critical' ? '#ef4444' : c.severity === 'warning' ? '#f59e0b' : '#3b82f6';
+      const icon = c.pass ? '<span style="color:var(--status-ok)">✓</span>' : `<span style="color:${sevColor}">✗</span>`;
+      const detail = c.detail || c.name || '';
+      const evidence = (c.evidence || []).join(', ');
+      return `<div style="font-size:12px;padding:3px 0;border-bottom:1px solid var(--border)">${icon} ${detail}${evidence ? ` <span style="color:var(--text-muted);font-size:10px">${evidence}</span>` : ''}</div>`;
+    }).join('');
+  };
+
   return `
-    <div class="metric-row">
-      <div class="metric-box"><div class="label">종합 등급</div><div class="value"><span class="badge ${gradeBadge}">${grade}</span></div></div>
-      <div class="metric-box"><div class="label">총 검증</div><div class="value">${totalPass + totalFail}</div></div>
-      <div class="metric-box"><div class="label">통과</div><div class="value" style="color:var(--status-ok)">${totalPass}</div></div>
-      <div class="metric-box"><div class="label">실패</div><div class="value" style="color:${totalFail ? 'var(--status-err)' : 'var(--status-ok)'}">${totalFail}</div></div>
-      <div class="metric-box"><div class="label">API 에러 건수</div><div class="value" style="color:${apiErrors ? 'var(--status-err)' : 'var(--status-ok)'}">${apiErrors}</div><div class="sub">총 API ${apiTotal.toLocaleString()}건 중</div></div>
+    <div style="display:flex;align-items:center;gap:16px;padding:16px;background:var(--bg-card);border:1px solid var(--border);border-radius:10px;margin-bottom:16px">
+      <div style="font-size:48px;font-weight:800;color:${gradeColor};min-width:60px;text-align:center">${gradeLabel}</div>
+      <div style="flex:1">
+        <div style="font-size:14px;font-weight:600;margin-bottom:6px">보안 종합 등급</div>
+        <div style="display:flex;gap:16px;font-size:12px;flex-wrap:wrap">
+          <span style="color:#ef4444">Critical ${critical}건</span>
+          <span style="color:#f59e0b">Warning ${warning + totalFail}건</span>
+          <span style="color:var(--status-ok)">Pass ${totalPass}건</span>
+          <span style="color:var(--text-muted)">API 에러 ${apiErrors}건 / ${apiTotal.toLocaleString()}</span>
+        </div>
+      </div>
     </div>
-    ${catSections}
-    ${balFailItems.length ? `<div class="tbl-wrap"><h4>입장료 밸런스 검증</h4>
-      <div style="font-size:12px;color:var(--status-err)">${balFailItems.map(f => `<div>✗ ${f}</div>`).join('')}</div></div>` : ''}
+    <div class="chart-grid">
+      <div class="tbl-wrap">
+        <h4>🖥 클라이언트 보안</h4>
+        <div style="margin-bottom:10px">
+          <div style="font-weight:600;font-size:12px;color:var(--text-muted);margin-bottom:4px">XSS 위험 요소</div>
+          ${renderCheckList(clientChecks.xss, '위험 요소 없음')}
+        </div>
+        <div style="margin-bottom:10px">
+          <div style="font-weight:600;font-size:12px;color:var(--text-muted);margin-bottom:4px">스토리지 민감정보</div>
+          ${renderCheckList(clientChecks.storage, '민감정보 없음')}
+        </div>
+        <div style="margin-bottom:10px">
+          <div style="font-weight:600;font-size:12px;color:var(--text-muted);margin-bottom:4px">HTTPS 적용 상태</div>
+          ${renderCheckList(clientChecks.https, 'HTTPS 정상')}
+        </div>
+        <div>
+          <div style="font-weight:600;font-size:12px;color:var(--text-muted);margin-bottom:4px">클라이언트 권한 검증</div>
+          ${renderCheckList(clientChecks.authority, '권한 남용 미감지')}
+        </div>
+      </div>
+      <div class="tbl-wrap">
+        <h4>🌐 서버 보안</h4>
+        <div style="margin-bottom:10px">
+          <div style="font-weight:600;font-size:12px;color:var(--text-muted);margin-bottom:4px">보안 헤더 상태</div>
+          ${renderCheckList(serverChecks.headers, '필수 헤더 확인 불가 (응답 헤더 미수집)')}
+        </div>
+        <div style="margin-bottom:10px">
+          <div style="font-weight:600;font-size:12px;color:var(--text-muted);margin-bottom:4px">서버 정보 노출</div>
+          ${renderCheckList(serverChecks.infoLeak, '정보 노출 없음')}
+        </div>
+        <div style="margin-bottom:10px">
+          <div style="font-weight:600;font-size:12px;color:var(--text-muted);margin-bottom:4px">API 에러 빈도</div>
+          ${apiErrors ? `<div style="font-size:12px;color:var(--status-err)">에러 ${apiErrors}건 / 총 ${apiTotal.toLocaleString()}건 (${(apiErrors/apiTotal*100).toFixed(1)}%)</div>` : '<div style="font-size:12px;color:var(--status-ok)">API 에러 없음</div>'}
+        </div>
+        <div>
+          <div style="font-weight:600;font-size:12px;color:var(--text-muted);margin-bottom:4px">IDOR 패턴 감지</div>
+          ${renderCheckList(serverChecks.idor, 'IDOR 패턴 미감지')}
+        </div>
+      </div>
+    </div>
+    <div class="tbl-wrap">
+      <h4>밸런스 검증 (입장료·보상)</h4>
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
+        <span class="badge ${balanceChecks.fail === 0 ? 'badge-ok' : 'badge-err'}">${balanceChecks.fail === 0 ? 'PASS' : 'FAIL'}</span>
+        <span style="font-size:12px;color:var(--text-muted)">통과 ${balanceChecks.pass} / 실패 ${balanceChecks.fail}</span>
+      </div>
+      ${balanceChecks.items.length ? balanceChecks.items.map(c =>
+        `<div style="font-size:12px;color:var(--status-err);padding:2px 0">✗ ${c.name || ''} — 예상: ${c.expected}, 실제: ${c.actual}</div>`
+      ).join('') : '<div style="font-size:12px;color:var(--status-ok)">모든 검증 통과</div>'}
+    </div>
+    <div class="tbl-wrap">
+      <h4>상세 증거 리스트</h4>
+      ${allChecks.filter(c => !c.pass).length ? allChecks.filter(c => !c.pass).map(c =>
+        `<div style="font-size:11px;padding:3px 0;border-bottom:1px solid var(--border);color:var(--text-secondary)">
+          <span style="color:var(--status-err)">✗</span>
+          <span style="color:var(--text-muted)">[${c.category || '?'}]</span>
+          ${c.name || ''} ${c.detail ? '— ' + c.detail : ''}
+          <span style="color:var(--text-muted);font-size:10px">(${c.date || ''} ${c.persona || ''})</span>
+        </div>`
+      ).join('') : '<div style="font-size:12px;color:var(--status-ok);padding:8px 0">실패 항목 없음</div>'}
+    </div>
   `;
 }
 

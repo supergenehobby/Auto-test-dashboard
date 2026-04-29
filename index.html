@@ -263,8 +263,10 @@ const SUPABASE_URL = 'https://lxkvjwnhrqbtaglwkgmf.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_d_sWb1OmWgs0oKrWPCxr5g_ARo_7kq7';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+const PERSONA_ORDER = ['hardcore', 'average', 'casual', 'struggling'];
 const PERSONA_KO = { hardcore: '고수', average: '중수', casual: '하수', struggling: '초보' };
 const PERSONA_COLORS = { hardcore: '#3b82f6', average: '#10b981', casual: '#f59e0b', struggling: '#ef4444' };
+function _sortPersona(entries) { return entries.sort(([a],[b]) => (PERSONA_ORDER.indexOf(a)===-1?99:PERSONA_ORDER.indexOf(a)) - (PERSONA_ORDER.indexOf(b)===-1?99:PERSONA_ORDER.indexOf(b))); }
 const DIFF_TIERS = { 1: '튜토리얼', 2: '노말', 3: '하드', 4: '슈퍼하드' };
 const DIFF_COLORS = { 1: '#10b981', 2: '#10b981', 3: '#f59e0b', 4: '#ef4444' };
 
@@ -376,7 +378,7 @@ function renderOverview(games) {
     </div>
     <div class="tbl-wrap"><h4>테스트 커버리지</h4>
       ${Object.entries(games).map(([gid, g]) => {
-        const pList = Object.entries(g.personas).sort(([a],[b]) => a.localeCompare(b))
+        const pList = Object.entries(g.personas).sort(([a],[b]) => (PERSONA_ORDER.indexOf(a)===-1?99:PERSONA_ORDER.indexOf(a)) - (PERSONA_ORDER.indexOf(b)===-1?99:PERSONA_ORDER.indexOf(b)))
           .map(([p, d]) => `${PERSONA_KO[p]||p} ${d.runs}`).join(' / ');
         const lastDate = Object.values(g.personas).reduce((mx, d) => d.lastDate > mx ? d.lastDate : mx, '');
         return `<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border);font-size:12px;">
@@ -726,7 +728,7 @@ function renderCatSummary(gameId, stages, runs) {
   }
 
   /* 게임별 페르소나 카드 */
-  const personaCards = Object.entries(personas).sort(([a],[b]) => a.localeCompare(b)).map(([p, d]) => {
+  const personaCards = Object.entries(personas).sort(([a],[b]) => (PERSONA_ORDER.indexOf(a)===-1?99:PERSONA_ORDER.indexOf(a)) - (PERSONA_ORDER.indexOf(b)===-1?99:PERSONA_ORDER.indexOf(b))).map(([p, d]) => {
     const avgTime = d.played ? (d.time / d.played).toFixed(1) : 0;
     let statsHtml;
     if (gameId === 'CTZ') {
@@ -904,7 +906,7 @@ function renderCatEconomy(gameId, runs) {
     </div>
     <div class="chart-grid">
       <div class="chart-box"><h4>배팅 배수별 골드 손익 /판</h4><canvas id="chart-bet-${gameId}"></canvas></div>
-      <div class="chart-box"><h4>골드 잔액 추이</h4><canvas id="chart-goldbal-${gameId}"></canvas></div>
+      <div class="chart-box"><h4>페르소나별 골드 잔액 추이</h4><canvas id="chart-goldbal-${gameId}"></canvas></div>
     </div>
     <div class="chart-grid" style="grid-template-columns:1fr 1fr">
       <div class="chart-box"><h4>와일드 비용 /판</h4><canvas id="chart-wild-${gameId}"></canvas></div>
@@ -919,7 +921,7 @@ function renderCatEconomy(gameId, runs) {
 /* 경제 탭 차트 렌더링 */
 function renderEconomyCharts(gameId, stages, runs) {
   const pAgg = _aggregatePersonaStages(stages);
-  const pKeys = Object.keys(pAgg).sort();
+  const pKeys = Object.keys(pAgg).sort((a,b) => (PERSONA_ORDER.indexOf(a)===-1?99:PERSONA_ORDER.indexOf(a)) - (PERSONA_ORDER.indexOf(b)===-1?99:PERSONA_ORDER.indexOf(b)));
   const labels = pKeys.map(p => PERSONA_KO[p] || p);
   const colors = pKeys.map(p => PERSONA_COLORS[p] || '#999');
 
@@ -964,36 +966,48 @@ function renderEconomyCharts(gameId, stages, runs) {
   _chartBar(gameId, 'wild', labels, colors, pKeys.map(p => pAgg[p].played ? Math.round(pAgg[p].wildCost / pAgg[p].played) : 0), '', '와일드비용/판');
   _chartBar(gameId, 'streak', labels, colors, pKeys.map(p => pAgg[p].played ? Math.round(pAgg[p].streakGold / pAgg[p].played) : 0), '', '스트릭/판');
 
-  // 골드 잔액 추이 (runs의 gold_start/gold_end 추적)
+  // 골드 잔액 추이 (페르소나별)
   const sortedRuns = [...runs].sort((a, b) => {
     if (a.run_date !== b.run_date) return a.run_date.localeCompare(b.run_date);
     return (a.created_at || '').localeCompare(b.created_at || '');
   });
-  const balLabels = [];
-  const balData = [];
+  // 페르소나별 데이터 구성
+  const balByPersona = {};
+  const balDates = [];
+  let runIdx = 0;
   for (const r of sortedRuns) {
     const m = r.metrics || {};
-    const pLabel = PERSONA_KO[r.persona] || r.persona;
-    if (m.gold_start != null) {
-      balLabels.push(`${r.run_date.slice(5)} ${pLabel} S`);
-      balData.push(m.gold_start);
-    }
+    const p = r.persona;
+    if (!balByPersona[p]) balByPersona[p] = [];
+    const label = `${r.run_date.slice(5)} #${++runIdx}`;
+    if (!balDates.includes(label)) balDates.push(label);
+    // 종료 잔액 기록
     if (m.gold_end != null) {
-      balLabels.push(`${r.run_date.slice(5)} ${pLabel} E`);
-      balData.push(m.gold_end);
+      balByPersona[p].push({ x: label, y: m.gold_end });
+    } else if (m.gold_start != null) {
+      balByPersona[p].push({ x: label, y: m.gold_start });
     }
   }
+  const balDatasets = Object.entries(balByPersona).sort(([a],[b]) => (PERSONA_ORDER.indexOf(a)===-1?99:PERSONA_ORDER.indexOf(a)) - (PERSONA_ORDER.indexOf(b)===-1?99:PERSONA_ORDER.indexOf(b))).map(([p, points]) => ({
+    label: PERSONA_KO[p] || p,
+    data: points,
+    borderColor: PERSONA_COLORS[p] || '#999',
+    backgroundColor: (PERSONA_COLORS[p] || '#999') + '22',
+    tension: 0.3,
+    fill: false,
+    pointRadius: 3,
+  }));
   const gbKey = `goldbal-${gameId}`;
   if (_charts[gbKey]) _charts[gbKey].destroy();
   const gbCanvas = document.getElementById(`chart-goldbal-${gameId}`);
-  if (gbCanvas && balData.length) {
+  if (gbCanvas && balDatasets.some(ds => ds.data.length)) {
     _charts[gbKey] = new Chart(gbCanvas, {
       type: 'line',
-      data: { labels: balLabels, datasets: [{ label: '골드 잔액', data: balData, borderColor: '#f59e0b', backgroundColor: '#f59e0b22', tension: 0.3, fill: true }] },
+      data: { labels: balDates, datasets: balDatasets },
       options: {
         responsive: true, maintainAspectRatio: false,
-        plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => c.raw.toLocaleString() + ' G' } } },
-        scales: { x: { ticks: { maxTicksLimit: 12, font: { size: 9 } } } },
+        plugins: { legend: { labels: { color: '#94a3b8' } }, tooltip: { callbacks: { label: c => `${c.dataset.label}: ${c.raw.y?.toLocaleString() || c.raw.toLocaleString()} G` } } },
+        scales: { x: { ticks: { maxTicksLimit: 15, font: { size: 9 } } }, y: { ticks: { callback: v => (v/1000).toFixed(0) + 'K' } } },
       },
     });
   }
@@ -1083,7 +1097,7 @@ function renderCatBalance(gameId, stages, runs) {
 /* 밸런스 탭 차트 렌더링 */
 function renderBalanceCharts(gameId, stages, runs) {
   const pAgg = _aggregatePersonaStages(stages);
-  const pKeys = Object.keys(pAgg).sort();
+  const pKeys = Object.keys(pAgg).sort((a,b) => (PERSONA_ORDER.indexOf(a)===-1?99:PERSONA_ORDER.indexOf(a)) - (PERSONA_ORDER.indexOf(b)===-1?99:PERSONA_ORDER.indexOf(b)));
   const labels = pKeys.map(p => PERSONA_KO[p] || p);
   const colors = pKeys.map(p => PERSONA_COLORS[p] || '#999');
 
@@ -1157,7 +1171,7 @@ function renderBalanceCharts(gameId, stages, runs) {
    ══════════════════════════════════════════════ */
 function renderCatGimmick(gameId, stages, runs) {
   const pAgg = _aggregatePersonaStages(stages);
-  const pKeys = Object.keys(pAgg).sort();
+  const pKeys = Object.keys(pAgg).sort((a,b) => (PERSONA_ORDER.indexOf(a)===-1?99:PERSONA_ORDER.indexOf(a)) - (PERSONA_ORDER.indexOf(b)===-1?99:PERSONA_ORDER.indexOf(b)));
 
   // 전체 합산
   let totalGimmickMaps = 0, totalWild = 0, totalExtra = 0, totalPlus = 0;
@@ -1226,7 +1240,7 @@ function renderCatGimmick(gameId, stages, runs) {
 /* 기믹 탭 차트 렌더링 */
 function renderGimmickCharts(gameId, stages) {
   const pAgg = _aggregatePersonaStages(stages);
-  const pKeys = Object.keys(pAgg).sort();
+  const pKeys = Object.keys(pAgg).sort((a,b) => (PERSONA_ORDER.indexOf(a)===-1?99:PERSONA_ORDER.indexOf(a)) - (PERSONA_ORDER.indexOf(b)===-1?99:PERSONA_ORDER.indexOf(b)));
   const labels = pKeys.map(p => PERSONA_KO[p] || p);
   const colors = pKeys.map(p => PERSONA_COLORS[p] || '#999');
 
@@ -1421,7 +1435,7 @@ function renderCatCtzItems(gameId, stages, runs) {
     byPersona[p].levels++;
   }
 
-  const pRows = Object.entries(byPersona).sort(([a],[b]) => a.localeCompare(b)).map(([p, d]) =>
+  const pRows = Object.entries(byPersona).sort(([a],[b]) => (PERSONA_ORDER.indexOf(a)===-1?99:PERSONA_ORDER.indexOf(a)) - (PERSONA_ORDER.indexOf(b)===-1?99:PERSONA_ORDER.indexOf(b))).map(([p, d]) =>
     `<tr><td style="color:${PERSONA_COLORS[p]||'#999'}">${PERSONA_KO[p]||p}</td>
      <td>${d.undo}</td><td>${d.shuffle}</td><td>${d.magnet}</td><td>${d.continues}</td><td>${d.levels}</td></tr>`
   ).join('');

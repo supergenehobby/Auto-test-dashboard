@@ -1636,26 +1636,27 @@ function renderCatStages(gameId, stages) {
       const avgBase = md.length ? Math.round(md.reduce((a,d)=>a+d.base,0)/md.length) : '-';
       const avgGimmickScore = md.length ? Math.round(md.reduce((a,d)=>a+d.gimmick,0)/md.length) : 0;
       const avgField = md.length ? Math.round(md.reduce((a,d)=>a+d.field,0)/md.length) : '-';
-      // 기믹 배치 정보: events + plus_card_count로 타입 추출, 판당 Set 중복 제거
-      const gimmickPresence = {};
-      for (const s of stages.filter(s2 => (s2.stage_number || s2.game_level) === st)) {
-        const typeSet = new Set();
-        const dd = (s.details || {});
-        for (const e of (dd.events || [])) {
-          if (typeof e !== 'string') continue;
-          if (e.startsWith('gimmick_match:')) typeSet.add(e.slice(14));
-          else if (e.startsWith('gimmick:')) typeSet.add(e.slice(8));
-        }
-        if (dd.plus_card_count > 0) typeSet.add('플러스카드');
-        for (const name of typeSet) {
-          gimmickPresence[name] = (gimmickPresence[name] || 0) + 1;
+      // 기믹 기여 점수: mapDetails.gimmicks(카드 수)로 실제 기여분 계산
+      const GTYPE_W = {'2': 20, '6': 30, '9': 40, '1': -10};
+      const gimmickContrib = {};
+      for (const d of md) {
+        if (!d.gimmicks) continue;
+        for (const [st2, cnt] of Object.entries(d.gimmicks)) {
+          if (!gimmickContrib[st2]) gimmickContrib[st2] = { total: 0, plays: 0 };
+          const eff = st2 === '2' ? Math.floor(cnt / 2) : cnt;
+          gimmickContrib[st2].total += eff;
+          gimmickContrib[st2].plays++;
         }
       }
-      const gimmickStr = Object.keys(gimmickPresence).length
-        ? Object.entries(gimmickPresence).map(([name,cnt]) => {
-            const w = GIMMICK_WEIGHTS[name];
-            const wStr = w ? ` [${w > 0 ? '+' : ''}${w}점]` : '';
-            return `${name}${wStr} (${cnt}판)`;
+      const gimmickStr = Object.keys(gimmickContrib).length
+        ? Object.entries(gimmickContrib).map(([st2, data]) => {
+            const name = GIMMICK_NAMES[st2] || '타입'+st2;
+            const w = GTYPE_W[st2] || 0;
+            const avgCnt = md.length ? +(data.total / md.length).toFixed(1) : 0;
+            const avgScore = md.length ? Math.round(data.total * w / md.length) : 0;
+            const unit = st2 === '2' ? '쌍' : '개';
+            const sign = avgScore >= 0 ? '+' : '';
+            return `${name} ×${avgCnt}${unit} ${sign}${avgScore}점 (${data.plays}판)`;
           }).join(', ')
         : '없음';
       return `<tr style="cursor:pointer" onclick="var d=document.getElementById('${rowId}');d.style.display=d.style.display==='none'?'table-row':'none'">
@@ -1667,8 +1668,18 @@ function renderCatStages(gameId, stages) {
         <td style="color:${diffColor};font-weight:600">${diffName}</td></tr>
       <tr id="${rowId}" style="display:none;background:rgba(56,189,248,.04)"><td></td><td colspan="7" style="padding:8px 12px;font-size:11px;color:var(--text-muted)">
         <b>맵스코어 상세</b> (${md.length}회 플레이)<br>
-        base(OBB): ${avgBase} · 기믹가중치: +${avgGimmickScore} · 합계: ${avgMS}<br>
-        평균카드수: ${avgField} · 기믹: ${gimmickStr}
+        ${md.map((d, i) => {
+          const gList = d.gimmicks ? Object.entries(d.gimmicks).map(([st2, cnt]) => {
+            const name = GIMMICK_NAMES[st2] || '타입'+st2;
+            const w = GTYPE_W[st2] || 0;
+            const eff = st2 === '2' ? Math.floor(cnt / 2) : cnt;
+            const unit = st2 === '2' ? '쌍' : '개';
+            const score = eff * w;
+            return \`\${name} ×\${eff}\${unit} \${score >= 0 ? '+' : ''}\${score}\`;
+          }).join(', ') : '';
+          const gPart = gList ? \` · 기믹: \${gList}\` : '';
+          return \`\${i+1}회: base \${d.base} + 기믹 \${d.gimmick >= 0 ? '+' : ''}\${d.gimmick} = <b>\${d.score}</b> (카드 \${d.field}장\${gPart})\`;
+        }).join('<br>')}
       </td></tr>`;
     }).join('');
 

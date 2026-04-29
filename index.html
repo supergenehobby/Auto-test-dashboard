@@ -177,6 +177,18 @@ tr:hover td { background: rgba(59,130,246,.05); }
 .gauge-bar { height: 8px; border-radius: 4px; background: var(--border); margin-top: 8px; overflow: hidden; }
 .gauge-fill { height: 100%; border-radius: 4px; transition: width .3s; }
 
+/* ── Run Manager ── */
+.rm-row { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-bottom: 1px solid var(--border); font-size: 12px; }
+.rm-row:hover { background: rgba(59,130,246,.05); }
+.rm-row input[type="checkbox"] { cursor: pointer; }
+.rm-date-filter { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; flex-wrap: wrap; font-size: 12px; }
+.rm-date-filter input[type="date"] { padding: 4px 8px; border: 1px solid var(--border); border-radius: 4px; background: var(--bg-card); color: var(--text-secondary); font-size: 12px; }
+.rm-actions { display: flex; gap: 8px; margin-top: 10px; }
+.rm-btn { padding: 6px 14px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg-card); color: var(--text-secondary); font-size: 12px; cursor: pointer; }
+.rm-btn:hover { border-color: var(--text-secondary); color: var(--text-primary); }
+.rm-btn-danger { border-color: #ef4444; color: #ef4444; }
+.rm-btn-danger:hover { background: #ef444422; }
+
 /* ── Layout Editor ── */
 .edit-mode .layout-section {
   border: 2px dashed var(--border); border-radius: 8px; padding: 4px; margin-bottom: 8px;
@@ -389,8 +401,10 @@ function renderOverview(games) {
       }).join('')}
     </div>
     <div id="cron-section"></div>
+    <div id="run-manager"></div>
   `;
   panel.style.display = 'block';
+  renderRunManager(_allRuns);
 
   renderAvgTimeChart(games);
   renderDailyRunsChart(games);
@@ -472,19 +486,34 @@ function renderGameCard(gid, g) {
 function renderCronHistory(cron) {
   if (!cron || !cron.length) return;
   const section = document.getElementById('cron-section');
+
+  // 모든 게임 ID 수집
+  const gameIds = new Set();
+  for (const c of cron) {
+    for (const g of Object.keys(c.results || {})) gameIds.add(g);
+  }
+  const games = [...gameIds].sort();
+
+  const gameHeaders = games.map(g => `<th>${g}</th>`).join('');
   const rows = cron.map(c => {
     const res = c.results || {};
-    const games = Object.entries(res).map(([g, r]) => `${g}:${r.exit_code === 0 ? 'OK' : 'FAIL'}`).join(', ');
     const startTime = c.started_at ? new Date(c.started_at).toLocaleTimeString('ko', {hour:'2-digit', minute:'2-digit'}) : '-';
     const endTime = c.finished_at ? new Date(c.finished_at).toLocaleTimeString('ko', {hour:'2-digit', minute:'2-digit'}) : '-';
+    const gameCells = games.map(g => {
+      const r = res[g];
+      if (!r) return '<td style="color:var(--text-muted)">-</td>';
+      const ok = r.exit_code === 0;
+      const color = ok ? 'var(--status-ok)' : 'var(--status-err)';
+      const label = ok ? 'OK' : `FAIL (${r.exit_code})`;
+      return `<td style="color:${color}">${label}</td>`;
+    }).join('');
     return `<tr>
       <td>${c.run_date}</td>
       <td>${startTime}</td>
       <td>${endTime}</td>
       <td>${c.levels_target || '-'}</td>
-      <td>${games || '-'}</td>
+      ${gameCells}
       <td>${c.duration_min || '-'}분</td>
-      <td>${c.deploy_ok ? '<span style="color:var(--status-ok)">OK</span>' : '<span style="color:var(--status-err)">FAIL</span>'}</td>
     </tr>`;
   }).join('');
 
@@ -492,7 +521,7 @@ function renderCronHistory(cron) {
     <div class="tbl-wrap">
       <h4>크론 실행 이력</h4>
       <table>
-        <thead><tr><th>날짜</th><th>시작</th><th>종료</th><th>목표</th><th>결과</th><th>소요</th><th>배포</th></tr></thead>
+        <thead><tr><th>날짜</th><th>시작</th><th>종료</th><th>목표</th>${gameHeaders}<th>소요</th></tr></thead>
         <tbody>${rows}</tbody>
       </table>
     </div>
@@ -2375,6 +2404,108 @@ function resetStageFilters(gameId) {
     if (el) el.value = '';
   });
   filterStages(gameId);
+}
+
+/* ── 런 관리 ── */
+
+function renderRunManager(runs) {
+  const el = document.getElementById('run-manager');
+  if (!el) return;
+  // 날짜 범위 기본값
+  const dates = runs.map(r => r.run_date).filter(Boolean);
+  const minDate = dates.length ? dates.reduce((a, b) => a < b ? a : b) : '';
+  const maxDate = dates.length ? dates.reduce((a, b) => a > b ? a : b) : '';
+
+  el.innerHTML = `
+    <div class="tbl-wrap">
+      <h4>런 데이터 관리</h4>
+      <div class="rm-date-filter">
+        <span style="color:var(--text-muted)">기간:</span>
+        <input type="date" id="rm-from" value="${minDate}" onchange="filterRunManager()">
+        <span>~</span>
+        <input type="date" id="rm-to" value="${maxDate}" onchange="filterRunManager()">
+        <button class="rm-btn" onclick="filterRunManager()">조회</button>
+        <label style="margin-left:auto;color:var(--text-muted)"><input type="checkbox" id="rm-select-all" onclick="toggleAllRuns(this.checked)"> 전체 선택</label>
+      </div>
+      <div id="rm-list"></div>
+      <div class="rm-actions">
+        <button class="rm-btn rm-btn-danger" onclick="deleteSelectedRuns()">선택 삭제</button>
+        <span id="rm-status" style="font-size:11px;color:var(--text-muted)"></span>
+      </div>
+    </div>
+  `;
+  filterRunManager();
+}
+
+function filterRunManager() {
+  const from = document.getElementById('rm-from')?.value || '';
+  const to = document.getElementById('rm-to')?.value || '';
+  const listEl = document.getElementById('rm-list');
+  if (!listEl) return;
+
+  const filtered = _allRuns.filter(r => {
+    if (from && r.run_date < from) return false;
+    if (to && r.run_date > to) return false;
+    return true;
+  }).sort((a, b) => {
+    if (a.run_date !== b.run_date) return b.run_date.localeCompare(a.run_date);
+    return (PERSONA_ORDER.indexOf(a.persona) || 99) - (PERSONA_ORDER.indexOf(b.persona) || 99);
+  });
+
+  if (!filtered.length) {
+    listEl.innerHTML = '<div style="color:var(--text-muted);padding:8px;font-size:12px">해당 기간에 데이터 없음</div>';
+    return;
+  }
+
+  listEl.innerHTML = filtered.map(r => {
+    const m = r.metrics || {};
+    const pColor = PERSONA_COLORS[r.persona] || '#999';
+    const pName = PERSONA_KO[r.persona] || r.persona;
+    const goldPnl = m.gold_pnl != null ? m.gold_pnl.toLocaleString() : '-';
+    const goldColor = (m.gold_pnl || 0) >= 0 ? 'var(--status-ok)' : 'var(--status-err)';
+    return `<div class="rm-row" data-run-id="${r.id}">
+      <input type="checkbox" class="rm-check" value="${r.id}">
+      <span style="min-width:80px">${r.run_date}</span>
+      <span style="color:${pColor};font-weight:600;min-width:40px">${pName}</span>
+      <span style="min-width:50px">${r.levels_played}판</span>
+      <span style="color:${goldColor};min-width:70px">골드 ${goldPnl}</span>
+      <span style="color:var(--text-muted);min-width:50px">${r.total_time_sec ? Math.round(r.total_time_sec) + '초' : '-'}</span>
+      <span style="color:var(--text-muted);font-size:10px">${r.id.slice(0, 8)}</span>
+    </div>`;
+  }).join('');
+
+  document.getElementById('rm-status').textContent = `${filtered.length}건 표시`;
+  const selectAll = document.getElementById('rm-select-all');
+  if (selectAll) selectAll.checked = false;
+}
+
+function toggleAllRuns(checked) {
+  document.querySelectorAll('.rm-check').forEach(cb => cb.checked = checked);
+}
+
+async function deleteSelectedRuns() {
+  const checked = [...document.querySelectorAll('.rm-check:checked')].map(cb => cb.value);
+  if (!checked.length) { alert('삭제할 런을 선택해주세요.'); return; }
+  if (!confirm(`${checked.length}건의 런을 삭제하시겠습니까?\n(stage_results도 함께 삭제됩니다. 복구 불가)`)) return;
+
+  const statusEl = document.getElementById('rm-status');
+  statusEl.textContent = '삭제 중...';
+  let deleted = 0, failed = 0;
+  for (const runId of checked) {
+    try {
+      await sb.rpc('delete_freeplay_run', { target_id: runId });
+      deleted++;
+    } catch (e) {
+      console.error('삭제 실패:', runId, e);
+      failed++;
+    }
+  }
+  statusEl.textContent = `삭제 완료: ${deleted}건 성공${failed ? `, ${failed}건 실패` : ''}`;
+  // 데이터 갱신
+  _allRuns = _allRuns.filter(r => !checked.includes(r.id));
+  const games = aggregateOverview(_allRuns);
+  renderOverview(games);
+  renderCronHistory(await fetchCronHistory());
 }
 
 /* ── CSV 다운로드 ── */

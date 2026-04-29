@@ -1619,10 +1619,18 @@ function renderCatStages(gameId, stages) {
     const d = s.details || {};
     if (d.map_score != null) {
       byStage[key].mapScores.push(d.map_score);
+      // events에서 기믹 타입 추출 (매칭 횟수 아닌 존재 여부)
+      const detailGimmicks = new Set();
+      for (const e of (d.events || [])) {
+        if (typeof e !== 'string') continue;
+        if (e.startsWith('gimmick_match:')) detailGimmicks.add(e.slice(14));
+        else if (e.startsWith('gimmick:')) detailGimmicks.add(e.slice(8));
+      }
+      if (d.plus_card_count > 0) detailGimmicks.add('플러스카드');
       byStage[key].mapDetails.push({
         score: d.map_score, base: d.map_score_base || 0,
         gimmick: d.gimmick_score || 0, field: d.field_total || 0,
-        gimmicks: d.gimmick_counts || {},
+        gimmickTypes: [...detailGimmicks],
       });
     }
     if (d.turns != null) byStage[key].turns.push(d.turns);
@@ -1653,27 +1661,19 @@ function renderCatStages(gameId, stages) {
       const avgBase = md.length ? Math.round(md.reduce((a,d)=>a+d.base,0)/md.length) : '-';
       const avgGimmickScore = md.length ? Math.round(md.reduce((a,d)=>a+d.gimmick,0)/md.length) : 0;
       const avgField = md.length ? Math.round(md.reduce((a,d)=>a+d.field,0)/md.length) : '-';
-      // 기믹 기여 점수: mapDetails.gimmicks(카드 수)로 실제 기여분 계산
-      const GTYPE_W = {'2': 20, '6': 30, '9': 40, '1': -10};
-      const gimmickContrib = {};
+      // 기믹 정보: events 기반 타입 존재 + gimmick_score로 기여 점수
+      const gimmickTypeSets = {};
       for (const d of md) {
-        if (!d.gimmicks) continue;
-        for (const [st2, cnt] of Object.entries(d.gimmicks)) {
-          if (!gimmickContrib[st2]) gimmickContrib[st2] = { total: 0, plays: 0 };
-          const eff = st2 === '2' ? Math.floor(cnt / 2) : cnt;
-          gimmickContrib[st2].total += eff;
-          gimmickContrib[st2].plays++;
+        for (const name of (d.gimmickTypes || [])) {
+          if (!gimmickTypeSets[name]) gimmickTypeSets[name] = 0;
+          gimmickTypeSets[name]++;
         }
       }
-      const gimmickStr = Object.keys(gimmickContrib).length
-        ? Object.entries(gimmickContrib).map(([st2, data]) => {
-            const name = GIMMICK_NAMES[st2] || '타입'+st2;
-            const w = GTYPE_W[st2] || 0;
-            const avgCnt = md.length ? +(data.total / md.length).toFixed(1) : 0;
-            const avgScore = md.length ? Math.round(data.total * w / md.length) : 0;
-            const unit = st2 === '2' ? '쌍' : '개';
-            const sign = avgScore >= 0 ? '+' : '';
-            return `${name} ×${avgCnt}${unit} ${sign}${avgScore}점 (${data.plays}판)`;
+      const gimmickStr = Object.keys(gimmickTypeSets).length
+        ? Object.entries(gimmickTypeSets).map(([name, cnt]) => {
+            const w = GIMMICK_WEIGHTS[name];
+            const wStr = w ? ` [${w > 0 ? '+' : ''}${w}/개]` : '';
+            return `${name}${wStr} (${cnt}/${md.length}판)`;
           }).join(', ')
         : '없음';
       return `<tr style="cursor:pointer" onclick="var d=document.getElementById('${rowId}');d.style.display=d.style.display==='none'?'table-row':'none'">
@@ -1686,16 +1686,12 @@ function renderCatStages(gameId, stages) {
       <tr id="${rowId}" style="display:none;background:rgba(56,189,248,.04)"><td></td><td colspan="7" style="padding:8px 12px;font-size:11px;color:var(--text-muted)">
         <b>맵스코어 상세</b> (${md.length}회 플레이)<br>
         ${md.map((d, i) => {
-          const gList = d.gimmicks ? Object.entries(d.gimmicks).map(([st2, cnt]) => {
-            const name = GIMMICK_NAMES[st2] || '타입'+st2;
-            const w = GTYPE_W[st2] || 0;
-            const eff = st2 === '2' ? Math.floor(cnt / 2) : cnt;
-            const unit = st2 === '2' ? '쌍' : '개';
-            const score = eff * w;
-            return `${name} ×${eff}${unit} ${score >= 0 ? '+' : ''}${score}`;
-          }).join(', ') : '';
+          const gList = (d.gimmickTypes || []).map(name => {
+            const w = GIMMICK_WEIGHTS[name];
+            return w ? `${name} [${w > 0 ? '+' : ''}${w}/개]` : name;
+          }).join(', ');
           const gPart = gList ? ` · 기믹: ${gList}` : '';
-          return `${i+1}회: base ${d.base} + 기믹 ${d.gimmick >= 0 ? '+' : ''}${d.gimmick} = <b>${d.score}</b> (카드 ${d.field}장${gPart})`;
+          return `${i+1}회: base ${d.base} + 기믹가중치 ${d.gimmick >= 0 ? '+' : ''}${d.gimmick} = <b>${d.score}</b> (카드 ${d.field}장${gPart})`;
         }).join('<br>')}
       </td></tr>`;
     }).join('');

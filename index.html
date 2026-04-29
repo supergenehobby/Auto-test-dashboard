@@ -1603,7 +1603,7 @@ function renderCatStagesCTZ(gameId, stages) {
     if (s.difficulty) v.difficulty = s.difficulty;
   }
   const rows = Object.entries(byStage)
-    .sort(([,a],[,b]) => (a.level||0) - (b.level||0))
+    .sort(([a],[b]) => a.localeCompare(b))
     .map(([st, v]) => {
       const avgT = v.times.length ? (v.times.reduce((a,b)=>a+b,0) / v.times.length).toFixed(1) : '-';
       const avgScore = v.scores.length ? Math.round(v.scores.reduce((a,b)=>a+b,0) / v.scores.length).toLocaleString() : '-';
@@ -1613,7 +1613,7 @@ function renderCatStagesCTZ(gameId, stages) {
       const diffColor = diffTier === 4 ? '#ef4444' : diffTier === 3 ? '#f59e0b' : diffTier === 2 ? '#10b981' : '#64748b';
       const diffName = DIFF_TIERS[diffTier] || '-';
       return `<tr>
-        <td>${st}</td><td>Lv${v.level||'?'}</td><td>${v.played}</td>
+        <td>${st}</td><td>${v.played}</td>
         <td>${avgT}초</td><td>${avgScore}</td><td>${avgSlots}</td>
         <td>${avgTK}</td><td>${v.continues}</td>
         <td style="color:${diffColor};font-weight:600">${diffName}</td></tr>`;
@@ -1627,14 +1627,13 @@ function renderCatStagesCTZ(gameId, stages) {
     <div class="tbl-wrap"><h4>스테이지별 상세 (${Object.keys(byStage).length}개)</h4>
       <table id="stg-table-${gameId}"><thead><tr>
         <th class="sortable" onclick="sortStageTable('${gameId}',0,'str')">스테이지</th>
-        <th class="sortable" onclick="sortStageTable('${gameId}',1,'num')">레벨</th>
-        <th class="sortable" onclick="sortStageTable('${gameId}',2,'num')">플레이</th>
-        <th class="sortable" onclick="sortStageTable('${gameId}',3,'num')">평균 시간</th>
-        <th class="sortable" onclick="sortStageTable('${gameId}',4,'num')">평균 점수</th>
-        <th class="sortable" onclick="sortStageTable('${gameId}',5,'num')">슬롯 사용</th>
-        <th class="sortable" onclick="sortStageTable('${gameId}',6,'num')">타일 종류</th>
-        <th class="sortable" onclick="sortStageTable('${gameId}',7,'num')">이어하기</th>
-        <th class="sortable" onclick="sortStageTable('${gameId}',8,'str')">난이도</th>
+        <th class="sortable" onclick="sortStageTable('${gameId}',1,'num')">플레이</th>
+        <th class="sortable" onclick="sortStageTable('${gameId}',2,'num')">평균 시간</th>
+        <th class="sortable" onclick="sortStageTable('${gameId}',3,'num')">평균 점수</th>
+        <th class="sortable" onclick="sortStageTable('${gameId}',4,'num')">슬롯 사용</th>
+        <th class="sortable" onclick="sortStageTable('${gameId}',5,'num')">타일 종류</th>
+        <th class="sortable" onclick="sortStageTable('${gameId}',6,'num')">이어하기</th>
+        <th class="sortable" onclick="sortStageTable('${gameId}',7,'str')">난이도</th>
       </tr></thead>
       <tbody>${rows}</tbody></table></div>
   `;

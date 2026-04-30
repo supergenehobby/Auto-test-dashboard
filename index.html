@@ -1985,7 +1985,10 @@ function renderCatLogApi(gameId, runs) {
   const levelRows = Object.entries(byLevel).sort(([,a],[,b]) => b - a)
     .map(([lvl, c]) => `<tr><td style="color:${levelColors[lvl] || 'var(--text-secondary)'}">${lvl}</td><td>${c.toLocaleString()}</td><td>${totalConsole ? (c / totalConsole * 100).toFixed(1) : 0}%</td></tr>`).join('');
 
+  const apiNote = totalApi === 0 ? `<div style="font-size:11px;color:var(--text-muted);padding:6px 10px;background:var(--bg-card);border:1px solid var(--border);border-radius:6px;margin-bottom:12px">ℹ️ API 호출 0건 — 이 게임은 자체 API 서버 대신 Facebook Instant Games 프레임워크를 통해 통신하므로 별도 API 로그가 수집되지 않습니다.</div>` : '';
+
   return `
+    ${apiNote}
     <div class="metric-row">
       <div class="metric-box"><div class="label">총 API 호출</div><div class="value">${totalApi.toLocaleString()}</div><div class="sub">런당 평균 ${avgApi}</div></div>
       <div class="metric-box"><div class="label">총 콘솔 로그</div><div class="value">${totalConsole.toLocaleString()}</div><div class="sub">런당 평균 ${avgConsole}</div></div>

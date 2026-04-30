@@ -680,8 +680,8 @@ function _aggregatePersonaStages(stages) {
     const gimmickPresent = new Set();
     for (const e of evts) {
       if (typeof e !== 'string') continue;
-      if (e.startsWith('gimmick_match:')) gimmickPresent.add(e.slice(14));
-      else if (e.startsWith('gimmick:')) gimmickPresent.add(e.slice(8));
+      if (e.startsWith('gimmick_match:')) gimmickPresent.add(e.slice(14).split(' (')[0].trim());
+      else if (e.startsWith('gimmick:')) gimmickPresent.add(e.slice(8).split(' (')[0].trim());
     }
     if (d.plus_card_count > 0) gimmickPresent.add('플러스카드');
     a.gimmicks += gimmickPresent.size; // 이 판에 배치된 기믹 종류 수
@@ -1657,8 +1657,8 @@ function renderCatStages(gameId, stages) {
       const detailGimmicks = new Set();
       for (const e of (d.events || [])) {
         if (typeof e !== 'string') continue;
-        if (e.startsWith('gimmick_match:')) detailGimmicks.add(e.slice(14));
-        else if (e.startsWith('gimmick:')) detailGimmicks.add(e.slice(8));
+        if (e.startsWith('gimmick_match:')) detailGimmicks.add(e.slice(14).split(' (')[0].trim());
+        else if (e.startsWith('gimmick:')) detailGimmicks.add(e.slice(8).split(' (')[0].trim());
       }
       if (d.plus_card_count > 0) detailGimmicks.add('플러스카드');
       byStage[key].mapDetails.push({

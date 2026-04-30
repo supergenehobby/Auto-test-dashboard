@@ -1228,9 +1228,7 @@ function renderCatGimmick(gameId, stages, runs) {
     .sort(([,a],[,b]) => b - a)
     .map(([k, cnt]) => {
       const name = GIMMICK_NAMES[k] || '타입'+k;
-      const w = GIMMICK_WEIGHTS[name];
-      const wStr = w ? ` [${w > 0 ? '+' : ''}${w}]` : '';
-      return `${name}${wStr}: ${cnt}맵`;
+      return `${name}: ${cnt}맵`;
     }).join(', ') || '없음';
 
   const pRows = pKeys.map(p => {
@@ -1704,11 +1702,7 @@ function renderCatStages(gameId, stages) {
         }
       }
       const gimmickStr = Object.keys(gimmickTypeSets).length
-        ? Object.entries(gimmickTypeSets).map(([name, cnt]) => {
-            const w = GIMMICK_WEIGHTS[name];
-            const wStr = w ? ` [${w > 0 ? '+' : ''}${w}/개]` : '';
-            return `${name}${wStr} (${cnt}/${md.length}판)`;
-          }).join(', ')
+        ? Object.entries(gimmickTypeSets).map(([name, cnt]) => `${name} (${cnt}/${md.length}판)`).join(', ')
         : '없음';
       return `<tr style="cursor:pointer" onclick="var d=document.getElementById('${rowId}');d.style.display=d.style.display==='none'?'table-row':'none'">
         <td>${st}</td><td>Lv${v.level||'?'}</td><td>${v.played}</td>
@@ -1720,10 +1714,7 @@ function renderCatStages(gameId, stages) {
       <tr id="${rowId}" style="display:none;background:rgba(56,189,248,.04)"><td></td><td colspan="7" style="padding:8px 12px;font-size:11px;color:var(--text-muted)">
         <b>맵스코어 상세</b> (${md.length}회 플레이)<br>
         ${md.map((d, i) => {
-          const gList = (d.gimmickTypes || []).map(name => {
-            const w = GIMMICK_WEIGHTS[name];
-            return w ? `${name} [${w > 0 ? '+' : ''}${w}/개]` : name;
-          }).join(', ');
+          const gList = (d.gimmickTypes || []).join(', ');
           const gPart = gList ? ` · 기믹: ${gList}` : '';
           return `${i+1}회: base <b>${d.base}</b> → 맵스코어 <b>${d.score}</b> (카드 ${d.field}장${gPart})`;
         }).join('<br>')}

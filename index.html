@@ -1725,11 +1725,7 @@ function renderCatStages(gameId, stages) {
             return w ? `${name} [${w > 0 ? '+' : ''}${w}/개]` : name;
           }).join(', ');
           const gPart = gList ? ` · 기믹: ${gList}` : '';
-          const isCapped = d.gimmick > 0 && d.base > 0 && (d.base + d.gimmick === 700 || d.base + d.gimmick === 900);
-          const isZeroWithGimmick = d.gimmick === 0 && gList;
-          const gimmickNote = isCapped ? ' <span style="color:var(--status-warn);font-size:10px">⚠ 티어 상한 캡핑</span>'
-            : isZeroWithGimmick ? ' <span style="color:var(--status-warn);font-size:10px">⚠ 가중치 보정됨</span>' : '';
-          return `${i+1}회: base ${d.base} + 기믹가중치 ${d.gimmick >= 0 ? '+' : ''}${d.gimmick} = <b>${d.score}</b> (카드 ${d.field}장${gPart})${gimmickNote}`;
+          return `${i+1}회: base <b>${d.base}</b> → 맵스코어 <b>${d.score}</b> (카드 ${d.field}장${gPart})`;
         }).join('<br>')}
       </td></tr>`;
     }).join('');

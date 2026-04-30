@@ -1725,7 +1725,8 @@ function renderCatStages(gameId, stages) {
             return w ? `${name} [${w > 0 ? '+' : ''}${w}/개]` : name;
           }).join(', ');
           const gPart = gList ? ` · 기믹: ${gList}` : '';
-          return `${i+1}회: base ${d.base} + 기믹가중치 ${d.gimmick >= 0 ? '+' : ''}${d.gimmick} = <b>${d.score}</b> (카드 ${d.field}장${gPart})`;
+          const gimmickNote = (d.gimmick === 0 && gList) ? ' <span style="color:var(--status-warn);font-size:10px">⚠ 가중치 보정됨</span>' : '';
+          return `${i+1}회: base ${d.base} + 기믹가중치 ${d.gimmick >= 0 ? '+' : ''}${d.gimmick} = <b>${d.score}</b> (카드 ${d.field}장${gPart})${gimmickNote}`;
         }).join('<br>')}
       </td></tr>`;
     }).join('');
